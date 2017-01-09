@@ -103,7 +103,12 @@ public class Robot extends IterativeRobot {
     public void teleopPeriodic() {
     	double drive = oi.joystick1.getRawAxis(1);
     	double rotate = oi.joystick1.getRawAxis(4);
-    	driveTrain.getRobotDrive().arcadeDrive(drive, rotate * -drive, true);
+    	System.out.println("Drive: " + drive);
+    	if (drive <= 0.05 || drive >= -0.05) {
+    		driveTrain.getRobotDrive().arcadeDrive(drive, rotate, true);
+    	} else {
+    		driveTrain.getRobotDrive().arcadeDrive(drive, rotate * -drive, true);
+    	}
         Scheduler.getInstance().run();
     }
 
