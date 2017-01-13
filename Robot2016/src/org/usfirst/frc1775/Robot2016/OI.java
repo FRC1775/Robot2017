@@ -81,7 +81,7 @@ public class OI {
         joystickButton4 = new JoystickButton(joystick1, 6);
         joystickButton4.whileHeld(new GrabbingArmDown());
         joystickButton3 = new JoystickButton(joystick1, 5);
-        joystickButton3.whileHeld(new GrabbingArmUp());
+        // joystickButton3.whileHeld(new GrabbingArmUp());
         joystickButton2 = new JoystickButton(joystick1, 2);
         //joystickButton2.whenPressed(new ReleaseThrowingArm());
         joystickButton1 = new JoystickButton(joystick1, 1);
