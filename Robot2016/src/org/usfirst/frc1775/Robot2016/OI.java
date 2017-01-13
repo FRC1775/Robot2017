@@ -75,17 +75,17 @@ public class OI {
         joystickButton7 = new JoystickButton(joystick1, 7);
         joystickButton7.whileHeld(new ReleaseBall());
         joystickButton6 = new JoystickButton(joystick1, 4);
-        joystickButton6.whileHeld(new RollerOut());
+        //joystickButton6.whileHeld(new RollerOut());
         joystickButton5 = new JoystickButton(joystick1, 3);
-        joystickButton5.whileHeld(new RollerIn());
+        //joystickButton5.whileHeld(new RollerIn());
         joystickButton4 = new JoystickButton(joystick1, 6);
         joystickButton4.whileHeld(new GrabbingArmDown());
         joystickButton3 = new JoystickButton(joystick1, 5);
         joystickButton3.whileHeld(new GrabbingArmUp());
         joystickButton2 = new JoystickButton(joystick1, 2);
-        joystickButton2.whenPressed(new ReleaseThrowingArm());
+        //joystickButton2.whenPressed(new ReleaseThrowingArm());
         joystickButton1 = new JoystickButton(joystick1, 1);
-        joystickButton1.whenPressed(new CrankThrowingArm());
+        //joystickButton1.whenPressed(new CrankThrowingArm());
 
 
         // SmartDashboard Buttons
