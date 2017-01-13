@@ -56,9 +56,9 @@ public class Robot extends IterativeRobot implements PIDOutput  {
     /* controllers by displaying a form where you can enter new P, I,  */
     /* and D constants and test the mechanism.                         */
     
-    static final double kP = 0.03;
-    static final double kI = 0.00;
-    static final double kD = 0.00;
+    static final double kP = 0.01;
+    static final double kI = 0.0004;
+    static final double kD = 0.0;
     static final double kF = 0.00;
     
   /* This tuning parameter indicates how close to "on target" the    */
@@ -177,10 +177,10 @@ public class Robot extends IterativeRobot implements PIDOutput  {
         } else if ( stick.getRawButton(2)) {
             turnController.setSetpoint(90.0f);
             rotateToAngle = true;
-        } else if ( stick.getRawButton(3)) {
+        } else if ( stick.getRawButton(4)) {
             turnController.setSetpoint(179.9f);
             rotateToAngle = true;
-        } else if ( stick.getRawButton(4)) {
+        } else if ( stick.getRawButton(3)) {
         	turnController.setSetpoint(-90.0f);
             rotateToAngle = true;
         }
