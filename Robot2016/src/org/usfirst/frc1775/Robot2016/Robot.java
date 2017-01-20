@@ -22,6 +22,9 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.vision.VisionThread;
 
+import java.util.ArrayList;
+
+import org.opencv.core.MatOfPoint;
 import org.opencv.core.Rect;
 import org.opencv.imgproc.Imgproc;
 import org.usfirst.frc1775.Robot2016.commands.*;
@@ -62,21 +65,34 @@ public class Robot extends IterativeRobot {
     public void robotInit() {
     	UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
     	camera.setResolution(IMG_WIDTH, IMG_HEIGHT);
-    	camera.setExposureManual(6);
-    	camera.setWhiteBalanceAuto();
+    	//camera.setWhiteBalanceAuto();
     	//camera.setExposureManual(5);
     	//camera.
     	//camera.setWhiteBalanceAuto();
     	//camera.setBrightness(10);
         
         visionThread = new VisionThread(camera, new GripPipeline(), pipeline -> {
-        	//DriverStation.reportWarning("frame", false);
             if (!pipeline.filterContoursOutput().isEmpty()) {
-            	DriverStation.reportWarning("HERE", false);
-                Rect r = Imgproc.boundingRect(pipeline.filterContoursOutput().get(0));
+            	ArrayList<MatOfPoint> contours = pipeline.filterContoursOutput();
+            	DriverStation.reportError("Count: " + contours.size(), false);
+            	MatOfPoint contour = contours.get(0);
+                Rect r = Imgproc.boundingRect(contour);
+                
                 synchronized (imgLock) {
-                	DriverStation.reportWarning("width" + r.width, false);
+                	// 0.45 => 20/44.5" calibration of frame view from 47"
+                	// 0.884 is view angle in radians
+                	// Calculate angle by ratio of screen to ratio of view angle
+                	double anglularDiameter = (0.884 * (r.width / (double)IMG_WIDTH)) / 0.45;
+                	// Use angular diameter equation solving for D (distance to object)
+                	double distance = 20.0 / Math.tan(anglularDiameter / 2.0);
+                	DriverStation.reportError("Distance: " + distance, false);
+                	
                     centerX = r.x + (r.width / 2);
+                    double opp = IMG_WIDTH / 2 - centerX;
+                    // Calculate angle of robot to target by using ratio of 1/2 view angle compared to percentage of screen width
+                    // between center of frame and center of target
+                    double angle = 180.0/Math.PI * ((0.442 * (opp / (double)IMG_WIDTH)) / 0.45);
+                    DriverStation.reportError("Angle: " + angle, false);
                 }
             }
         });
