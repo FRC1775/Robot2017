@@ -1,0 +1,81 @@
+<xml version="1.0">
+<dashboard>
+	<widget field="DriveTrain.rotateValue" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.SimpleDial">
+		<location x="462" y="22"/>
+		<property name="Upper Limit" value="1.0"/>
+		<property name="Lower Limit" value="-1.0"/>
+		<property name="Tick Interval" value="0.05"/>
+	</widget>
+	<widget field="DriveTrain.squaredInputs" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.BooleanBox">
+		<location x="513" y="184"/>
+		<height>15</height>
+	</widget>
+	<widget field="DriveTrain.moveValue" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.LinePlot">
+		<location x="52" y="5"/>
+		<width>407</width>
+		<height>197</height>
+		<property name="Buffer Size (samples)" value="100"/>
+	</widget>
+	<widget field="Both? " type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.BooleanBox">
+		<location x="1095" y="264"/>
+		<width>213</width>
+		<height>105</height>
+	</widget>
+	<widget field="Second Sensor: " type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.BooleanBox">
+		<location x="1056" y="324"/>
+		<width>173</width>
+		<height>83</height>
+	</widget>
+	<widget field="First Sensor: " type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.BooleanBox">
+		<location x="1002" y="262"/>
+		<width>173</width>
+		<height>68</height>
+	</widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.RobotPreferences">
+		<location x="22" y="236"/>
+		<width>422</width>
+		<height>132</height>
+	</static-widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.ConnectionIndicator">
+		<location x="7" y="6"/>
+	</static-widget>
+	<widget field="GrabbingArmUp" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="940" y="53"/>
+	</widget>
+	<widget field="Autonomous Command" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="917" y="15"/>
+	</widget>
+	<widget field="ReleaseThrowingArm" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="1019" y="162"/>
+	</widget>
+	<widget field="Command Group 1" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="990" y="110"/>
+	</widget>
+	<widget field="GrabbingArmDown" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="1124" y="12"/>
+	</widget>
+	<widget field="Command 1" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="1123" y="57"/>
+	</widget>
+	<widget field="CrankThrowingArm" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="1144" y="227"/>
+	</widget>
+	<widget field="ReleaseBall" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="1182" y="116"/>
+	</widget>
+	<widget field="RollerOut" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="759" y="21"/>
+	</widget>
+	<widget field="RollerIn" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="776" y="60"/>
+	</widget>
+	<widget field="Auto Selector" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="790" y="109"/>
+	</widget>
+	<widget field="Auto mode" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
+		<location x="1029" y="213"/>
+	</widget>
+</dashboard>
+<live-window>
+</live-window>
+</xml>
