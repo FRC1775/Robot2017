@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Joystick.AxisType;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -29,6 +30,10 @@ import org.opencv.core.Rect;
 import org.opencv.imgproc.Imgproc;
 import org.usfirst.frc1775.Robot2016.commands.*;
 import org.usfirst.frc1775.Robot2016.subsystems.*;
+
+//import digial input lib
+import edu.wpi.first.wpilibj.smartdashboard.*;
+import edu.wpi.first.wpilibj.DigitalInput;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -62,37 +67,56 @@ public class Robot extends IterativeRobot {
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
+    DigitalInput digital1;
+    DigitalInput digital2;
     public void robotInit() {
+        // This is Kate's sensor for the gear
+    	digital1 = new DigitalInput(8);
+    	digital2 = new DigitalInput(9);
+        
+
+        
     	UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
     	camera.setResolution(IMG_WIDTH, IMG_HEIGHT);
     	//camera.setWhiteBalanceAuto();
-    	//camera.setExposureManual(5);
+    	//camera.setExposureManual(1);
     	//camera.
     	//camera.setWhiteBalanceAuto();
     	//camera.setBrightness(10);
         
         visionThread = new VisionThread(camera, new GripPipeline(), pipeline -> {
+        	//DriverStation.reportError("HERE", false);
             if (!pipeline.filterContoursOutput().isEmpty()) {
             	ArrayList<MatOfPoint> contours = pipeline.filterContoursOutput();
-            	DriverStation.reportError("Count: " + contours.size(), false);
-            	MatOfPoint contour = contours.get(0);
-                Rect r = Imgproc.boundingRect(contour);
+            	//DriverStation.reportError("Count: " + contours.size(), false);
+            	MatOfPoint contour1 = contours.get(0);
+                Rect r = Imgproc.boundingRect(contour1);
+                MatOfPoint contour2 = contours.get(1);
+                Rect r2 = Imgproc.boundingRect(contour2);
+               
                 
                 synchronized (imgLock) {
                 	// 0.45 => 20/44.5" calibration of frame view from 47"
                 	// 0.884 is view angle in radians
                 	// Calculate angle by ratio of screen to ratio of view angle
-                	double anglularDiameter = (0.884 * (r.width / (double)IMG_WIDTH)) / 0.45;
+                	//double anglularDiameter = (0.884 * (r.width / (double)IMG_WIDTH)) / 0.45;
+                	double testDistance = ((20.0*(double)IMG_WIDTH)/(2.0*r.width*Math.tan(((50.7*Math.PI)/180)/2.0)));
+                	double testDistance2 = Math.sqrt((Math.pow(testDistance, 2)-Math.pow(120, 2)));
                 	// Use angular diameter equation solving for D (distance to object)
-                	double distance = 20.0 / Math.tan(anglularDiameter / 2.0);
-                	DriverStation.reportError("Distance: " + distance, false);
+                	//double distance = 20.0 / Math.tan(anglularDiameter / 2.0);
+                	//DriverStation.reportError("Distance: " + distance, false);
                 	
                     centerX = r.x + (r.width / 2);
                     double opp = IMG_WIDTH / 2 - centerX;
                     // Calculate angle of robot to target by using ratio of 1/2 view angle compared to percentage of screen width
                     // between center of frame and center of target
                     double angle = 180.0/Math.PI * ((0.442 * (opp / (double)IMG_WIDTH)) / 0.45);
-                    DriverStation.reportError("Angle: " + angle, false);
+                    //DriverStation.reportError("Angle: " + angle, false);
+                    //DriverStation.reportError(""+r.width, false);
+                    //DriverStation.reportError("This is a test distance " + testDistance, false);
+                    //DriverStation.reportError("This is the length of the peg tape: "+ r2.height, false);
+                    //DriverStation.reportError("Contour 1 X: "+r.x, false);
+                    //DriverStation.reportError("Contour 2 X: "+r2.x , false);
                 }
             }
         });
@@ -166,13 +190,20 @@ public class Robot extends IterativeRobot {
     	synchronized (imgLock) {
     		centerX = this.centerX;
     	}
-    	DriverStation.reportError("CenterX: " + centerX, false);
+    	//DriverStation.reportError("CenterX: " + centerX, false);
         Scheduler.getInstance().run();
+        SmartDashboard.putBoolean("First Sensor: ", digital1.get());
+        SmartDashboard.putBoolean("Second Sensor: ", digital2.get());
+        SmartDashboard.putBoolean("Both? ", false);
+        if (digital1.get() == false & digital2.get()==false) {
+        	SmartDashboard.putBoolean("Both? ", true);
+        }
     }
 
     /**
      * This function is called periodically during test mode
      */
+        
     public void testPeriodic() {
         LiveWindow.run();
     }
