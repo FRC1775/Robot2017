@@ -21,16 +21,18 @@ public class RobotMap {
 	public static SpeedController driveTrainLeftController;
 	public static SpeedController driveTrainRightController;
 	public static RobotDrive driveTrainRobotDrive;
+	
+	public static SpeedController shooterSingulatorController;
 
 	// If you are using multiple modules, make sure to define both the port
 	// number and the module. For example you with a rangefinder:
 	// public static int rangefinderPort = 1;
 	// public static int rangefinderModule = 1;
 	public static void init() {
-		driveTrainLeftController = new Talon(1);
+		driveTrainLeftController = new Talon(getDriveTrainLeftPWM());
 		LiveWindow.addActuator("DriveTrain", "LeftController", (Talon) driveTrainLeftController);
 
-		driveTrainRightController = new Talon(0);
+		driveTrainRightController = new Talon(getDriveTrainRightPWM());
 		LiveWindow.addActuator("DriveTrain", "RightController", (Talon) driveTrainRightController);
 
 		driveTrainRobotDrive = new RobotDrive(driveTrainLeftController, driveTrainRightController);
@@ -39,8 +41,11 @@ public class RobotMap {
 		driveTrainRobotDrive.setExpiration(0.1);
 		driveTrainRobotDrive.setSensitivity(0.5);
 		driveTrainRobotDrive.setMaxOutput(getMaxOutput());
-		driveTrainRobotDrive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, false);
-		driveTrainRobotDrive.setInvertedMotor(RobotDrive.MotorType.kRearRight, false);
+		driveTrainRobotDrive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
+		driveTrainRobotDrive.setInvertedMotor(RobotDrive.MotorType.kRearRight, true);
+		
+		shooterSingulatorController = new Talon(2);
+		LiveWindow.addActuator("Shooter", "SingulatorController", (Talon) shooterSingulatorController);
 	}
 
 	private static double getMaxOutput() {
@@ -53,5 +58,13 @@ public class RobotMap {
 		SmartDashboard.putNumber("DriveTrain.maxOutput", maxOutput);
 
 		return maxOutput;
+	}
+	
+	private static int getDriveTrainLeftPWM() {
+		return Preferences.getInstance().getInt("DriveTrain.leftPWM", 0);
+	}
+	
+	private static int getDriveTrainRightPWM() {
+		return Preferences.getInstance().getInt("DriveTrain.rightPWM", 1);
 	}
 }

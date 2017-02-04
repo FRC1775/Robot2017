@@ -2,8 +2,10 @@ package org.usfirst.frc.team1775.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 import org.usfirst.frc.team1775.robot.commands.ExampleCommand;
+import org.usfirst.frc.team1775.robot.commands.PrepareShootCommand;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -40,9 +42,15 @@ public class OI {
 
 	public Joystick joystick1;
 	public Joystick joystick2;
+	
+	public JoystickButton rightBumper;
 
 	public OI() {
 		joystick1 = new Joystick(0);
 		joystick2 = new Joystick(1);
+
+		rightBumper = new JoystickButton(joystick1, 6);
+        
+		rightBumper.toggleWhenPressed(new PrepareShootCommand());
 	}
 }

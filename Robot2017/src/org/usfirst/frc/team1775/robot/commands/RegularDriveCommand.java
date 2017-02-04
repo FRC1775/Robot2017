@@ -1,14 +1,22 @@
 package org.usfirst.frc.team1775.robot.commands;
 
 import org.usfirst.frc.team1775.robot.Robot;
+import org.usfirst.frc.team1775.robot.subsystems.DriveTrainSubsystem;
 
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class RegularDriveCommand extends Command {
 	
+	public static DriveTrainSubsystem driveTrain = Robot.driveTrain;
+	
 	public RegularDriveCommand() {
-		requires(Robot.driveTrain);
+		requires(driveTrain);
+	}
+	
+	public void initialize() {
+		SmartDashboard.putData(driveTrain);
 	}
 
 	public void execute() {
@@ -17,11 +25,11 @@ public class RegularDriveCommand extends Command {
     	boolean squaredInputs = Preferences.getInstance().getBoolean("DriveTrain.squaredInputs", true);
     	boolean constantRadius = Preferences.getInstance().getBoolean("DriveTrain.constantRadius", true);
     	
-    	if ((drive <= 0.1 && drive >= -0.1) && (rotate >= 0.2 || rotate <= -0.2)) {
-    		Robot.driveTrain.rotate(rotate, squaredInputs);
-    	} else {
-    		Robot.driveTrain.arcadeDrive(-drive, rotate, squaredInputs, constantRadius);
-    	}
+    	//if ((drive <= 0.1 && drive >= -0.1) && (rotate >= 0.2 || rotate <= -0.2)) {
+    	//	driveTrain.arcadeDrive(-drive, rotate, squaredInputs, false);
+    	//} else {
+    		driveTrain.arcadeDrive(-drive, rotate, squaredInputs, constantRadius);
+    	//}
 	}
 	
 	@Override
@@ -31,6 +39,6 @@ public class RegularDriveCommand extends Command {
 
 	@Override
 	protected void interrupted() {
-		Robot.driveTrain.stop();
+		driveTrain.stop();
 	}
 }

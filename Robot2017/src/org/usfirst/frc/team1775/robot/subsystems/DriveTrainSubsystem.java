@@ -21,7 +21,7 @@ public class DriveTrainSubsystem extends Subsystem {
 
 		double actualRotateValue = rotateValue;
 		if (constantRadius) {
-			actualRotateValue = rotateValue * -moveValue;
+			actualRotateValue = rotateValue * moveValue;
 		}
 		RobotMap.driveTrainRobotDrive.arcadeDrive(moveValue, actualRotateValue, squaredInputs);
 	}
