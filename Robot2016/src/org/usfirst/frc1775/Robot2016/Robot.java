@@ -79,7 +79,8 @@ public class Robot extends IterativeRobot {
     	UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
     	camera.setResolution(IMG_WIDTH, IMG_HEIGHT);
     	//camera.setWhiteBalanceAuto();
-    	//camera.setExposureManual(1);
+    	
+    	camera.setExposureManual(0);
     	//camera.
     	//camera.setWhiteBalanceAuto();
     	//camera.setBrightness(10);
@@ -87,12 +88,14 @@ public class Robot extends IterativeRobot {
         visionThread = new VisionThread(camera, new GripPipeline(), pipeline -> {
         	//DriverStation.reportError("HERE", false);
             if (!pipeline.filterContoursOutput().isEmpty()) {
+            	DriverStation.reportError(""+pipeline.filterContoursOutput().size(), false);
             	ArrayList<MatOfPoint> contours = pipeline.filterContoursOutput();
             	//DriverStation.reportError("Count: " + contours.size(), false);
             	MatOfPoint contour1 = contours.get(0);
                 Rect r = Imgproc.boundingRect(contour1);
-                MatOfPoint contour2 = contours.get(1);
-                Rect r2 = Imgproc.boundingRect(contour2);
+                //MatOfPoint contour2 = contours.get(1);
+                //Rect r2 = Imgproc.boundingRect(contour2);
+               
                
                 
                 synchronized (imgLock) {
@@ -112,8 +115,8 @@ public class Robot extends IterativeRobot {
                     // between center of frame and center of target
                     double angle = 180.0/Math.PI * ((0.442 * (opp / (double)IMG_WIDTH)) / 0.45);
                     //DriverStation.reportError("Angle: " + angle, false);
-                    //DriverStation.reportError(""+r.width, false);
-                    //DriverStation.reportError("This is a test distance " + testDistance, false);
+                    DriverStation.reportError(""+r.width, false);
+                    DriverStation.reportError("This is a test distance " + testDistance, false);
                     //DriverStation.reportError("This is the length of the peg tape: "+ r2.height, false);
                     //DriverStation.reportError("Contour 1 X: "+r.x, false);
                     //DriverStation.reportError("Contour 2 X: "+r2.x , false);
