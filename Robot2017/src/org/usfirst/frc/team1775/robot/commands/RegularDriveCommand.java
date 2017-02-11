@@ -25,11 +25,13 @@ public class RegularDriveCommand extends Command {
     	boolean squaredInputs = Preferences.getInstance().getBoolean("DriveTrain.squaredInputs", true);
     	boolean constantRadius = Preferences.getInstance().getBoolean("DriveTrain.constantRadius", true);
     	
-    	//if ((drive <= 0.1 && drive >= -0.1) && (rotate >= 0.2 || rotate <= -0.2)) {
-    	//	driveTrain.arcadeDrive(-drive, rotate, squaredInputs, false);
-    	//} else {
-    		driveTrain.arcadeDrive(-drive, rotate, squaredInputs, constantRadius);
-    	//}
+    	double rightTrigger = Robot.oi.joystick1.getRawAxis(3);
+    	if (rightTrigger >0) {
+    		Robot.driveTrain.rotate(-rotate, true);
+    	}
+    	else {
+    		Robot.driveTrain.arcadeDrive(-drive, -rotate, squaredInputs, constantRadius);
+    	}
 	}
 	
 	@Override
