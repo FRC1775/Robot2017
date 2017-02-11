@@ -1,12 +1,24 @@
 
 package org.usfirst.frc.team1775.robot;
 
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DigitalOutput;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.vision.VisionThread;
+
+import java.util.ArrayList;
+
+import org.opencv.core.MatOfPoint;
+import org.opencv.core.Rect;
+import org.opencv.imgproc.Imgproc;
 
 import org.usfirst.frc.team1775.robot.commands.ExampleCommand;
 import org.usfirst.frc.team1775.robot.subsystems.DriveTrainSubsystem;
@@ -29,7 +41,16 @@ public class Robot extends IterativeRobot {
 
 	Command autonomousCommand;
 	SendableChooser<Command> chooser = new SendableChooser<>();
-
+    
+	private static final int IMG_WIDTH = 320;
+    private static final int IMG_HEIGHT = 240;
+    
+    private VisionThread visionThread;
+    private double centerX = 0.0;
+     
+    private final Object imgLock = new Object();
+     
+     
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -37,6 +58,18 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		RobotMap.init();
+	    /*DigitalInput digital1;
+	    DigitalInput digital2;
+	        // This is Kate's sensor for the gear
+	    	digital1 = new DigitalInput(8);
+	    	digital2 = new DigitalInput(9);
+	    
+	    if (digital1.get() & digital2.get()){
+	    	SmartDashboard.putBoolean("both?", true);
+	    }
+	    */
+		
+		
 		
         driveTrain = new DriveTrainSubsystem();
         shooter = new ShooterSubsystem();
@@ -48,6 +81,58 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putData("Auto mode", chooser);
 		
 		SmartDashboard.putData(Scheduler.getInstance());
+		
+		UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
+    	camera.setResolution(IMG_WIDTH, IMG_HEIGHT);
+    	//camera.setWhiteBalanceAuto();
+    	//camera.setExposureManual(1);
+    	camera.setExposureManual(1);
+    	
+    	//camera.
+    	//camera.setWhiteBalanceAuto();
+    	//camera.setBrightness(10);
+    	visionThread = new VisionThread(camera, new GripPipeline(), pipeline -> {
+        	//DriverStation.reportError("HERE", false);
+            if (!pipeline.filterContoursOutput().isEmpty()) {
+            	DriverStation.reportError(""+pipeline.filterContoursOutput().size(), false);
+            	ArrayList<MatOfPoint> contours = pipeline.filterContoursOutput();
+            	DriverStation.reportError("Count: " + contours.size(), false);
+            	MatOfPoint contour1 = contours.get(0);
+                Rect r = Imgproc.boundingRect(contour1);
+                //MatOfPoint contour2 = contours.get(1);
+                //Rect r2 = Imgproc.boundingRect(contour2);
+                 
+                synchronized (imgLock) {
+                	// 0.45 => 20/44.5" calibration of frame view from 47"
+                	// 0.884 is view angle in radians
+                	// Calculate angle by ratio of screen to ratio of view angle
+                	//double anglularDiameter = (0.884 * (r.width / (double)IMG_WIDTH)) / 0.45;
+                	double testDistance = ((20.0*(double)IMG_WIDTH)/(2.0*r.width*Math.tan(((50.7*Math.PI)/180)/2.0)));
+                	//double testDistance2 = Math.sqrt((Math.pow(testDistance, 2)-Math.pow(120, 2)));
+                	// Use angular diameter equation solving for D (distance to object)
+                	//double distance = 20.0 / Math.tan(anglularDiameter / 2.0);
+                	//DriverStation.reportError("Distance: " + distance, false);
+                 	
+                    centerX = r.x + (r.width / 2);
+                    double opp = IMG_WIDTH / 2 - centerX;
+                    // Calculate angle of robot to target by using ratio of 1/2 view angle compared to percentage of screen width
+                    // between center of frame and center of target
+                    double angle = 180.0/Math.PI * ((0.442 * (opp / (double)IMG_WIDTH)) / 0.45);
+                    //DriverStation.reportError("Angle: " + angle, false);
+                    //DriverStation.reportError(""+r.width, false);
+                    //DriverStation.reportError("This is a test distance " + testDistance, false);
+                    //DriverStation.reportError(""+r.width, false);
+                    //DriverStation.reportError("This is a test distance " + testDistance, false);
+                    //DriverStation.reportError("This is the length of the peg tape: "+ r2.height, false);
+                    //DriverStation.reportError("Contour 1 X: "+r.x, false);
+                    //DriverStation.reportError("Contour 2 X: "+r2.x , false);
+                }
+            }
+        });
+        visionThread.start();
+        
+        
+        
 	}
 
 	/**

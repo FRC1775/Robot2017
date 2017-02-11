@@ -41,8 +41,8 @@ public class RobotMap {
 		driveTrainRobotDrive.setExpiration(0.1);
 		driveTrainRobotDrive.setSensitivity(0.5);
 		driveTrainRobotDrive.setMaxOutput(getMaxOutput());
-		driveTrainRobotDrive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
-		driveTrainRobotDrive.setInvertedMotor(RobotDrive.MotorType.kRearRight, true);
+		driveTrainRobotDrive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, false);
+		driveTrainRobotDrive.setInvertedMotor(RobotDrive.MotorType.kRearRight, false);
 		
 		shooterSingulatorController = new Talon(2);
 		LiveWindow.addActuator("Shooter", "SingulatorController", (Talon) shooterSingulatorController);
