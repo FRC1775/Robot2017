@@ -82,6 +82,7 @@ public class Robot extends IterativeRobot {
 		
 		SmartDashboard.putData(Scheduler.getInstance());
 		
+		/*
 		UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
     	camera.setResolution(IMG_WIDTH, IMG_HEIGHT);
     	//camera.setWhiteBalanceAuto();
@@ -131,7 +132,7 @@ public class Robot extends IterativeRobot {
         });
         visionThread.start();
         
-        
+        */
         
 	}
 

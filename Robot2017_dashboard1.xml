@@ -1,5 +1,51 @@
 <xml version="1.0">
 <dashboard>
+	<widget field="Shooter.spm" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.LinePlot">
+		<location x="470" y="171"/>
+		<width>960</width>
+		<height>319</height>
+		<property name="Buffer Size (samples)" value="25"/>
+	</widget>
+	<widget field="Shooter.regulatorSpeed" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="976" y="125"/>
+	</widget>
+	<widget field="PID Result" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="683" y="157"/>
+		<width>296</width>
+	</widget>
+	<widget field="Rotation Rate" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="753" y="95"/>
+	</widget>
+	<widget field="Angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="793" y="126"/>
+	</widget>
+	<widget field="lum2: " type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="882" y="62"/>
+	</widget>
+	<widget field="lum1:	" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1145" y="10"/>
+	</widget>
+	<widget field="sat2: " type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1226" y="38"/>
+	</widget>
+	<widget field="sat1: " type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1219" y="71"/>
+	</widget>
+	<widget field="hue2: " type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1212" y="109"/>
+	</widget>
+	<widget field="hue1: " type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="730" y="61"/>
+	</widget>
+	<widget field="both?" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="203"/>
+	</widget>
+	<widget field="DriveTrain.rotateValue" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.SimpleDial">
+		<location x="483" y="6"/>
+		<property name="Upper Limit" value="1.0"/>
+		<property name="Lower Limit" value="-1.0"/>
+		<property name="Tick Interval" value="0.05"/>
+	</widget>
 	<widget field="ShooterSubsystem" type="Subsystem" class="edu.wpi.first.smartdashboard.gui.elements.Subsystem">
 		<location x="1009" y="88"/>
 	</widget>
@@ -25,13 +71,6 @@
 		<location x="521" y="202"/>
 		<property name="Editable" value="false"/>
 	</widget>
-	<widget field="DriveTrain.rotateValue" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.SimpleDial">
-		<location x="484" y="7"/>
-		<width>227</width>
-		<property name="Upper Limit" value="1.0"/>
-		<property name="Lower Limit" value="-1.0"/>
-		<property name="Tick Interval" value="0.05"/>
-	</widget>
 	<widget field="DriveTrain.squaredInputs" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.BooleanBox">
 		<location x="521" y="161"/>
 		<height>15</height>
@@ -43,31 +82,86 @@
 		<property name="Buffer Size (samples)" value="100"/>
 	</widget>
 	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.RobotPreferences">
-		<location x="69" y="242"/>
-		<width>422</width>
-		<height>183</height>
+		<location x="4" y="253"/>
+		<width>451</width>
+		<height>244</height>
 	</static-widget>
 	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.ConnectionIndicator">
 		<location x="13" y="27"/>
 	</static-widget>
 	<widget field="Auto Selector" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="1107" y="260"/>
+		<location x="1222" y="137"/>
 		<height>28</height>
 	</widget>
 	<widget field="Auto mode" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
 		<location x="1092" y="220"/>
 	</widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Label">
+		<location x="4" y="6"/>
+		<property name="Text" value="Connected"/>
+	</static-widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.ConnectionIndicator">
+		<location x="13" y="27"/>
+	</static-widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Label">
+		<location x="4" y="6"/>
+		<property name="Text" value="Connected"/>
+	</static-widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.ConnectionIndicator">
+		<location x="13" y="27"/>
+	</static-widget>
 </dashboard>
 <live-window>
+	<widget field="Ungrouped" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
+		<widget field="ADXRS450_Gyro[0]" type="Gyro" class="edu.wpi.first.smartdashboard.gui.elements.Compass">
+			<location x="6" y="16"/>
+			<height>150</height>
+			<width>250</width>
+		</widget>
+		<location x="705" y="117"/>
+		<width>262</width>
+		<height>173</height>
+	</widget>
+	<widget field="Shooter" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
+		<widget field="SingulatorController" type="Speed Controller" class="edu.wpi.first.smartdashboard.livewindow.elements.SpeedController">
+			<location x="6" y="16"/>
+			<height>46</height>
+			<width>293</width>
+		</widget>
+		<widget field="RegulatorController" type="Speed Controller" class="edu.wpi.first.smartdashboard.livewindow.elements.SpeedController">
+			<location x="6" y="62"/>
+			<height>46</height>
+			<width>293</width>
+		</widget>
+		<location x="312" y="236"/>
+		<width>305</width>
+		<height>115</height>
+	</widget>
+	<widget field="DriveTrain" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
+		<widget field="LeftController" type="Speed Controller" class="edu.wpi.first.smartdashboard.livewindow.elements.SpeedController">
+			<location x="6" y="16"/>
+			<height>46</height>
+			<width>293</width>
+		</widget>
+		<widget field="RightController" type="Speed Controller" class="edu.wpi.first.smartdashboard.livewindow.elements.SpeedController">
+			<location x="6" y="62"/>
+			<height>46</height>
+			<width>293</width>
+		</widget>
+		<location x="314" y="47"/>
+		<width>305</width>
+		<height>115</height>
+	</widget>
 </live-window>
-	<hidden field="Command 1"/>
 	<hidden field="Second Sensor: "/>
+	<hidden field="Command 1"/>
 	<hidden field="Command Group 1"/>
 	<hidden field="RollerIn"/>
 	<hidden field="Both? "/>
+	<hidden field="ArmEncVoltage"/>
 	<hidden field="GrabbingArmUp"/>
-	<hidden field="CrankThrowingArm"/>
 	<hidden field="First Sensor: "/>
+	<hidden field="CrankThrowingArm"/>
 	<hidden field="ReleaseThrowingArm"/>
 	<hidden field="RollerOut"/>
 	<hidden field="drive"/>

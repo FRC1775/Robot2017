@@ -43,14 +43,14 @@ public class OI {
 	public Joystick joystick1;
 	public Joystick joystick2;
 	
-	public JoystickButton rightBumper;
+	public JoystickButton leftBumper;
 
 	public OI() {
 		joystick1 = new Joystick(0);
 		joystick2 = new Joystick(1);
 
-		rightBumper = new JoystickButton(joystick1, 6);
+		leftBumper = new JoystickButton(joystick1, 5);
         
-		rightBumper.toggleWhenPressed(new PrepareShootCommand());
+		leftBumper.toggleWhenPressed(new PrepareShootCommand());
 	}
 }
