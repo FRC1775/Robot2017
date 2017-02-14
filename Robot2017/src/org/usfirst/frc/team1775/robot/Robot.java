@@ -22,7 +22,6 @@ import org.opencv.imgproc.Imgproc;
 
 import org.usfirst.frc.team1775.robot.commands.ExampleCommand;
 import org.usfirst.frc.team1775.robot.subsystems.DriveTrainSubsystem;
-import org.usfirst.frc.team1775.robot.subsystems.ExampleSubsystem;
 import org.usfirst.frc.team1775.robot.subsystems.ShooterSubsystem;
 
 /**
@@ -33,8 +32,7 @@ import org.usfirst.frc.team1775.robot.subsystems.ShooterSubsystem;
  * directory.
  */
 public class Robot extends IterativeRobot {
-
-	public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
+	
     public static DriveTrainSubsystem driveTrain;
     public static ShooterSubsystem shooter;
 	public static OI oi;
