@@ -1,7 +1,7 @@
 package org.usfirst.frc.team1775.robot.subsystems;
 
 import org.usfirst.frc.team1775.robot.RobotMap;
-import org.usfirst.frc.team1775.robot.commands.RegularDriveCommand;
+import org.usfirst.frc.team1775.robot.commands.RegularDrive;
 
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDSource;
@@ -22,7 +22,7 @@ public class DriveTrainSubsystem extends Subsystem {
 
 	@Override
 	protected void initDefaultCommand() {
-		setDefaultCommand(new RegularDriveCommand());
+		setDefaultCommand(new RegularDrive());
 	}
 
 	public void arcadeDrive(double moveValue, double rotateValue, boolean squaredInputs, boolean constantRadius) {

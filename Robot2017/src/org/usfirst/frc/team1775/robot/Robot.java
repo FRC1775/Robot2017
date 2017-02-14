@@ -20,7 +20,7 @@ import org.opencv.core.MatOfPoint;
 import org.opencv.core.Rect;
 import org.opencv.imgproc.Imgproc;
 
-import org.usfirst.frc.team1775.robot.commands.ExampleCommand;
+import org.usfirst.frc.team1775.robot.commands.Example;
 import org.usfirst.frc.team1775.robot.subsystems.DriveTrainSubsystem;
 import org.usfirst.frc.team1775.robot.subsystems.ShooterSubsystem;
 
@@ -74,7 +74,7 @@ public class Robot extends IterativeRobot {
         
 		oi = new OI();
 		
-		chooser.addDefault("Default Auto", new ExampleCommand());
+		chooser.addDefault("Default Auto", new Example());
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", chooser);
 		

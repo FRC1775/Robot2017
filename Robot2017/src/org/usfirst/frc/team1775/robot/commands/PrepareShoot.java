@@ -8,12 +8,12 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class PrepareShootCommand extends Command {
+public class PrepareShoot extends Command {
 
 	public static ShooterSubsystem shooter = Robot.shooter;
 	public static DriveTrainSubsystem driveTrain = Robot.driveTrain;
 	
-	public PrepareShootCommand() {
+	public PrepareShoot() {
 		requires(Robot.shooter);
 		requires(Robot.driveTrain);
 	}

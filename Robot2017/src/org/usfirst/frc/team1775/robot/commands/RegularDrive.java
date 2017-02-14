@@ -7,11 +7,11 @@ import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class RegularDriveCommand extends Command {
+public class RegularDrive extends Command {
 	
 	public static DriveTrainSubsystem driveTrain = Robot.driveTrain;
 	
-	public RegularDriveCommand() {
+	public RegularDrive() {
 		requires(driveTrain);
 	}
 	
