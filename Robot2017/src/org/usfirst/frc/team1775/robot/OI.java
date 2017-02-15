@@ -6,6 +6,8 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 import org.usfirst.frc.team1775.robot.commands.Example;
 import org.usfirst.frc.team1775.robot.commands.PrepareShoot;
+import org.usfirst.frc.team1775.robot.commands.RotateByAngle;
+import org.usfirst.frc.team1775.robot.commands.ShowCameraOne;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -52,5 +54,12 @@ public class OI {
 		leftBumper = new JoystickButton(joystick1, 5);
         
 		leftBumper.toggleWhenPressed(new PrepareShoot());
+		
+		JoystickButton b = new JoystickButton(joystick1, 4);
+		b.whenPressed(new RotateByAngle(90));
+		
+
+		//JoystickButton c1 = new JoystickButton(joystick1, 1);
+		//c1.whenPressed(new ShowCameraOne());
 	}
 }

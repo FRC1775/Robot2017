@@ -1,7 +1,14 @@
 
 package org.usfirst.frc.team1775.robot;
 
+import edu.wpi.cscore.CvSink;
+import edu.wpi.cscore.CvSource;
+import edu.wpi.cscore.MjpegServer;
 import edu.wpi.cscore.UsbCamera;
+import edu.wpi.cscore.VideoMode;
+import edu.wpi.cscore.VideoMode.PixelFormat;
+import edu.wpi.cscore.VideoProperty;
+import edu.wpi.cscore.VideoProperty.Kind;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DigitalOutput;
@@ -15,7 +22,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.vision.VisionThread;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
+import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Rect;
 import org.opencv.imgproc.Imgproc;
@@ -80,26 +89,102 @@ public class Robot extends IterativeRobot {
 		
 		SmartDashboard.putData(Scheduler.getInstance());
 		
+		
+Thread t = new Thread(() -> {
+    		
+    		boolean allowCam1 = false;
+    		
+    		UsbCamera camera1 = CameraServer.getInstance().startAutomaticCapture(0);
+    		camera1.setPixelFormat(PixelFormat.kMJPEG);
+            camera1.setResolution(320, 180);
+            camera1.setFPS(15);
+            UsbCamera camera2 = CameraServer.getInstance().startAutomaticCapture(1);
+    		camera2.setPixelFormat(PixelFormat.kMJPEG);
+            camera2.setResolution(320, 180);
+            camera2.setFPS(15);
+            
+            CvSink cvSink1 = CameraServer.getInstance().getVideo(camera1);
+            CvSink cvSink2 = CameraServer.getInstance().getVideo(camera2);
+            CvSource outputStream = CameraServer.getInstance().putVideo("Switcher", 320, 180);
+            
+            Mat image = new Mat();
+            
+            while(!Thread.interrupted()) {
+            	
+            	if(oi.joystick1.getRawButton(1)) {
+            		allowCam1 = !allowCam1;
+            	}
+            	
+                if(allowCam1){
+                  cvSink2.setEnabled(false);
+                  cvSink1.setEnabled(true);
+                  cvSink1.grabFrame(image);
+                } else{
+                  cvSink1.setEnabled(false);
+                  cvSink2.setEnabled(true);
+                  cvSink2.grabFrame(image);    
+                }
+                
+                outputStream.putFrame(image);
+            }
+            
+        });
+        t.start();
+		
+		//UsbCamera c = CameraServer.getInstance().startAutomaticCapture(0);
+		//UsbCamera camera1 = new UsbCamera("test", UsbCamera.enumerateUsbCameras()[0].path);//CameraServer.getInstance().startAutomaticCapture(0);
+		
+		//c.setVideoMode(PixelFormat.kYUYV, 320, 240, 5);
+		//CameraServer.getInstance().removeCamera(c.getName());
+		
+		//UsbCamera c2 = CameraServer.getInstance().startAutomaticCapture(1);
+
+		//c2.setVideoMode(PixelFormat.kYUYV, 320, 240, 5);
+		
 		/*
-		UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
-    	camera.setResolution(IMG_WIDTH, IMG_HEIGHT);
+		 * This code can be used to enumerate the properties of the camera
+		 * 
+		for (VideoProperty vp : c.enumerateProperties()) {
+			System.out.println("\n" + vp.getName() + ": " + vp.getKind());
+			System.out.println("Range: " + vp.getMin() + " - " + vp.getMax());
+			if (vp.getKind() == Kind.kInteger || vp.getKind() == Kind.kBoolean || vp.getKind() == Kind.kEnum) {
+				System.out.println("Default: " + vp.getDefault());
+				System.out.println("Value: " + vp.get());
+				System.out.println("Step: " + vp.getStep());
+			}
+			if (vp.getKind() == Kind.kString) {
+				System.out.println("String: " + vp.getString());
+			}
+			if (vp.getKind() == Kind.kEnum) {
+				System.out.println("Choices: " + Arrays.toString(vp.getChoices()));
+			}
+		}
+		*/
+		//UsbCamera camera2 = CameraServer.getInstance().startAutomaticCapture(1);
+    	//camera1.setResolution(IMG_WIDTH, IMG_HEIGHT);
+    	//camera2.setResolution(IMG_WIDTH, IMG_HEIGHT);
     	//camera.setWhiteBalanceAuto();
     	//camera.setExposureManual(1);
-    	camera.setExposureManual(1);
+    	//camera1.setExposureManual(5);
+    	//camera1.getProperty("zoom_absolute").s
+    	//camera2.setExposureManual(0);
     	
     	//camera.
     	//camera.setWhiteBalanceAuto();
     	//camera.setBrightness(10);
-    	visionThread = new VisionThread(camera, new GripPipeline(), pipeline -> {
+		/*
+    	visionThread = new VisionThread(camera1, new GripPipeline(), pipeline -> {
         	//DriverStation.reportError("HERE", false);
             if (!pipeline.filterContoursOutput().isEmpty()) {
+            //if (!VisionThread.interrupted()) {
             	DriverStation.reportError(""+pipeline.filterContoursOutput().size(), false);
             	ArrayList<MatOfPoint> contours = pipeline.filterContoursOutput();
             	DriverStation.reportError("Count: " + contours.size(), false);
             	MatOfPoint contour1 = contours.get(0);
                 Rect r = Imgproc.boundingRect(contour1);
-                //MatOfPoint contour2 = contours.get(1);
-                //Rect r2 = Imgproc.boundingRect(contour2);
+                MatOfPoint contour2 = contours.get(1);
+                Rect r2 = Imgproc.boundingRect(contour2);
+                
                  
                 synchronized (imgLock) {
                 	// 0.45 => 20/44.5" calibration of frame view from 47"
@@ -111,7 +196,7 @@ public class Robot extends IterativeRobot {
                 	// Use angular diameter equation solving for D (distance to object)
                 	//double distance = 20.0 / Math.tan(anglularDiameter / 2.0);
                 	//DriverStation.reportError("Distance: " + distance, false);
-                 	
+                	DriverStation.reportError("LeftX: "+r.x + " RightX: "+r2.x, false);
                     centerX = r.x + (r.width / 2);
                     double opp = IMG_WIDTH / 2 - centerX;
                     // Calculate angle of robot to target by using ratio of 1/2 view angle compared to percentage of screen width
@@ -129,8 +214,9 @@ public class Robot extends IterativeRobot {
             }
         });
         visionThread.start();
-        
         */
+        
+        
         
 	}
 
@@ -159,7 +245,7 @@ public class Robot extends IterativeRobot {
 	 * You can add additional auto modes by adding additional commands to the
 	 * chooser code above (like the commented example) or additional comparisons
 	 * to the switch structure below with additional strings & commands.
-	 */
+	 */ 
 	@Override
 	public void autonomousInit() {
 		autonomousCommand = chooser.getSelected();
