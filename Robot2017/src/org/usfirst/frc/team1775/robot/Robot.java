@@ -3,15 +3,9 @@ package org.usfirst.frc.team1775.robot;
 
 import edu.wpi.cscore.CvSink;
 import edu.wpi.cscore.CvSource;
-import edu.wpi.cscore.MjpegServer;
 import edu.wpi.cscore.UsbCamera;
-import edu.wpi.cscore.VideoMode;
 import edu.wpi.cscore.VideoMode.PixelFormat;
-import edu.wpi.cscore.VideoProperty;
-import edu.wpi.cscore.VideoProperty.Kind;
 import edu.wpi.first.wpilibj.CameraServer;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -22,16 +16,18 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.vision.VisionThread;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Rect;
+import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
-
 import org.usfirst.frc.team1775.robot.commands.Example;
 import org.usfirst.frc.team1775.robot.subsystems.DriveTrainSubsystem;
+import org.usfirst.frc.team1775.robot.subsystems.GearAssemblySubsystem;
 import org.usfirst.frc.team1775.robot.subsystems.ShooterSubsystem;
+import org.usfirst.frc.team1775.robot.subsystems.WinchSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -44,6 +40,8 @@ public class Robot extends IterativeRobot {
 	
     public static DriveTrainSubsystem driveTrain;
     public static ShooterSubsystem shooter;
+    public static GearAssemblySubsystem gearAssembly;
+    public static WinchSubsystem winch;
 	public static OI oi;
 
 	Command autonomousCommand;
@@ -56,6 +54,8 @@ public class Robot extends IterativeRobot {
     private double centerX = 0.0;
      
     private final Object imgLock = new Object();
+    
+    private List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
      
      
 	/**
@@ -80,6 +80,8 @@ public class Robot extends IterativeRobot {
 		
         driveTrain = new DriveTrainSubsystem();
         shooter = new ShooterSubsystem();
+        gearAssembly = new GearAssemblySubsystem();
+        winch = new WinchSubsystem();
         
 		oi = new OI();
 		
@@ -88,26 +90,30 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putData("Auto mode", chooser);
 		
 		SmartDashboard.putData(Scheduler.getInstance());
+
 		
-		
+		/*
 Thread t = new Thread(() -> {
+	UsbCamera camera1 = CameraServer.getInstance().startAutomaticCapture(0);
+	camera1.setPixelFormat(PixelFormat.kMJPEG);
+    camera1.setResolution(320, 180);
+    camera1.setFPS(15);
+    camera1.setExposureManual(0);
+    
+    UsbCamera camera2 = CameraServer.getInstance().startAutomaticCapture(1);
+	camera2.setPixelFormat(PixelFormat.kMJPEG);
+    camera2.setResolution(320, 180);
+    camera2.setFPS(15);
     		
     		boolean allowCam1 = false;
-    		
-    		UsbCamera camera1 = CameraServer.getInstance().startAutomaticCapture(0);
-    		camera1.setPixelFormat(PixelFormat.kMJPEG);
-            camera1.setResolution(320, 180);
-            camera1.setFPS(15);
-            UsbCamera camera2 = CameraServer.getInstance().startAutomaticCapture(1);
-    		camera2.setPixelFormat(PixelFormat.kMJPEG);
-            camera2.setResolution(320, 180);
-            camera2.setFPS(15);
             
             CvSink cvSink1 = CameraServer.getInstance().getVideo(camera1);
             CvSink cvSink2 = CameraServer.getInstance().getVideo(camera2);
             CvSource outputStream = CameraServer.getInstance().putVideo("Switcher", 320, 180);
             
             Mat image = new Mat();
+            
+            GripPipeline pipeline = new GripPipeline();
             
             while(!Thread.interrupted()) {
             	
@@ -125,12 +131,17 @@ Thread t = new Thread(() -> {
                   cvSink2.grabFrame(image);    
                 }
                 
+                pipeline.process(image);
+                DriverStation.reportError(""+pipeline.filterContoursOutput().size(), false);
+            	ArrayList<MatOfPoint> contours = pipeline.filterContoursOutput();
+                Imgproc.drawContours(image, contours, -1, new Scalar(0, 255, 0));
+                
                 outputStream.putFrame(image);
             }
             
         });
         t.start();
-		
+		*/
 		//UsbCamera c = CameraServer.getInstance().startAutomaticCapture(0);
 		//UsbCamera camera1 = new UsbCamera("test", UsbCamera.enumerateUsbCameras()[0].path);//CameraServer.getInstance().startAutomaticCapture(0);
 		
@@ -172,21 +183,23 @@ Thread t = new Thread(() -> {
     	//camera.
     	//camera.setWhiteBalanceAuto();
     	//camera.setBrightness(10);
-		/*
+		
+        /*
     	visionThread = new VisionThread(camera1, new GripPipeline(), pipeline -> {
         	//DriverStation.reportError("HERE", false);
             if (!pipeline.filterContoursOutput().isEmpty()) {
             //if (!VisionThread.interrupted()) {
-            	DriverStation.reportError(""+pipeline.filterContoursOutput().size(), false);
-            	ArrayList<MatOfPoint> contours = pipeline.filterContoursOutput();
-            	DriverStation.reportError("Count: " + contours.size(), false);
-            	MatOfPoint contour1 = contours.get(0);
-                Rect r = Imgproc.boundingRect(contour1);
-                MatOfPoint contour2 = contours.get(1);
-                Rect r2 = Imgproc.boundingRect(contour2);
                 
                  
                 synchronized (imgLock) {
+                	DriverStation.reportError(""+pipeline.filterContoursOutput().size(), false);
+                	ArrayList<MatOfPoint> contours = pipeline.filterContoursOutput();
+                	DriverStation.reportError("Count: " + contours.size(), false);
+                	MatOfPoint contour1 = contours.get(0);
+                    Rect r = Imgproc.boundingRect(contour1);
+                    MatOfPoint contour2 = contours.get(1);
+                    Rect r2 = Imgproc.boundingRect(contour2);
+                	
                 	// 0.45 => 20/44.5" calibration of frame view from 47"
                 	// 0.884 is view angle in radians
                 	// Calculate angle by ratio of screen to ratio of view angle
@@ -215,7 +228,6 @@ Thread t = new Thread(() -> {
         });
         visionThread.start();
         */
-        
         
         
 	}

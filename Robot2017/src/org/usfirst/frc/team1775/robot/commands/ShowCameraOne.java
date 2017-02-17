@@ -8,10 +8,10 @@ import edu.wpi.first.wpilibj.command.Command;
 public class ShowCameraOne extends Command {
 
 	public void execute() {
-		UsbCamera c = CameraServer.getInstance().startAutomaticCapture(0);
+		//UsbCamera c = CameraServer.getInstance().startAutomaticCapture(0);
 		//UsbCamera camera1 = new UsbCamera("test", UsbCamera.enumerateUsbCameras()[0].path);//CameraServer.getInstance().startAutomaticCapture(0);
 		
-		c.setVideoMode(PixelFormat.kYUYV, 320, 240, 5);
+		//c.setVideoMode(PixelFormat.kYUYV, 320, 240, 5);
 	}
 
 	@Override

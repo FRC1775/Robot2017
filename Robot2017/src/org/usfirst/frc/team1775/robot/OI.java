@@ -8,6 +8,7 @@ import org.usfirst.frc.team1775.robot.commands.Example;
 import org.usfirst.frc.team1775.robot.commands.PrepareShoot;
 import org.usfirst.frc.team1775.robot.commands.RotateByAngle;
 import org.usfirst.frc.team1775.robot.commands.ShowCameraOne;
+import org.usfirst.frc.team1775.robot.commands.WindWinch;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -46,20 +47,29 @@ public class OI {
 	public Joystick joystick2;
 	
 	public JoystickButton leftBumper;
+	public JoystickButton rightBumper;
+	public JoystickButton yButton;
+	public JoystickButton bButton;
 
 	public OI() {
+		// Driver joystick
 		joystick1 = new Joystick(0);
+		
+		// Operator joystick
 		joystick2 = new Joystick(1);
 
+		// Left bumper
 		leftBumper = new JoystickButton(joystick1, 5);
-        
 		leftBumper.toggleWhenPressed(new PrepareShoot());
 		
-		JoystickButton b = new JoystickButton(joystick1, 4);
-		b.whenPressed(new RotateByAngle(90));
+		// Right bumper
 		
-
-		//JoystickButton c1 = new JoystickButton(joystick1, 1);
-		//c1.whenPressed(new ShowCameraOne());
+		// Y button
+		yButton = new JoystickButton(joystick1, 4);
+		yButton.whileHeld(new WindWinch());
+		
+		// B button
+		//bButton = new JoystickButton(joystick1, 3);
+		//bButton.whenPressed(new RotateByAngle(90));
 	}
 }

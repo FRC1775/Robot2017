@@ -29,12 +29,13 @@ public class ShooterSubsystem extends Subsystem {
 			SmartDashboard.putNumber("Shooter.singulatorSpeed", singulatorSpeed);
 			SmartDashboard.putNumber("Shooter.regulatorSpeed", regulatorSpeed);
 			
-			RobotMap.shooterSingulatorController.set(singulatorSpeed);
-			RobotMap.shooterRegulatorController.set(regulatorSpeed);
+			//RobotMap.shooterSingulatorController.set(singulatorSpeed);
+			//RobotMap.shooterRegulatorController.set(regulatorSpeed);
 			
 			// Set shooter speed
 			RobotMap.shooterController.changeControlMode(TalonControlMode.Speed);
-			RobotMap.shooterController.set(rpm * 1000 / 2700);
+			RobotMap.shooterController.set(rpm);
+			SmartDashboard.putNumber("Shooter.trigger", rpm);
 			SmartDashboard.putNumber("Shooter.spm", RobotMap.shooterController.getSpeed());
 		} else {
 			stop();
@@ -44,6 +45,6 @@ public class ShooterSubsystem extends Subsystem {
 	public void stop() {
 		RobotMap.shooterSingulatorController.stopMotor();
 		RobotMap.shooterRegulatorController.stopMotor();
-		RobotMap.shooterController.set(0);
+		RobotMap.shooterController.setI(0);
 	}
 }

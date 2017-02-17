@@ -51,6 +51,7 @@ public class DriveTrainSubsystem extends Subsystem {
 			straightDrive.disable();
 			shouldSetPoint = true;
 		}
+		SmartDashboard.putNumber("DriveTrain.actualRotateValue", actualRotateValue);
 		
 		RobotMap.driveTrainRobotDrive.arcadeDrive(moveValue, actualRotateValue, squaredInputs);
 	}
