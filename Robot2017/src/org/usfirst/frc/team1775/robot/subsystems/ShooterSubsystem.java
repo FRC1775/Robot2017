@@ -24,27 +24,34 @@ public class ShooterSubsystem extends Subsystem {
 		double regulatorSpeed = Preferences.getInstance().getDouble("Shooter.regulatorSpeed", 0.25);
 		int rpm = Preferences.getInstance().getInt("Shooter.rpm", 2750);
 		
-		if (trigger > 0.5) {
-			SmartDashboard.putNumber("Angle", RobotMap.gyro.getAngle());
-			SmartDashboard.putNumber("Shooter.singulatorSpeed", singulatorSpeed);
-			SmartDashboard.putNumber("Shooter.regulatorSpeed", regulatorSpeed);
+		//if (trigger > 0.5) {
+		//	SmartDashboard.putNumber("Angle", RobotMap.gyro.getAngle());
+		//	SmartDashboard.putNumber("Shooter.singulatorSpeed", singulatorSpeed);
+		//	SmartDashboard.putNumber("Shooter.regulatorSpeed", regulatorSpeed);
 			
-			//RobotMap.shooterSingulatorController.set(singulatorSpeed);
-			//RobotMap.shooterRegulatorController.set(regulatorSpeed);
+			RobotMap.shooterSingulatorController.set(singulatorSpeed);
+			RobotMap.shooterRegulatorController.set(regulatorSpeed);
 			
 			// Set shooter speed
 			RobotMap.shooterController.changeControlMode(TalonControlMode.Speed);
-			RobotMap.shooterController.set(rpm);
-			SmartDashboard.putNumber("Shooter.trigger", rpm);
-			SmartDashboard.putNumber("Shooter.spm", RobotMap.shooterController.getSpeed());
-		} else {
-			stop();
-		}
+			RobotMap.shooterController.setF(Preferences.getInstance().getDouble("Shooter.F", 1.4));
+			RobotMap.shooterController.setP(Preferences.getInstance().getDouble("Shooter.P", 1));
+			RobotMap.shooterController.setI(Preferences.getInstance().getDouble("Shooter.I", 0));
+			RobotMap.shooterController.setD(Preferences.getInstance().getDouble("Shooter.D", 0));
+			RobotMap.shooterController.set(2500);
+			SmartDashboard.putNumber("Shooter.trigger", trigger);
+			SmartDashboard.putNumber("Shooter.rpm", RobotMap.shooterController.getSpeed());
+			SmartDashboard.putNumber("Shooter.output", RobotMap.shooterController.getOutputVoltage());
+			SmartDashboard.putNumber("Shooter.cle", RobotMap.shooterController.getClosedLoopError());
+		//} else {
+		//	stop();
+		//}
 	}
 
 	public void stop() {
 		RobotMap.shooterSingulatorController.stopMotor();
 		RobotMap.shooterRegulatorController.stopMotor();
-		RobotMap.shooterController.setI(0);
+		RobotMap.shooterController.changeControlMode(TalonControlMode.PercentVbus);
+		RobotMap.shooterController.set(0);
 	}
 }

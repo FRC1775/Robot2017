@@ -15,6 +15,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
+import com.ctre.CANTalon.VelocityMeasurementPeriod;
+
+import edu.wpi.first.wpilibj.Encoder;
 
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
@@ -45,6 +48,7 @@ public class RobotMap {
 	
 	// Winch
 	public static SpeedController winchController;
+	
 
 	// If you are using multiple modules, make sure to define both the port
 	// number and the module. For example you with a rangefinder:
@@ -64,10 +68,10 @@ public class RobotMap {
 	}
 	
 	private static void initDriveTrain() {
-		driveTrainLeftController = new Talon(getDriveTrainLeftPWM());
+		driveTrainLeftController = new Talon(2);
 		LiveWindow.addActuator("DriveTrain", "LeftController", (Talon) driveTrainLeftController);
 
-		driveTrainRightController = new Talon(getDriveTrainRightPWM());
+		driveTrainRightController = new Talon(1);
 		LiveWindow.addActuator("DriveTrain", "RightController", (Talon) driveTrainRightController);
 
 		driveTrainRobotDrive = new RobotDrive(driveTrainLeftController, driveTrainRightController);
@@ -76,17 +80,19 @@ public class RobotMap {
 		driveTrainRobotDrive.setExpiration(0.1);
 		driveTrainRobotDrive.setSensitivity(0.5);
 		driveTrainRobotDrive.setMaxOutput(getMaxOutput());
-		driveTrainRobotDrive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, false);
-		driveTrainRobotDrive.setInvertedMotor(RobotDrive.MotorType.kRearRight, false);
+		driveTrainRobotDrive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
+		driveTrainRobotDrive.setInvertedMotor(RobotDrive.MotorType.kRearRight, true);
 		
 		// TODO drive train encoder
+		//driveTrainEncoder.setDistancePerPulse(10);
+		
 	}
 	
 	private static void initShooter() {
-		shooterSingulatorController = new Talon(2);
+		shooterSingulatorController = new Talon(0);
 		LiveWindow.addActuator("Shooter", "SingulatorController", (Talon) shooterSingulatorController);
 		
-		shooterRegulatorController = new Talon(4);
+		shooterRegulatorController = new Talon(3);
 		LiveWindow.addActuator("Shooter", "RegulatorController", (Talon) shooterRegulatorController);
 		
 		shooterController = new CANTalon(0);
@@ -98,33 +104,52 @@ public class RobotMap {
 		shooterController.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 		shooterController.configEncoderCodesPerRev(20);
 		shooterController.setProfile(0);
-		shooterController.setF(Preferences.getInstance().getDouble("Shooter.F", 2300));
-		shooterController.setP(Preferences.getInstance().getDouble("Shooter.P", 1));
-		shooterController.setI(Preferences.getInstance().getDouble("Shooter.I", 0));
-		shooterController.setD(Preferences.getInstance().getDouble("Shooter.D", 0));
+		shooterController.setPosition(0);
+		shooterController.SetVelocityMeasurementPeriod(VelocityMeasurementPeriod.Period_100Ms);
+		shooterController.SetVelocityMeasurementWindow(64);
+		shooterController.setAllowableClosedLoopErr(1);
+		//shooterController.setF(Preferences.getInstance().getDouble("Shooter.F", 2300));
+		//shooterController.setP(Preferences.getInstance().getDouble("Shooter.P", 1));
+		//shooterController.setI(Preferences.getInstance().getDouble("Shooter.I", 0));
+		//shooterController.setD(Preferences.getInstance().getDouble("Shooter.D", 0));
 		//shooterController.clearIAccum();
 		
 		// Must be true!!
 		shooterController.enableBrakeMode(true);
 		shooterController.enableLimitSwitch(false, false);
-		shooterController.enableForwardSoftLimit(false);
-		shooterController.enableReverseSoftLimit(false);
+		//shooterController.enableForwardSoftLimit(false);
+		//shooterController.enableReverseSoftLimit(false);
 		//shooterController.enableZeroSensorPositionOnForwardLimit(false);
 		//shooterController.enableZeroSensorPositionOnReverseLimit(false);
 		shooterController.enableControl();
-		//shooterController.setVoltageRampRate(12);
 		shooterController.enable();
+		//shooterController.setVoltageRampRate(12);
 	}
 	
 	private static void initGearAssembly() {
 		// TODO initialize gear components
 		// PWM 3
+		/*
+		gearRelease = new Solenoid(   ) ;
+		//gearRelease.set(true);
+		//gearRelease.set(false);
+		
+		gearRotatorController = new Talon(   ) ;
+		
+		gearSpokeDetectorOne = new DigitalInput(   ) ;
+		gearSpokeDetectorTwo = new DigitalInput(   ) ;
+		
+		//public static SpeedController gearRotatorController;
+		//public static DigitalInput gearSpokeDetectorOne;
+		//public static DigitalInput gearSpokeDetectorTwo;
+		*/
 	}
 	
 	private static void initWinch() {
 		winchController = new Talon(5);
 		//LiveWindow.addActuator("Winch", "WinchController", (Talon) winchController);
 	}
+	
 
 	private static double getMaxOutput() {
 		double maxOutput = Preferences.getInstance().getDouble("DriveTrain.maxOutput", 1.0);
@@ -139,10 +164,10 @@ public class RobotMap {
 	}
 	
 	private static int getDriveTrainLeftPWM() {
-		return Preferences.getInstance().getInt("DriveTrain.leftPWM", 0);
+		return Preferences.getInstance().getInt("DriveTrain.leftPWM", 1);
 	}
 	
 	private static int getDriveTrainRightPWM() {
-		return Preferences.getInstance().getInt("DriveTrain.rightPWM", 1);
+		return Preferences.getInstance().getInt("DriveTrain.rightPWM", 2);
 	}
 }
