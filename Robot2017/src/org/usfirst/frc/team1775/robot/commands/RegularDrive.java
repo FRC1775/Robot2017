@@ -1,5 +1,5 @@
 package org.usfirst.frc.team1775.robot.commands;
-
+import org.usfirst.frc.team1775.robot.RobotMap;
 import org.usfirst.frc.team1775.robot.Robot;
 import org.usfirst.frc.team1775.robot.subsystems.DriveTrainSubsystem;
 
@@ -20,6 +20,9 @@ public class RegularDrive extends Command {
 	}
 
 	public void execute() {
+		
+		
+		
 		double drive = Robot.oi.joystick1.getRawAxis(1);
     	double rotate = Robot.oi.joystick1.getRawAxis(4);
     	boolean squaredInputs = Preferences.getInstance().getBoolean("DriveTrain.squaredInputs", true);
@@ -27,10 +30,10 @@ public class RegularDrive extends Command {
     	
     	double rightTrigger = Robot.oi.joystick1.getRawAxis(3);
     	if (rightTrigger >0) {
-    		Robot.driveTrain.rotate(-rotate, true);
+    		Robot.driveTrain.rotate(rotate, true);
     	}
     	else {
-    		Robot.driveTrain.arcadeDrive(-drive, -rotate, squaredInputs, constantRadius);
+    		Robot.driveTrain.arcadeDrive(drive, rotate, squaredInputs, false);
     	}
 	}
 	

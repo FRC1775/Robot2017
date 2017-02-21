@@ -84,8 +84,15 @@ public class RobotMap {
 		driveTrainRobotDrive.setInvertedMotor(RobotDrive.MotorType.kRearRight, true);
 		
 		// TODO drive train encoder
-		//driveTrainEncoder.setDistancePerPulse(10);
+		driveTrainEncoder = new Encoder(2, 3, false, Encoder.EncodingType.k4X);
 		
+		//driveTrainEncoder.setDistancePerPulse(10);
+		//Quadrature 4x
+		double distancePerPulse = (3.5*Math.PI)/250.0; //this distance is in inches, not sure
+		//if because this is a 4x encoder that I need to divide by 1000 or 250
+		driveTrainEncoder.setDistancePerPulse(distancePerPulse);
+		double encoderValue = driveTrainEncoder.getDistance();
+		SmartDashboard.putNumber("DriveTrainEncoder", encoderValue );
 	}
 	
 	private static void initShooter() {
@@ -96,7 +103,6 @@ public class RobotMap {
 		LiveWindow.addActuator("Shooter", "RegulatorController", (Talon) shooterRegulatorController);
 		
 		shooterController = new CANTalon(0);
-		//shooterController.changeControlMode(TalonControlMode.PercentVbus);
 		shooterController.reverseSensor(false);
 		shooterController.reverseOutput(true);
 		shooterController.configNominalOutputVoltage(+0.0, -0.0);
@@ -108,19 +114,10 @@ public class RobotMap {
 		shooterController.SetVelocityMeasurementPeriod(VelocityMeasurementPeriod.Period_100Ms);
 		shooterController.SetVelocityMeasurementWindow(64);
 		shooterController.setAllowableClosedLoopErr(1);
-		//shooterController.setF(Preferences.getInstance().getDouble("Shooter.F", 2300));
-		//shooterController.setP(Preferences.getInstance().getDouble("Shooter.P", 1));
-		//shooterController.setI(Preferences.getInstance().getDouble("Shooter.I", 0));
-		//shooterController.setD(Preferences.getInstance().getDouble("Shooter.D", 0));
-		//shooterController.clearIAccum();
 		
 		// Must be true!!
 		shooterController.enableBrakeMode(true);
 		shooterController.enableLimitSwitch(false, false);
-		//shooterController.enableForwardSoftLimit(false);
-		//shooterController.enableReverseSoftLimit(false);
-		//shooterController.enableZeroSensorPositionOnForwardLimit(false);
-		//shooterController.enableZeroSensorPositionOnReverseLimit(false);
 		shooterController.enableControl();
 		shooterController.enable();
 		//shooterController.setVoltageRampRate(12);
@@ -128,13 +125,13 @@ public class RobotMap {
 	
 	private static void initGearAssembly() {
 		// TODO initialize gear components
-		// PWM 3
-		/*
-		gearRelease = new Solenoid(   ) ;
+
+		
+		gearRelease = new Solenoid( 0 ) ;
 		//gearRelease.set(true);
 		//gearRelease.set(false);
-		
-		gearRotatorController = new Talon(   ) ;
+		/*
+		gearRotatorController = new Talon( 5 ) ;
 		
 		gearSpokeDetectorOne = new DigitalInput(   ) ;
 		gearSpokeDetectorTwo = new DigitalInput(   ) ;
@@ -146,8 +143,8 @@ public class RobotMap {
 	}
 	
 	private static void initWinch() {
-		winchController = new Talon(5);
-		//LiveWindow.addActuator("Winch", "WinchController", (Talon) winchController);
+		winchController = new Talon(4);
+		LiveWindow.addActuator("Winch", "WinchController", (Talon) winchController);
 	}
 	
 
@@ -161,13 +158,5 @@ public class RobotMap {
 		SmartDashboard.putNumber("DriveTrain.maxOutput", maxOutput);
 
 		return maxOutput;
-	}
-	
-	private static int getDriveTrainLeftPWM() {
-		return Preferences.getInstance().getInt("DriveTrain.leftPWM", 1);
-	}
-	
-	private static int getDriveTrainRightPWM() {
-		return Preferences.getInstance().getInt("DriveTrain.rightPWM", 2);
 	}
 }

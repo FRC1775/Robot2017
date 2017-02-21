@@ -15,7 +15,6 @@ public class PrepareShoot extends Command {
 	
 	public PrepareShoot() {
 		requires(Robot.shooter);
-		requires(Robot.driveTrain);
 	}
 	
 	@Override

@@ -38,7 +38,7 @@ public class ShooterSubsystem extends Subsystem {
 			RobotMap.shooterController.setP(Preferences.getInstance().getDouble("Shooter.P", 1));
 			RobotMap.shooterController.setI(Preferences.getInstance().getDouble("Shooter.I", 0));
 			RobotMap.shooterController.setD(Preferences.getInstance().getDouble("Shooter.D", 0));
-			RobotMap.shooterController.set(2500);
+			RobotMap.shooterController.set(Preferences.getInstance().getDouble("Shooter.rpm", 0));
 			SmartDashboard.putNumber("Shooter.trigger", trigger);
 			SmartDashboard.putNumber("Shooter.rpm", RobotMap.shooterController.getSpeed());
 			SmartDashboard.putNumber("Shooter.output", RobotMap.shooterController.getOutputVoltage());

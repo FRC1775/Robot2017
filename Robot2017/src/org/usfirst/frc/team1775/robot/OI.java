@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
-import org.usfirst.frc.team1775.robot.commands.Example;
+import org.usfirst.frc.team1775.robot.commands.PlaceGear;
 import org.usfirst.frc.team1775.robot.commands.PrepareShoot;
 import org.usfirst.frc.team1775.robot.commands.RotateByAngle;
 import org.usfirst.frc.team1775.robot.commands.ShowCameraOne;
@@ -50,6 +50,7 @@ public class OI {
 	public JoystickButton rightBumper;
 	public JoystickButton yButton;
 	public JoystickButton bButton;
+	public JoystickButton cbButton;
 
 	public OI() {
 		// Driver joystick
@@ -71,5 +72,10 @@ public class OI {
 		// B button
 		//bButton = new JoystickButton(joystick1, 3);
 		//bButton.whenPressed(new RotateByAngle(90));
+		
+		//center 'back' button
+		cbButton = new JoystickButton(joystick1, 7);
+		cbButton.whileHeld(new PlaceGear());
+		
 	}
 }

@@ -10,14 +10,22 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveTrainSubsystem extends Subsystem {
+
+	double rotateByAngleAngle = 0;
+	double rotateByAngleValue = 0;
+	double straightDriveRotateCompensationValue = 0;
 	
-	double straightRotate = 0;
+	// Used for straight drive
 	boolean shouldSetPoint = true;
 	
-	// -0.3 for straight drive
-	PIDController straightDrive = new PIDController(0.01, 0.0, 0.0, (PIDSource) RobotMap.gyro, (value) -> {
-		SmartDashboard.putNumber("PID Result", value);
-		straightRotate = value;
+	PIDController straightDrivePidController = new PIDController(-0.3, 0.0, 0.0, (PIDSource) RobotMap.gyro, (value) -> {
+		SmartDashboard.putNumber("StraightDrive.pidResult", value);
+		straightDriveRotateCompensationValue = value;
+	}, 0.01);
+	
+	PIDController rotateByAnglePidController = new PIDController(0.01, 0.0, 0.0, (PIDSource) RobotMap.gyro, (value) -> {
+		SmartDashboard.putNumber("RotateByAngle.pidResult", value);
+		rotateByAngleValue = value;
 	}, 0.01);
 
 	@Override
@@ -38,17 +46,16 @@ public class DriveTrainSubsystem extends Subsystem {
 		
 		if (rotateValue < 0.2 && rotateValue > -0.2) {
 			if (shouldSetPoint || (moveValue < 0.1 && moveValue > -0.1)) {
-				straightDrive.setOutputRange(-0.3, 0.3);
-				straightDrive.setSetpoint(RobotMap.gyro.getAngle());
+				straightDrivePidController.setOutputRange(-0.3, 0.3);
+				straightDrivePidController.setSetpoint(RobotMap.gyro.getAngle());
 				shouldSetPoint = false;
-				straightDrive.enable();
+				straightDrivePidController.enable();
 			}
 			
 			SmartDashboard.putNumber("Angle", RobotMap.gyro.getAngle());
-			actualRotateValue = straightRotate;
+			actualRotateValue = straightDriveRotateCompensationValue;
 		} else {
-			//straightDrive.disable();
-			straightDrive.disable();
+			straightDrivePidController.disable();
 			shouldSetPoint = true;
 		}
 		SmartDashboard.putNumber("DriveTrain.actualRotateValue", actualRotateValue);
@@ -57,41 +64,37 @@ public class DriveTrainSubsystem extends Subsystem {
 	}
 	
 	public boolean isFinished() {
-		//if (straightDrive.isEnabled() && straightDrive.getError() < 1) {
-		//	straightDrive.disable();
-		//	return true;
-		//}
+		// TODO figure out when to say we are finished
 		return false;
 	}
 	
-	double angle = 0;
 	public void setRotateByAngle(double degrees) {
 
 		double p = Preferences.getInstance().getDouble("P", 0.01);
 		double i = Preferences.getInstance().getDouble("I", 0.0);
 		double d = Preferences.getInstance().getDouble("D", 0.0);
-		angle = Preferences.getInstance().getDouble("angle", 90);
-		straightDrive.disable();
-		straightDrive.free();
-		straightDrive = new PIDController(p, i, d, (PIDSource) RobotMap.gyro, (value) -> {
-			SmartDashboard.putNumber("PID Result", value);
-			straightRotate = value;
+		rotateByAngleAngle = Preferences.getInstance().getDouble("angle", 90);
+		rotateByAnglePidController.disable();
+		rotateByAnglePidController.free();
+		rotateByAnglePidController = new PIDController(p, i, d, (PIDSource) RobotMap.gyro, (value) -> {
+			SmartDashboard.putNumber("StraightDrive.pidResult", value);
+			straightDriveRotateCompensationValue = value;
 		}, 0.01);
 		
-		straightDrive.setSetpoint(RobotMap.gyro.getAngle() + angle);
-		straightDrive.setOutputRange(-1, 1);
-		straightDrive.enable();
+		rotateByAnglePidController.setSetpoint(RobotMap.gyro.getAngle() + rotateByAngleAngle);
+		rotateByAnglePidController.setOutputRange(-1, 1);
+		rotateByAnglePidController.enable();
 		
 	}
 	
 	public void rotateByAngle() {
-		SmartDashboard.putNumber("DriveTrain.straightRotate", straightRotate);
-		SmartDashboard.putNumber("DriveTrain.rotateError", straightDrive.getError());
+		SmartDashboard.putNumber("DriveTrain.straightRotate", straightDriveRotateCompensationValue);
+		SmartDashboard.putNumber("DriveTrain.rotateError", rotateByAnglePidController.getError());
 		SmartDashboard.putNumber("Angle", RobotMap.gyro.getAngle());
 		//if (Math.abs(straightRotate) < 0.01 && Math.abs(straightRotate) > 0.001) {
 		//	straightRotate *= 5;
 		//}
-		RobotMap.driveTrainRobotDrive.arcadeDrive(0, -straightRotate * (1.0/Math.min(angle/90.0, 1)), false);
+		RobotMap.driveTrainRobotDrive.arcadeDrive(0, -straightDriveRotateCompensationValue * (1.0/Math.min(rotateByAngleAngle/90.0, 1)), false);
 	}
 
 	public void rotate(double rotateValue, boolean squaredInputs) {
