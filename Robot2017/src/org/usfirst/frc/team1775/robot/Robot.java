@@ -75,6 +75,21 @@ public class Robot extends IterativeRobot {
 		initDashboard();
         
 		
+		Thread rpm = new Thread(() -> {
+			
+			while (true) {
+				try {
+					Thread.sleep(5);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				//SmartDashboard.putNumber("Shooter.rpm", RobotMap.shooterController.getSpeed());
+			}
+			
+		});
+		rpm.start();
+		
 		/*
 		Thread reportErrors = new Thread(() -> {
 			while (!Thread.interrupted()) {

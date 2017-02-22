@@ -33,7 +33,7 @@ public class RegularDrive extends Command {
     		Robot.driveTrain.rotate(rotate, true);
     	}
     	else {
-    		Robot.driveTrain.arcadeDrive(drive, rotate, squaredInputs, false);
+    		Robot.driveTrain.arcadeDrive(-drive, rotate, squaredInputs, false);
     	}
 	}
 	

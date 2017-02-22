@@ -44,7 +44,7 @@ public class Cameras {
 			camera2.setPixelFormat(PixelFormat.kMJPEG);
 		    camera2.setResolution(320, 180);
 		    camera2.setFPS(15);
-		    camera2.setExposureManual(2);
+		    camera2.setExposureManual(0);
 		    
 		    CvSink cvSink1 = new CvSink("Camera 0 sink");
 		    cvSink1.setSource(camera1);
@@ -80,9 +80,14 @@ public class Cameras {
                 pipeline.process(inputImage);
                 DriverStation.reportError(""+pipeline.filterContoursOutput().size(), false);
             	ArrayList<MatOfPoint> contours = pipeline.filterContoursOutput();
-                Imgproc.drawContours(inputImage, contours, -1, new Scalar(0, 255, 0));
+                Imgproc.drawContours(inputImage, contours, -1, new Scalar(0, 255, 0)); //changed -1 to -5
                 DriverStation.reportError("number of countours "+contours.size(), false);
-                
+                /*
+                MatOfPoint contour1 = contours.get(0);
+                Rect r = Imgproc.boundingRect(contour1);
+                double testDistance = ((15.0*(double)IMG_WIDTH)/(2.0*r.width*Math.tan(((60.0*Math.PI)/180)/2.0)));
+            	DriverStation.reportError("Distance to boiler: "+testDistance, false);
+		    	*/
 		    	imageSource.putFrame(inputImage);
 		    }
 	    });

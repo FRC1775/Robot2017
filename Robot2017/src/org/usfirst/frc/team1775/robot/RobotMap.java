@@ -38,8 +38,9 @@ public class RobotMap {
 	// Shooter
 	public static SpeedController shooterSingulatorController;
 	public static SpeedController shooterRegulatorController;
-	public static CANTalon shooterController;
-	
+	public static SpeedController shooterController;
+	//public static CANTalon shooterController;
+	public static Encoder shooterEncoder;
 	// Gear Assembly
 	public static Solenoid gearRelease;
 	public static SpeedController gearRotatorController;
@@ -88,11 +89,13 @@ public class RobotMap {
 		
 		//driveTrainEncoder.setDistancePerPulse(10);
 		//Quadrature 4x
-		double distancePerPulse = (3.5*Math.PI)/250.0; //this distance is in inches, not sure
+		double distancePerPulse = ((3.5*Math.PI)/250.0)*1.067; // distance in inches multiplied by ratio error factor
 		//if because this is a 4x encoder that I need to divide by 1000 or 250
 		driveTrainEncoder.setDistancePerPulse(distancePerPulse);
 		double encoderValue = driveTrainEncoder.getDistance();
-		SmartDashboard.putNumber("DriveTrainEncoder", encoderValue );
+		//SmartDashboard.putNumber("DriveTrainEncoder", encoderValue );
+		
+		
 	}
 	
 	private static void initShooter() {
@@ -102,6 +105,14 @@ public class RobotMap {
 		shooterRegulatorController = new Talon(3);
 		LiveWindow.addActuator("Shooter", "RegulatorController", (Talon) shooterRegulatorController);
 		
+		shooterEncoder = new Encoder(4, 5, false, Encoder.EncodingType.k1X);
+		shooterEncoder.setDistancePerPulse(360 / 20);
+		shooterEncoder.setSamplesToAverage(10);
+		
+		shooterController = new Talon(6);
+		shooterController.setInverted(true);
+		
+		/*
 		shooterController = new CANTalon(0);
 		shooterController.reverseSensor(false);
 		shooterController.reverseOutput(true);
@@ -121,6 +132,7 @@ public class RobotMap {
 		shooterController.enableControl();
 		shooterController.enable();
 		//shooterController.setVoltageRampRate(12);
+		 */
 	}
 	
 	private static void initGearAssembly() {

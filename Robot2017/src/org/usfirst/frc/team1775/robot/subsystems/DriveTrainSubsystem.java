@@ -13,6 +13,10 @@ public class DriveTrainSubsystem extends Subsystem {
 
 	double rotateByAngleAngle = 0;
 	double rotateByAngleValue = 0;
+	
+	double distanceValue = 0;
+	double distance = 0;
+	
 	double straightDriveRotateCompensationValue = 0;
 	
 	// Used for straight drive
@@ -26,6 +30,11 @@ public class DriveTrainSubsystem extends Subsystem {
 	PIDController rotateByAnglePidController = new PIDController(0.01, 0.0, 0.0, (PIDSource) RobotMap.gyro, (value) -> {
 		SmartDashboard.putNumber("RotateByAngle.pidResult", value);
 		rotateByAngleValue = value;
+	}, 0.01);
+	
+	PIDController distancePidController = new PIDController(0.01, 0.0, 0.0, (PIDSource) RobotMap.driveTrainEncoder, (value) -> {
+		SmartDashboard.putNumber("Distance.pidResult", value);
+		distanceValue = value;
 	}, 0.01);
 
 	@Override
@@ -53,14 +62,14 @@ public class DriveTrainSubsystem extends Subsystem {
 			}
 			
 			SmartDashboard.putNumber("Angle", RobotMap.gyro.getAngle());
-			actualRotateValue = straightDriveRotateCompensationValue;
+			actualRotateValue = -straightDriveRotateCompensationValue;
 		} else {
 			straightDrivePidController.disable();
 			shouldSetPoint = true;
 		}
 		SmartDashboard.putNumber("DriveTrain.actualRotateValue", actualRotateValue);
 		
-		RobotMap.driveTrainRobotDrive.arcadeDrive(moveValue, actualRotateValue, squaredInputs);
+		RobotMap.driveTrainRobotDrive.arcadeDrive(-moveValue, actualRotateValue, squaredInputs);
 	}
 	
 	public boolean isFinished() {
@@ -85,6 +94,29 @@ public class DriveTrainSubsystem extends Subsystem {
 		rotateByAnglePidController.setOutputRange(-1, 1);
 		rotateByAnglePidController.enable();
 		
+	}
+	public void setDriveDistance(double distance) {
+
+		double p = Preferences.getInstance().getDouble("distanceP", 0.01);
+		double i = Preferences.getInstance().getDouble("distanceI", 0.0);
+		double d = Preferences.getInstance().getDouble("distanceD", 0.0);
+		distance = Preferences.getInstance().getDouble("distance", 60);
+		//distance.disable();
+		//distance.free();
+		distancePidController = new PIDController(p, i, d, (PIDSource) RobotMap.driveTrainEncoder, (value) -> {
+			SmartDashboard.putNumber("driveTrainEncoder.pidResult", value);
+			distanceValue = value;
+		}, 0.01);
+		
+		
+		distancePidController.setSetpoint(RobotMap.driveTrainEncoder.getDistance() + distance);
+		distancePidController.setOutputRange(-1, 1);
+		distancePidController.enable();
+		
+	}
+	public void driveToDistance() {
+		SmartDashboard.putNumber("encoder.distance ", RobotMap.driveTrainEncoder.getDistance());
+		RobotMap.driveTrainRobotDrive.arcadeDrive(distanceValue, 0, false);
 	}
 	
 	public void rotateByAngle() {
