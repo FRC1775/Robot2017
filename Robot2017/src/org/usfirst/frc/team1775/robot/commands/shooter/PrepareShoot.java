@@ -1,4 +1,4 @@
-package org.usfirst.frc.team1775.robot.commands;
+package org.usfirst.frc.team1775.robot.commands.shooter;
 
 import org.usfirst.frc.team1775.robot.Robot;
 import org.usfirst.frc.team1775.robot.subsystems.DriveTrainSubsystem;

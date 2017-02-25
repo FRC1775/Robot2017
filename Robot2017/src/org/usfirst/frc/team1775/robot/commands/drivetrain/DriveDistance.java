@@ -1,4 +1,4 @@
-package org.usfirst.frc.team1775.robot.commands;
+package org.usfirst.frc.team1775.robot.commands.drivetrain;
 
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;

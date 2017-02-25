@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import org.usfirst.frc.team1775.robot.commands.PlaceGear;
+import org.usfirst.frc.team1775.robot.commands.gearassembly.PlaceGear;
 import org.usfirst.frc.team1775.robot.subsystems.DriveTrainSubsystem;
 import org.usfirst.frc.team1775.robot.subsystems.GearAssemblySubsystem;
 import org.usfirst.frc.team1775.robot.subsystems.ShooterSubsystem;

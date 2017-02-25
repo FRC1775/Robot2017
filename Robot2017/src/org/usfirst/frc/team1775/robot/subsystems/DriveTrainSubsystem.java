@@ -1,7 +1,7 @@
 package org.usfirst.frc.team1775.robot.subsystems;
 
 import org.usfirst.frc.team1775.robot.RobotMap;
-import org.usfirst.frc.team1775.robot.commands.RegularDrive;
+import org.usfirst.frc.team1775.robot.commands.drivetrain.RegularDrive;
 
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDSource;

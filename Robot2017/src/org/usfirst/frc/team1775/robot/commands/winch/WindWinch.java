@@ -1,4 +1,4 @@
-package org.usfirst.frc.team1775.robot.commands;
+package org.usfirst.frc.team1775.robot.commands.winch;
 
 import org.usfirst.frc.team1775.robot.Robot;
 import org.usfirst.frc.team1775.robot.subsystems.WinchSubsystem;

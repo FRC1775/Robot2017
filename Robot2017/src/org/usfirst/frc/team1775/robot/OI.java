@@ -3,10 +3,10 @@ package org.usfirst.frc.team1775.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
-import org.usfirst.frc.team1775.robot.commands.DriveDistance;
-import org.usfirst.frc.team1775.robot.commands.PlaceGear;
-import org.usfirst.frc.team1775.robot.commands.PrepareShoot;
-import org.usfirst.frc.team1775.robot.commands.WindWinch;
+import org.usfirst.frc.team1775.robot.commands.drivetrain.DriveDistance;
+import org.usfirst.frc.team1775.robot.commands.gearassembly.PlaceGear;
+import org.usfirst.frc.team1775.robot.commands.shooter.PrepareShoot;
+import org.usfirst.frc.team1775.robot.commands.winch.WindWinch;
 
 /**
  * This class is the glue that binds the controls on the physical operator
