@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1775.robot.subsystems;
 
+import org.usfirst.frc.team1775.robot.OI;
 import org.usfirst.frc.team1775.robot.Robot;
 import org.usfirst.frc.team1775.robot.RobotMap;
 import org.usfirst.frc.team1775.robot.commands.WindWinch;
@@ -19,7 +20,7 @@ public class WinchSubsystem extends Subsystem {
 	}
 
 	public void wind() {
-		double trigger = Robot.oi.joystick1.getRawAxis(2);
+		double trigger = Robot.oi.driverJoystick.getRawAxis(OI.XBOX_LEFT_TRIGGER);
 		double speed = Math.abs(trigger)*0.75;
 		SmartDashboard.putNumber("Winch.speed", speed);
 		double current = pdp.getCurrent(4);

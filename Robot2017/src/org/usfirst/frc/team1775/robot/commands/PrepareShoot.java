@@ -42,12 +42,12 @@ public class PrepareShoot extends Command {
 	}
 
 	private void notifyReady() {
-		Robot.oi.joystick1.setRumble(RumbleType.kRightRumble, 1);
+		Robot.oi.driverJoystick.setRumble(RumbleType.kRightRumble, 1);
 		try {
 			Thread.sleep(200);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		Robot.oi.joystick1.setRumble(RumbleType.kRightRumble, 0);
+		Robot.oi.driverJoystick.setRumble(RumbleType.kRightRumble, 0);
 	}
 }

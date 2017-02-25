@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1775.robot.commands;
 import org.usfirst.frc.team1775.robot.RobotMap;
+import org.usfirst.frc.team1775.robot.OI;
 import org.usfirst.frc.team1775.robot.Robot;
 import org.usfirst.frc.team1775.robot.subsystems.DriveTrainSubsystem;
 
@@ -23,12 +24,12 @@ public class RegularDrive extends Command {
 		
 		
 		
-		double drive = Robot.oi.joystick1.getRawAxis(1);
-    	double rotate = Robot.oi.joystick1.getRawAxis(4);
+		double drive = Robot.oi.driverJoystick.getRawAxis(OI.XBOX_LEFT_JOYSTICK_Y_AXIS);
+    	double rotate = Robot.oi.driverJoystick.getRawAxis(OI.XBOX_RIGHT_JOYSTICK_X_AXIS);
     	boolean squaredInputs = Preferences.getInstance().getBoolean("DriveTrain.squaredInputs", true);
     	boolean constantRadius = Preferences.getInstance().getBoolean("DriveTrain.constantRadius", true);
     	
-    	double rightTrigger = Robot.oi.joystick1.getRawAxis(3);
+    	double rightTrigger = Robot.oi.driverJoystick.getRawAxis(OI.XBOX_RIGHT_TRIGGER);
     	if (rightTrigger >0) {
     		Robot.driveTrain.rotate(rotate, true);
     	}

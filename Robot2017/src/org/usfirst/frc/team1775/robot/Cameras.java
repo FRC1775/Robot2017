@@ -59,7 +59,7 @@ public class Cameras {
     		
 		    while(!Thread.interrupted()) {
 		    	
-		    	if(Robot.oi.joystick1.getRawButton(1)) {
+		    	if(Robot.oi.driverAButton.get()) {
             		allowCam1 = !allowCam1;
             	}
             	
