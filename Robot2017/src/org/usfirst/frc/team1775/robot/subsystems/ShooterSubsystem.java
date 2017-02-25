@@ -1,9 +1,6 @@
 package org.usfirst.frc.team1775.robot.subsystems;
 
-import org.usfirst.frc.team1775.robot.Robot;
 import org.usfirst.frc.team1775.robot.RobotMap;
-
-import com.ctre.CANTalon.TalonControlMode;
 
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Subsystem;

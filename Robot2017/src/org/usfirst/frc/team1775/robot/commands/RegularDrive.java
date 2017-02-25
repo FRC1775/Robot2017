@@ -1,5 +1,4 @@
 package org.usfirst.frc.team1775.robot.commands;
-import org.usfirst.frc.team1775.robot.RobotMap;
 import org.usfirst.frc.team1775.robot.OI;
 import org.usfirst.frc.team1775.robot.Robot;
 import org.usfirst.frc.team1775.robot.subsystems.DriveTrainSubsystem;

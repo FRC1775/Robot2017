@@ -1,12 +1,7 @@
 package org.usfirst.frc.team1775.robot.commands;
-import org.usfirst.frc.team1775.robot.*;
 
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-import java.time.Clock;
 
 import org.usfirst.frc.team1775.robot.Robot;
 import org.usfirst.frc.team1775.robot.subsystems.DriveTrainSubsystem;

@@ -1,15 +1,11 @@
 package org.usfirst.frc.team1775.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
-import edu.wpi.first.wpilibj.buttons.Trigger;
 
 import org.usfirst.frc.team1775.robot.commands.DriveDistance;
 import org.usfirst.frc.team1775.robot.commands.PlaceGear;
 import org.usfirst.frc.team1775.robot.commands.PrepareShoot;
-import org.usfirst.frc.team1775.robot.commands.RotateByAngle;
-import org.usfirst.frc.team1775.robot.commands.ShowCameraOne;
 import org.usfirst.frc.team1775.robot.commands.WindWinch;
 
 /**

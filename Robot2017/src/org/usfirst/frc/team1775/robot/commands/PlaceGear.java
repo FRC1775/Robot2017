@@ -4,10 +4,7 @@ import org.usfirst.frc.team1775.robot.Robot;
 import org.usfirst.frc.team1775.robot.RobotMap;
 import org.usfirst.frc.team1775.robot.subsystems.DriveTrainSubsystem;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
-
-
 
 //This auto will place the gear on the middle peg starting from the middle position
 public class PlaceGear extends Command {

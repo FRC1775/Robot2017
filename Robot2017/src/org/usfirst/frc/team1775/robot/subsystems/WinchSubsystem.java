@@ -3,7 +3,6 @@ package org.usfirst.frc.team1775.robot.subsystems;
 import org.usfirst.frc.team1775.robot.OI;
 import org.usfirst.frc.team1775.robot.Robot;
 import org.usfirst.frc.team1775.robot.RobotMap;
-import org.usfirst.frc.team1775.robot.commands.WindWinch;
 
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.command.Subsystem;
