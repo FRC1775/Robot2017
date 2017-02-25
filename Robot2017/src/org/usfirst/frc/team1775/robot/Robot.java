@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import org.usfirst.frc.team1775.robot.commands.gearassembly.ReleaseGear;
+import org.usfirst.frc.team1775.robot.commands.autonomous.PlaceGear;
 import org.usfirst.frc.team1775.robot.subsystems.DriveTrainSubsystem;
 import org.usfirst.frc.team1775.robot.subsystems.GearAssemblySubsystem;
 import org.usfirst.frc.team1775.robot.subsystems.ShooterSubsystem;
@@ -94,7 +94,7 @@ public class Robot extends IterativeRobot {
 	}
 	
 	private void initDashboard() {
-		chooser.addDefault("Default Auto", new ReleaseGear());
+		chooser.addDefault("Default Auto", new PlaceGear());
 		SmartDashboard.putData("Auto mode", chooser);
 		
 		SmartDashboard.putData(Scheduler.getInstance());
