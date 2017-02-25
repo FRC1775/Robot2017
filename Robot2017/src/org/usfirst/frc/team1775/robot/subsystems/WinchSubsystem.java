@@ -4,26 +4,22 @@ import org.usfirst.frc.team1775.robot.OI;
 import org.usfirst.frc.team1775.robot.Robot;
 import org.usfirst.frc.team1775.robot.RobotMap;
 
-import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class WinchSubsystem extends Subsystem {
-
-	PowerDistributionPanel pdp;
 	
+	public static final double WINCH_MAX_SPEED = 0.75;
+
 	@Override
-	protected void initDefaultCommand() {
-		//setDefaultCommand(new WindWinch());
-		pdp = new PowerDistributionPanel();
-	}
+	protected void initDefaultCommand() { }
 
 	public void wind() {
-		double trigger = Robot.oi.driverJoystick.getRawAxis(OI.XBOX_LEFT_TRIGGER);
-		double speed = Math.abs(trigger)*0.75;
+		double leftTriggerValue = Robot.oi.driverJoystick.getRawAxis(OI.XBOX_LEFT_TRIGGER);
+		double speed = Math.abs(leftTriggerValue) * WINCH_MAX_SPEED;
+		
 		SmartDashboard.putNumber("Winch.speed", speed);
-		double current = pdp.getCurrent(4);
-		SmartDashboard.putNumber("Winch.current", speed);
+		
 		RobotMap.winchController.set(speed);
 	}
 	
@@ -35,4 +31,5 @@ public class WinchSubsystem extends Subsystem {
 		// TODO If we add some sort of limit sensor, check it here
 		return false;
 	}
+	
 }

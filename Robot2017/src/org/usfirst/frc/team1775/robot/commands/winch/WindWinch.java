@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class WindWinch extends Command {
 
-	public static WinchSubsystem winch = Robot.winch;
+	private static WinchSubsystem winch = Robot.winch;
 	
 	public WindWinch() {
 		requires(winch);
@@ -19,7 +19,7 @@ public class WindWinch extends Command {
 	
 	@Override
 	protected boolean isFinished() {
-		return !winch.isAtLimit();
+		return winch.isAtLimit();
 	}
 	
 	@Override
