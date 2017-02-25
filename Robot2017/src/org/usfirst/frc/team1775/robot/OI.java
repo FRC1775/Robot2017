@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 import org.usfirst.frc.team1775.robot.commands.drivetrain.DriveDistance;
-import org.usfirst.frc.team1775.robot.commands.gearassembly.PlaceGear;
+import org.usfirst.frc.team1775.robot.commands.gearassembly.ReleaseGear;
 import org.usfirst.frc.team1775.robot.commands.shooter.PrepareShoot;
 import org.usfirst.frc.team1775.robot.commands.winch.WindWinch;
 
@@ -112,7 +112,7 @@ public class OI {
 		
 		// Back button
 		driverBackButton = new JoystickButton(driverJoystick, XBOX_BACK);
-		driverBackButton.whileHeld(new PlaceGear());
+		driverBackButton.whileHeld(new ReleaseGear());
 		
 		// Start button 
 		driverStartButton = new JoystickButton(driverJoystick, XBOX_START);
@@ -146,7 +146,7 @@ public class OI {
 		
 		// Back button
 		operatorBackButton = new JoystickButton(operatorJoystick, XBOX_BACK);
-		operatorBackButton.whileHeld(new PlaceGear());
+		operatorBackButton.whileHeld(new ReleaseGear());
 		
 		// Start button 
 		operatorStartButton = new JoystickButton(operatorJoystick, XBOX_START);
