@@ -2,10 +2,12 @@ package org.usfirst.frc.team1775.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.buttons.Trigger;
 
 import org.usfirst.frc.team1775.robot.commands.drivetrain.DriveDistance;
 import org.usfirst.frc.team1775.robot.commands.gearassembly.ReleaseGear;
-import org.usfirst.frc.team1775.robot.commands.shooter.PrepareShoot;
+import org.usfirst.frc.team1775.robot.commands.shooter.Shoot;
+import org.usfirst.frc.team1775.robot.commands.shooter.StopShooterSubsystem;
 import org.usfirst.frc.team1775.robot.commands.winch.WindWinch;
 
 /**
@@ -71,6 +73,7 @@ public class OI {
 	public JoystickButton driverRightBumper;
 	public JoystickButton driverBackButton;
 	public JoystickButton driverStartButton;
+	public Trigger        driverLeftTrigger;
 
 	public JoystickButton operatorAButton;
 	public JoystickButton operatorBButton;
@@ -105,7 +108,6 @@ public class OI {
 
 		// Left bumper
 		driverLeftBumper = new JoystickButton(driverJoystick, XBOX_LEFT_BUMPER);
-		driverLeftBumper.toggleWhenPressed(new PrepareShoot());
 		
 		// Right bumper
 		driverRightBumper = new JoystickButton(driverJoystick, XBOX_RIGHT_BUMPER);
@@ -117,7 +119,16 @@ public class OI {
 		// Start button 
 		driverStartButton = new JoystickButton(driverJoystick, XBOX_START);
 		driverStartButton.whileHeld(new DriveDistance(60));
-		
+
+		// Left trigger
+		driverLeftTrigger = new Trigger() {
+			@Override
+			public boolean get() {
+				return driverJoystick.getRawAxis(XBOX_LEFT_TRIGGER) > 0;
+			}
+		};
+		driverLeftTrigger.whenActive(new Shoot());
+		driverLeftTrigger.whenInactive(new StopShooterSubsystem());
 	}
 	
 	private void initOperatorJoystick() {
@@ -139,7 +150,6 @@ public class OI {
 
 		// Left bumper
 		operatorLeftBumper = new JoystickButton(operatorJoystick, XBOX_LEFT_BUMPER);
-		operatorLeftBumper.toggleWhenPressed(new PrepareShoot());
 		
 		// Right bumper
 		operatorRightBumper = new JoystickButton(operatorJoystick, XBOX_RIGHT_BUMPER);

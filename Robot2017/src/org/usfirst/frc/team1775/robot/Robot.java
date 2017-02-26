@@ -112,7 +112,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void disabledInit() {
-
+		shooter.stop();
 	}
 
 	@Override
