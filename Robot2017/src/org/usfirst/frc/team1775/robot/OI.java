@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.buttons.Trigger;
 
-import org.usfirst.frc.team1775.robot.commands.drivetrain.DriveDistance;
 import org.usfirst.frc.team1775.robot.commands.gearassembly.ReleaseGear;
 import org.usfirst.frc.team1775.robot.commands.shooter.Shoot;
 import org.usfirst.frc.team1775.robot.commands.shooter.StopShooterSubsystem;
@@ -74,6 +73,7 @@ public class OI {
 	public JoystickButton driverBackButton;
 	public JoystickButton driverStartButton;
 	public Trigger        driverLeftTrigger;
+	public Trigger        driverRightTrigger;
 
 	public JoystickButton operatorAButton;
 	public JoystickButton operatorBButton;
@@ -83,6 +83,8 @@ public class OI {
 	public JoystickButton operatorRightBumper;
 	public JoystickButton operatorBackButton;
 	public JoystickButton operatorStartButton;
+	public Trigger        operatorLeftTrigger;
+	public Trigger        operatorRightTrigger;
 
 	public OI() {
 		initDriverJoystick();
@@ -104,7 +106,6 @@ public class OI {
 		
 		// Y button
 		driverYButton = new JoystickButton(driverJoystick, XBOX_Y);
-		driverYButton.whileHeld(new WindWinch());
 
 		// Left bumper
 		driverLeftBumper = new JoystickButton(driverJoystick, XBOX_LEFT_BUMPER);
@@ -118,7 +119,7 @@ public class OI {
 		
 		// Start button 
 		driverStartButton = new JoystickButton(driverJoystick, XBOX_START);
-		driverStartButton.whileHeld(new DriveDistance(60));
+		//driverStartButton.whileHeld(new DriveDistance(60));
 
 		// Left trigger
 		driverLeftTrigger = new Trigger() {
@@ -129,6 +130,15 @@ public class OI {
 		};
 		driverLeftTrigger.whenActive(new Shoot());
 		driverLeftTrigger.whenInactive(new StopShooterSubsystem());
+		
+		// Right trigger
+		driverRightTrigger = new Trigger() {
+			@Override
+			public boolean get() {
+				return driverJoystick.getRawAxis(XBOX_RIGHT_TRIGGER) > 0;
+			}
+		};
+		driverRightTrigger.whileActive(new WindWinch());
 	}
 	
 	private void initOperatorJoystick() {
@@ -146,7 +156,6 @@ public class OI {
 		
 		// Y button
 		operatorYButton = new JoystickButton(operatorJoystick, XBOX_Y);
-		operatorYButton.whileHeld(new WindWinch());
 
 		// Left bumper
 		operatorLeftBumper = new JoystickButton(operatorJoystick, XBOX_LEFT_BUMPER);
@@ -160,6 +169,25 @@ public class OI {
 		
 		// Start button 
 		operatorStartButton = new JoystickButton(operatorJoystick, XBOX_START);
-		operatorStartButton.whileHeld(new DriveDistance(60));
+		//operatorStartButton.whileHeld(new DriveDistance(60));
+
+		// Left trigger
+		operatorLeftTrigger = new Trigger() {
+			@Override
+			public boolean get() {
+				return operatorJoystick.getRawAxis(XBOX_LEFT_TRIGGER) > 0;
+			}
+		};
+		operatorLeftTrigger.whenActive(new Shoot());
+		operatorLeftTrigger.whenInactive(new StopShooterSubsystem());
+		
+		// Right trigger
+		operatorRightTrigger = new Trigger() {
+			@Override
+			public boolean get() {
+				return operatorJoystick.getRawAxis(XBOX_RIGHT_TRIGGER) > 0;
+			}
+		};
+		operatorRightTrigger.whileActive(new WindWinch());
 	}
 }

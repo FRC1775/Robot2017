@@ -28,12 +28,11 @@ public class RegularDrive extends Command {
     	boolean squaredInputs = Preferences.getInstance().getBoolean("DriveTrain.squaredInputs", true);
     	boolean constantRadius = Preferences.getInstance().getBoolean("DriveTrain.constantRadius", true);
     	
-    	double rightTrigger = Robot.oi.driverJoystick.getRawAxis(OI.XBOX_RIGHT_TRIGGER);
-    	if (rightTrigger >0) {
+    	if (Robot.oi.driverRightBumper.get()) {
     		Robot.driveTrain.rotate(rotate, true);
     	}
     	else {
-    		Robot.driveTrain.arcadeDrive(-drive, rotate, squaredInputs, false);
+    		Robot.driveTrain.arcadeDrive(-drive, rotate, squaredInputs, constantRadius);
     	}
 	}
 	
