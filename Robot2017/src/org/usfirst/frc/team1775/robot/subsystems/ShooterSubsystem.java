@@ -7,8 +7,8 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ShooterSubsystem extends Subsystem {
-	public static final double DEFAULT_SHOOTER_BANG_BANG_MAX = 0.7; // Max shooter output during bang-bang
-	public static final double DEFAULT_SHOOTER_BANG_BANG_MIN = 0.4; // Min shooter output during bang-bang
+	public static final double DEFAULT_SHOOTER_BANG_BANG_MAX = 1; // Max shooter output during bang-bang
+	public static final double DEFAULT_SHOOTER_BANG_BANG_MIN = 0; // Min shooter output during bang-bang
 	public static final int DEFAULT_SHOOTER_BANG_BANG_RATE = 10; // Time in milliseconds between each bang-bang
 	public static final int DEFAULT_SHOOTER_BANG_BANG_READY_TOLERANCE = 200; // Number of +/- rpm tolerance for bang-bang to be considered ready
 	
