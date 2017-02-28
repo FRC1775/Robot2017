@@ -12,8 +12,8 @@ public class WindWinch extends Command {
 	private static final boolean FAST = true;
 	private static final boolean SLOW = false;
 	
-	public static final double DEFAULT_SLOW_JOYSTICK_RUMBLE = 0.3;
-	public static final double DEFAULT_FAST_JOYSTICK_RUMBLE = 0.7;
+	public static final double DEFAULT_SLOW_JOYSTICK_RUMBLE = 0.5;
+	public static final double DEFAULT_FAST_JOYSTICK_RUMBLE = 1.0;
 
 	private static WinchSubsystem winch = Robot.winch;
 	

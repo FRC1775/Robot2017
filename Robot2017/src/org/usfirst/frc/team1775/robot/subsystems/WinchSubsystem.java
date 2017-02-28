@@ -8,8 +8,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class WinchSubsystem extends Subsystem {
 	
-	public static final double DEFAULT_WINCH_SLOW_SPEED = 0.30;
-	public static final double DEFAULT_WINCH_FAST_SPEED = 0.75;
+	public static final double DEFAULT_WINCH_SLOW_SPEED = 0.5;
+	public static final double DEFAULT_WINCH_FAST_SPEED = 1.0;
 
 	@Override
 	protected void initDefaultCommand() { }
