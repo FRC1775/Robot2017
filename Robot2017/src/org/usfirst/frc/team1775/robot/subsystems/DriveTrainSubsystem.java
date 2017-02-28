@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveTrainSubsystem extends Subsystem {
-	private static final int DEFAULT_ROTATE_RAMP_TIME = 100; // Time in ms to ramp up to 100% of rotateValue
+	private static final int DEFAULT_ROTATE_RAMP_TIME = 200; // Time in ms to ramp up to 100% of rotateValue
 	
 	private enum DriveMode {
 		Regular, RotateInPlace, RotateByAngle, DriveToDistance
@@ -59,6 +59,11 @@ public class DriveTrainSubsystem extends Subsystem {
 		double actualRotateValue = rotateValue;
 		
 		if (moveValue < 0.15 && moveValue > -0.15) {
+			if (rotateValue < 0.15 && rotateValue > -0.15) {
+
+				rotateInPlaceCurrentRampFactor = 0;
+				rotateInPlaceStartTime = System.currentTimeMillis();
+			}
 			actualMoveValue = 0;
 			setDriveMode(DriveMode.RotateInPlace);
 			
@@ -66,8 +71,7 @@ public class DriveTrainSubsystem extends Subsystem {
 			SmartDashboard.putBoolean("DriveTrain.squaredInputs", squaredInputs);
 
 			// TODO handle ramp of rotate
-			rotateInPlaceCurrentRampFactor = Math.min(1, (System.currentTimeMillis() - rotateInPlaceStartTime) / DEFAULT_ROTATE_RAMP_TIME);
-			System.out.println("ramp: " + rotateInPlaceCurrentRampFactor);
+			rotateInPlaceCurrentRampFactor = Math.min(1, (System.currentTimeMillis() - rotateInPlaceStartTime) / (double) DEFAULT_ROTATE_RAMP_TIME);
 			actualRotateValue = rotateValue * rotateInPlaceCurrentRampFactor;
 		} else {
 			setDriveMode(DriveMode.Regular);
@@ -105,13 +109,13 @@ public class DriveTrainSubsystem extends Subsystem {
 	}
 	
 	public void rotateByAngle() {
-		SmartDashboard.putNumber("DriveTrain.straightRotate", straightDriveRotateCompensationValue);
+		SmartDashboard.putNumber("DriveTrain.straightRotate", rotateByAnglePidResult);
 		SmartDashboard.putNumber("DriveTrain.rotateError", rotateByAnglePidController.getError());
-		SmartDashboard.putNumber("Angle", RobotMap.gyro.getAngle());
+		SmartDashboard.putNumber("DriveTrain.angle", RobotMap.gyro.getAngle());
 		//if (Math.abs(straightRotate) < 0.01 && Math.abs(straightRotate) > 0.001) {
 		//	straightRotate *= 5;
 		//}
-		RobotMap.driveTrainRobotDrive.arcadeDrive(0, -straightDriveRotateCompensationValue * (1.0/Math.min(rotateByAngleTargetAngle/90.0, 1)), false);
+		RobotMap.driveTrainRobotDrive.arcadeDrive(0, rotateByAnglePidResult * (1.0/Math.min(rotateByAngleTargetAngle/90.0, 1)), false);
 	}
 
 	public void rotate(double rotateValue, boolean squaredInputs) {
@@ -199,10 +203,15 @@ public class DriveTrainSubsystem extends Subsystem {
 	
 	private void stopPidControllers() {
 		// TODO can we include straight drive?
-		rotateByAnglePidController.disable();
-		rotateByAnglePidController.free();
-		driveToDistancePidController.disable();
-		driveToDistancePidController.free();
+		if (rotateByAnglePidController != null) {
+			rotateByAnglePidController.disable();
+			rotateByAnglePidController.free();
+		}
+		
+		if (driveToDistancePidController != null) {
+			driveToDistancePidController.disable();
+			driveToDistancePidController.free();
+		}
 	}
 	
 }
