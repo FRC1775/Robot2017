@@ -20,20 +20,13 @@ public class RegularDrive extends Command {
 	}
 
 	public void execute() {
-		
-		
-		
 		double drive = Robot.oi.driverJoystick.getRawAxis(OI.XBOX_LEFT_JOYSTICK_Y_AXIS);
     	double rotate = Robot.oi.driverJoystick.getRawAxis(OI.XBOX_RIGHT_JOYSTICK_X_AXIS);
+    	
     	boolean squaredInputs = Preferences.getInstance().getBoolean("DriveTrain.squaredInputs", true);
     	boolean constantRadius = Preferences.getInstance().getBoolean("DriveTrain.constantRadius", true);
-    	
-    	if (Robot.oi.driverRightBumper.get()) {
-    		Robot.driveTrain.rotate(rotate, true);
-    	}
-    	else {
-    		Robot.driveTrain.arcadeDrive(-drive, rotate, squaredInputs, constantRadius);
-    	}
+
+    	Robot.driveTrain.arcadeDrive(drive, rotate, squaredInputs, constantRadius);
 	}
 	
 	@Override
@@ -45,4 +38,8 @@ public class RegularDrive extends Command {
 	protected void interrupted() {
 		driveTrain.stop();
 	}
+	
+//	private boolean shouldRotate() {
+//		return Robot.oi.driverRightBumper.get();
+//	}
 }

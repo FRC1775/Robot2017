@@ -14,25 +14,27 @@ public class RotateByAngle extends Command {
 	
 	public RotateByAngle(double degrees) {
 		requires(driveTrain);
+		
 		this.degrees = degrees;
 	}
 	
 	public void initialize() {
 		SmartDashboard.putData(driveTrain);
+		
 		driveTrain.setRotateByAngle(degrees);
 	}
 
 	public void execute() {
 		driveTrain.rotateByAngle();
 	}
-	
-	@Override
-	protected boolean isFinished() {
-		return driveTrain.isFinished();
-	}
 
 	@Override
 	protected void interrupted() {
 		driveTrain.stop();
+	}
+	
+	@Override
+	protected boolean isFinished() {
+		return driveTrain.isFinished();
 	}
 }

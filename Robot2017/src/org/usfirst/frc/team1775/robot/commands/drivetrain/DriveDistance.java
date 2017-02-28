@@ -7,17 +7,21 @@ import org.usfirst.frc.team1775.robot.Robot;
 import org.usfirst.frc.team1775.robot.subsystems.DriveTrainSubsystem;
 
 public class DriveDistance extends Command {
+	
 	public static DriveTrainSubsystem driveTrain = Robot.driveTrain;
+	
 	private double distance;
+	
 	public DriveDistance(double distance) {
 		requires(driveTrain);
+		
 		this.distance = distance;
 	}
 
 	@Override
 	protected void initialize() {
-		//SmartDashboard.putData(driveTrain);
 		SmartDashboard.putData(driveTrain);
+		
 		driveTrain.setDriveDistance(distance);
 	}
 
@@ -30,10 +34,10 @@ public class DriveDistance extends Command {
 	protected void interrupted() {
 		driveTrain.stop();
 	}
+	
 	@Override
 	protected boolean isFinished() {
-		// TODO Auto-generated method stub
-		return false;
+		return driveTrain.isFinished();
 	}
 
 }
