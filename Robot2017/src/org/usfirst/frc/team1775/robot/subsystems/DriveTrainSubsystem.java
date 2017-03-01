@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1775.robot.subsystems;
 
+import org.usfirst.frc.team1775.robot.Cameras;
 import org.usfirst.frc.team1775.robot.RobotMap;
 import org.usfirst.frc.team1775.robot.commands.drivetrain.RegularDrive;
 
@@ -115,7 +116,8 @@ public class DriveTrainSubsystem extends Subsystem {
 		//if (Math.abs(straightRotate) < 0.01 && Math.abs(straightRotate) > 0.001) {
 		//	straightRotate *= 5;
 		//}
-		RobotMap.driveTrainRobotDrive.arcadeDrive(0, rotateByAnglePidResult * (1.0/Math.min(rotateByAngleTargetAngle/90.0, 1)), false);
+		//  * (1.0/Math.min(rotateByAngleTargetAngle/90.0, 1))
+		RobotMap.driveTrainRobotDrive.arcadeDrive(0, rotateByAnglePidResult, false);
 	}
 
 	public void rotate(double rotateValue, boolean squaredInputs) {
@@ -130,9 +132,17 @@ public class DriveTrainSubsystem extends Subsystem {
 		RobotMap.driveTrainRobotDrive.arcadeDrive(0, rotateValue * rotateInPlaceCurrentRampFactor, squaredInputs);
 	}
 	
+	private int counts = 0;
+	
 	public boolean isFinished() {
 		// TODO figure out when to say we are finished
-		return false;
+		if (Math.abs(rotateByAnglePidResult) < 1.5) {
+			counts++;
+		} else {
+			counts = 0;
+		}
+		
+		return counts > 300;
 	}
 	
 	public void setRegularDrive() {
@@ -145,16 +155,20 @@ public class DriveTrainSubsystem extends Subsystem {
 		double p = Preferences.getInstance().getDouble("DriveTrain.rotateByAngle.p", 0.01);
 		double i = Preferences.getInstance().getDouble("DriveTrain.rotateByAngle.i", 0.0);
 		double d = Preferences.getInstance().getDouble("DriveTrain.rotateByAngle.d", 0.0);
-		
+		counts = 0;
 		// TODO replace with rotateByAngleTargetAngle = degrees;
-		rotateByAngleTargetAngle = Preferences.getInstance().getDouble("DriveTrain.rotateByAngle.angle", 90);
+		rotateByAngleTargetAngle = Cameras.angleOffCenter;
+		//rotateByAngleTargetAngle = Preferences.getInstance().getDouble("DriveTrain.rotateByAngle.angle", 90);
 		
 		rotateByAnglePidController = new PIDController(p, i, d, (PIDSource) RobotMap.gyro, (value) -> {
 			SmartDashboard.putNumber("DriveTrain.rotateByAngle.pidResult", value);
 			rotateByAnglePidResult = value;
 		}, 0.01);
 		
-		rotateByAnglePidController.setSetpoint(RobotMap.gyro.getAngle() + degrees);
+		//this set the tolerance degrees
+		//rotateByAnglePidController.setAbsoluteTolerance(1);;
+		
+		rotateByAnglePidController.setSetpoint(RobotMap.gyro.getAngle() + rotateByAngleTargetAngle);
 		rotateByAnglePidController.enable();
 	}
 	
@@ -188,11 +202,13 @@ public class DriveTrainSubsystem extends Subsystem {
 		if (rotateByAnglePidController != null) {
 			rotateByAnglePidController.disable();
 			rotateByAnglePidController.free();
+			rotateByAnglePidController = null;
 		}
 		
 		if (driveToDistancePidController != null) {
 			driveToDistancePidController.disable();
 			driveToDistancePidController.free();
+			driveToDistancePidController = null;
 		}
 		
 		rotateInPlaceCurrentRampFactor = 0;
@@ -206,11 +222,13 @@ public class DriveTrainSubsystem extends Subsystem {
 		if (rotateByAnglePidController != null) {
 			rotateByAnglePidController.disable();
 			rotateByAnglePidController.free();
+			rotateByAnglePidController = null;
 		}
 		
 		if (driveToDistancePidController != null) {
 			driveToDistancePidController.disable();
 			driveToDistancePidController.free();
+			driveToDistancePidController = null;
 		}
 	}
 	

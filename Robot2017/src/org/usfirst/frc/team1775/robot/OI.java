@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.buttons.Trigger;
 
+import org.usfirst.frc.team1775.robot.commands.drivetrain.RotateByAngle;
 import org.usfirst.frc.team1775.robot.commands.gearassembly.ReleaseGear;
 import org.usfirst.frc.team1775.robot.commands.shooter.Shoot;
 import org.usfirst.frc.team1775.robot.commands.shooter.StopShooterSubsystem;
@@ -88,7 +89,7 @@ public class OI {
 
 	public OI() {
 		initDriverJoystick();
-		initOperatorJoystick();
+		//initOperatorJoystick();
 	}
 	
 	private void initDriverJoystick() {
@@ -99,7 +100,7 @@ public class OI {
 		
 		// B button
 		driverBButton = new JoystickButton(driverJoystick, XBOX_B);
-		//bButton.whenPressed(new RotateByAngle(90));
+		driverBButton.whenPressed(new RotateByAngle(90));
 		
 		// X button
 		driverXButton = new JoystickButton(driverJoystick, XBOX_X);
@@ -143,6 +144,7 @@ public class OI {
 	
 	private void initOperatorJoystick() {
 		operatorJoystick = new Joystick(OPERATOR_JOYSTICK);
+		//DriverStation.
 		
 		// A button
 		operatorAButton = new JoystickButton(operatorJoystick, XBOX_A);
