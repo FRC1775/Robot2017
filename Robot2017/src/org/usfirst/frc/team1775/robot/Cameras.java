@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
+import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
@@ -13,6 +14,7 @@ import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Cameras {
 	// General camera settings
@@ -31,6 +33,8 @@ public class Cameras {
     private static final int GEAR_CAMERA_DEVICE = 1;
     private static final int GEAR_CAMERA_EXPOSURE = 0;
     
+    public static double angleOffCenter;
+    
     private Thread cameraThread;
 	
 	public void init() {
@@ -43,22 +47,30 @@ public class Cameras {
 			shooterCamera.setFPS(FPS);
 			shooterCamera.setExposureManual(SHOOTER_CAMERA_EXPOSURE);
 		    
+			/*
 		    UsbCamera gearCamera = new UsbCamera(GEAR_CAMERA_NAME, GEAR_CAMERA_DEVICE);
 		    gearCamera.setPixelFormat(PIXEL_FORMAT);
 		    gearCamera.setResolution(IMG_WIDTH, IMG_HEIGHT);
 		    gearCamera.setFPS(FPS);
 		    gearCamera.setExposureManual(GEAR_CAMERA_EXPOSURE);
+		    */
 		    
 		    CvSink shooterCameraSink = new CvSink(SHOOTER_CAMERA_NAME + " sink");
 		    shooterCameraSink.setSource(shooterCamera);
 		    
-		    CvSink gearCameraSink = new CvSink(GEAR_CAMERA_NAME + " sink");
-		    gearCameraSink.setSource(gearCamera);
+		    //CvSink gearCameraSink = new CvSink(GEAR_CAMERA_NAME + " sink");
+		    //gearCameraSink.setSource(gearCamera);
+		    /*
+		    if (!shooterCamera.isConnected() || !gearCamera.isConnected()) {
+	    		System.out.println("HERE");
+		    	cameraThread.interrupt();
+		    }
+		    */
 		    
 		    
 		    Mat inputImage = new Mat();
 	    	
-    		boolean showShooterCamera = false;
+    		boolean showShooterCamera = true;
     		
             GripPipeline pipeline = new GripPipeline();
             
@@ -70,26 +82,48 @@ public class Cameras {
             	}
             	
                 if(showShooterCamera) {
-                	gearCameraSink.setEnabled(false);
+                	//gearCameraSink.setEnabled(false);
                 	shooterCameraSink.setEnabled(true);
                 	
 	  		    	long frameTime = shooterCameraSink.grabFrame(inputImage);
 	  		    	if (frameTime == 0) continue;
                 } else {
                 	shooterCameraSink.setEnabled(false);
-                	gearCameraSink.setEnabled(true);
+                	//gearCameraSink.setEnabled(true);
                 	
-	  		    	long frameTime = gearCameraSink.grabFrame(inputImage);
-	  		    	if (frameTime == 0) continue;
+	  		    	//long frameTime = gearCameraSink.grabFrame(inputImage);
+	  		    	//if (frameTime == 0) continue;
                 }
                 
                 pipeline.process(inputImage);
-                DriverStation.reportError(""+pipeline.filterContoursOutput().size(), false);
             	ArrayList<MatOfPoint> contours = pipeline.filterContoursOutput();
                 Imgproc.drawContours(inputImage, contours, -1, new Scalar(0, 255, 0)); //changed -1 to -5
-                DriverStation.reportError("number of countours "+contours.size(), false);
+                if (contours.size() > 0) {
+                	//System.out.println("number of contours: "+contours.size());
+                	if (contours.size() == 2) {
+                		Rect r1 = Imgproc.boundingRect(contours.get(0));
+                		Rect r2 = Imgproc.boundingRect(contours.get(1));
+                		
+                		Rect top, bottom;
+                		
+                		if (r1.height > r2.height) {
+                			top = r1;
+                			bottom = r2;
+                		} else {
+                			top = r2;
+                			bottom = r1;
+                		}
+                		
+                		double offCenter = (double)top.x + (double)top.width / 2.0 - ((double)IMG_WIDTH / 2.0);
+                		
+                		angleOffCenter = (65 / (double) IMG_WIDTH) * offCenter;
+                		SmartDashboard.putNumber("Camera.shooter.angle", angleOffCenter);
+                		
+                	}
+                }
                 
                 // TODO do other processing here
+                
                 
                 /*
                 MatOfPoint contour1 = contours.get(0);
