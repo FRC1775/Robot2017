@@ -82,6 +82,8 @@ public class DriveTrainSubsystem extends Subsystem {
 			}
 		}
 		
+		SmartDashboard.putNumber("DriveTrain.encoderDistance", RobotMap.driveTrainEncoder.getDistance());
+		
 		/*
 		if (rotateValue < 0.2 && rotateValue > -0.2) {
 			if (shouldSetPoint || (moveValue < 0.1 && moveValue > -0.1)) {
@@ -104,8 +106,22 @@ public class DriveTrainSubsystem extends Subsystem {
 		RobotMap.driveTrainRobotDrive.arcadeDrive(actualMoveValue, actualRotateValue, squaredInputs);
 	}
 	
-	public void driveToDistance() {
+	private int detectEncoderCount = 0;
+	private double distanceEncoderValue = 0;
+	
+	public void driveDistance() {
 		SmartDashboard.putNumber("DriveTrain.encoderDistance", RobotMap.driveTrainEncoder.getDistance());
+		
+		if (distanceEncoderValue == RobotMap.driveTrainEncoder.getDistance()) {
+			detectEncoderCount++;
+			if (detectEncoderCount > 10) {
+				stop();
+			}
+		} else {
+			distanceEncoderValue = RobotMap.driveTrainEncoder.getDistance();
+			detectEncoderCount = 0;
+		}
+		
 		RobotMap.driveTrainRobotDrive.arcadeDrive(driveToDistancePidResult, 0, false);
 	}
 	
@@ -136,13 +152,27 @@ public class DriveTrainSubsystem extends Subsystem {
 	
 	public boolean isFinished() {
 		// TODO figure out when to say we are finished
-		if (Math.abs(rotateByAnglePidResult) < 1.5) {
-			counts++;
-		} else {
-			counts = 0;
+		if (driveMode == DriveMode.RotateByAngle) {
+			return rotateByAnglePidController.onTarget();
+			/*
+			if ( < 0.25) {
+				counts++;
+			} else {
+				counts = 0;
+			}
+			
+			return counts > 20;
+			*/
+		} else if (driveMode == DriveMode.DriveToDistance) {
+			if (Math.abs(driveToDistanceTargetDistance - RobotMap.driveTrainEncoder.getDistance()) < 5) {
+				counts++;
+			} else {
+				counts = 0;
+			}
+			
+			return counts > 10;
 		}
-		
-		return counts > 300;
+		return false;
 	}
 	
 	public void setRegularDrive() {
@@ -152,42 +182,65 @@ public class DriveTrainSubsystem extends Subsystem {
 	public void setRotateByAngle(double degrees) {
 		setDriveMode(DriveMode.RotateByAngle);
 
-		double p = Preferences.getInstance().getDouble("DriveTrain.rotateByAngle.p", 0.01);
-		double i = Preferences.getInstance().getDouble("DriveTrain.rotateByAngle.i", 0.0);
-		double d = Preferences.getInstance().getDouble("DriveTrain.rotateByAngle.d", 0.0);
+		double p, i = 0, d, offset;
+		if (degrees > 0) {
+			offset = 2.5;
+		} else {
+			offset = -2.5;
+		}
+		if (Math.abs(degrees) < 16) {
+			p = 0.15;
+			d = 0.4;
+			offset = -1;
+		} else {
+			p = 0.15;
+			d = 0.4;
+			//offset = -2.5;
+		}
+		//p = Preferences.getInstance().getDouble("DriveTrain.rotateByAngle.p", 0.01);
+		//d = Preferences.getInstance().getDouble("DriveTrain.rotateByAngle.d", 0.0);
 		counts = 0;
 		// TODO replace with rotateByAngleTargetAngle = degrees;
-		rotateByAngleTargetAngle = Cameras.angleOffCenter;
+		RobotMap.gyro.reset();
+		rotateByAngleTargetAngle = degrees + offset;
 		//rotateByAngleTargetAngle = Preferences.getInstance().getDouble("DriveTrain.rotateByAngle.angle", 90);
 		
-		rotateByAnglePidController = new PIDController(p, i, d, (PIDSource) RobotMap.gyro, (value) -> {
-			SmartDashboard.putNumber("DriveTrain.rotateByAngle.pidResult", value);
-			rotateByAnglePidResult = value;
-		}, 0.01);
+		if (rotateByAnglePidController == null) {
+			rotateByAnglePidController = new PIDController(p, i, d, (PIDSource) RobotMap.gyro, (value) -> {
+				SmartDashboard.putNumber("DriveTrain.rotateByAngle.pidResult", value);
+				rotateByAnglePidResult = value;
+			}, 0.01);
+		}
+		rotateByAnglePidController.setPID(p, i, d);
+		rotateByAnglePidController.setInputRange(-180, 180);
+		rotateByAnglePidController.setPercentTolerance(0.4);
+		//rotateByAnglePidController.setAbsoluteTolerance(2);
 		
 		//this set the tolerance degrees
 		//rotateByAnglePidController.setAbsoluteTolerance(1);;
 		
-		rotateByAnglePidController.setSetpoint(RobotMap.gyro.getAngle() + rotateByAngleTargetAngle);
+		rotateByAnglePidController.setSetpoint(rotateByAngleTargetAngle);
 		rotateByAnglePidController.enable();
 	}
 	
 	public void setDriveDistance(double distance) {
 		setDriveMode(DriveMode.DriveToDistance);
 
+		
 		double p = Preferences.getInstance().getDouble("DriveTrain.driveToDistance.p", 0.01);
 		double i = Preferences.getInstance().getDouble("DriveTrain.driveToDistance.i", 0.0);
 		double d = Preferences.getInstance().getDouble("DriveTrain.driveToDistance.d", 0.0);
-		
-		// TODO replace with driveToDistanceTargetDistance = distance;
-		driveToDistanceTargetDistance = Preferences.getInstance().getDouble("DriveTrain.driveToDistance.distance", 60);
+		counts = 0;
+		// TODO replace with 
+		driveToDistanceTargetDistance = RobotMap.driveTrainEncoder.getDistance() + distance;
+		//driveToDistanceTargetDistance = Preferences.getInstance().getDouble("DriveTrain.driveToDistance.distance", 60);
 		
 		driveToDistancePidController = new PIDController(p, i, d, (PIDSource) RobotMap.driveTrainEncoder, (value) -> {
 			SmartDashboard.putNumber("DriveTrain.driveToDistance.pidResult", value);
 			driveToDistancePidResult = value;
 		}, 0.01);
 		
-		driveToDistancePidController.setSetpoint(RobotMap.driveTrainEncoder.getDistance() + distance);
+		driveToDistancePidController.setSetpoint(driveToDistanceTargetDistance);
 		driveToDistancePidController.enable();
 	}
 
@@ -200,9 +253,9 @@ public class DriveTrainSubsystem extends Subsystem {
 		if (driveMode == mode) return;
 		
 		if (rotateByAnglePidController != null) {
-			rotateByAnglePidController.disable();
-			rotateByAnglePidController.free();
-			rotateByAnglePidController = null;
+			//rotateByAnglePidController.disable();
+			//rotateByAnglePidController.free();
+			//rotateByAnglePidController = null;
 		}
 		
 		if (driveToDistancePidController != null) {
@@ -220,9 +273,9 @@ public class DriveTrainSubsystem extends Subsystem {
 	private void stopPidControllers() {
 		// TODO can we include straight drive?
 		if (rotateByAnglePidController != null) {
-			rotateByAnglePidController.disable();
-			rotateByAnglePidController.free();
-			rotateByAnglePidController = null;
+			//rotateByAnglePidController.disable();
+			//rotateByAnglePidController.free();
+			//rotateByAnglePidController = null;
 		}
 		
 		if (driveToDistancePidController != null) {

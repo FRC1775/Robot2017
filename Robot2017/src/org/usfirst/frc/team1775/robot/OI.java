@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.buttons.Trigger;
 
+import org.usfirst.frc.team1775.robot.commands.autonomous.DriveFromBackWallAndShoot;
 import org.usfirst.frc.team1775.robot.commands.drivetrain.RotateByAngle;
 import org.usfirst.frc.team1775.robot.commands.gearassembly.ReleaseGear;
 import org.usfirst.frc.team1775.robot.commands.shooter.Shoot;
@@ -100,10 +101,11 @@ public class OI {
 		
 		// B button
 		driverBButton = new JoystickButton(driverJoystick, XBOX_B);
-		driverBButton.whenPressed(new RotateByAngle(90));
+		driverBButton.whenPressed(new RotateByAngle());
 		
 		// X button
 		driverXButton = new JoystickButton(driverJoystick, XBOX_X);
+		driverXButton.whenPressed(new RotateByAngle(-110));
 		
 		// Y button
 		driverYButton = new JoystickButton(driverJoystick, XBOX_Y);
@@ -120,7 +122,7 @@ public class OI {
 		
 		// Start button 
 		driverStartButton = new JoystickButton(driverJoystick, XBOX_START);
-		//driverStartButton.whileHeld(new DriveDistance(60));
+		driverStartButton.whenPressed(new DriveFromBackWallAndShoot());
 
 		// Left trigger
 		driverLeftTrigger = new Trigger() {

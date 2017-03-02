@@ -47,8 +47,8 @@ public class RobotMap {
 	
 	public final static int PRACTICE_DRIVE_TRAIN_LEFT_CONTROLLER_PWM_CHANNEL = 2;
 	public final static int PRACTICE_DRIVE_TRAIN_RIGHT_CONTROLLER_PWM_CHANNEL = 1;
-	public final static int PRACTICE_DRIVE_TRAIN_ENCODER_DIO_CHANNEL_A = 2;
-	public final static int PRACTICE_DRIVE_TRAIN_ENCODER_DIO_CHANNEL_B = 3;
+	public final static int PRACTICE_DRIVE_TRAIN_ENCODER_DIO_CHANNEL_A = 3;
+	public final static int PRACTICE_DRIVE_TRAIN_ENCODER_DIO_CHANNEL_B = 2;
 	
 	public final static int PRACTICE_SHOOTER_SINGULATOR_CONTROLLER_PWM_CHANNEL = 0;
 	public final static int PRACTICE_SHOOTER_REGULATOR_CONTROLLER_PWM_CHANNEL = 3;
@@ -123,6 +123,7 @@ public class RobotMap {
 		driveTrainEncoder.setDistancePerPulse(distancePerPulse);
 		//double encoderValue = driveTrainEncoder.getDistance();
 		//SmartDashboard.putNumber("DriveTrainEncoder", encoderValue );
+		
 	}
 	
 	private static void initShooter() {
