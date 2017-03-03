@@ -8,6 +8,9 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import org.usfirst.frc.team1775.robot.commands.autonomous.DoNothing;
+import org.usfirst.frc.team1775.robot.commands.autonomous.DriveAcrossBaseline;
+import org.usfirst.frc.team1775.robot.commands.autonomous.DriveFromBackWallAndShoot;
 import org.usfirst.frc.team1775.robot.commands.autonomous.PlaceGear;
 import org.usfirst.frc.team1775.robot.subsystems.DriveTrainSubsystem;
 import org.usfirst.frc.team1775.robot.subsystems.GearAssemblySubsystem;
@@ -68,7 +71,7 @@ public class Robot extends IterativeRobot {
 				//SmartDashboard.putNumber("Shooter.rpm", RobotMap.shooterController.getSpeed());
 			}
 			
-		});
+		}); 
 		rpm.start();
 		
 		/*
@@ -83,7 +86,7 @@ public class Robot extends IterativeRobot {
 		
 	    /*DigitalInput digital1;
 	    DigitalInput digital2;
-	        // This is Kate's sensor for the gear
+	        // This is Kait's sensor for the gear
 	    	digital1 = new DigitalInput(8);
 	    	digital2 = new DigitalInput(9);
 	    
@@ -94,8 +97,11 @@ public class Robot extends IterativeRobot {
 	}
 	
 	private void initDashboard() {
-		chooser.addDefault("Default Auto", new PlaceGear());
-		SmartDashboard.putData("Auto mode", chooser);
+		chooser.addDefault("Do Nothing", new DoNothing());
+		chooser.addObject("Drive Across Base Line", new DriveAcrossBaseline());
+		chooser.addObject("Drive And Shoot", new DriveFromBackWallAndShoot());
+		chooser.addObject("Place Gear", new PlaceGear());
+		SmartDashboard.putData("Auto Mode", chooser);
 		
 		SmartDashboard.putData(Scheduler.getInstance());
 	}

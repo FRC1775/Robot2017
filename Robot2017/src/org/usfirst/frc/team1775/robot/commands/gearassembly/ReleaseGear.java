@@ -33,6 +33,7 @@ public class ReleaseGear extends Command {
 	// subsystems is scheduled to run
 	@Override
 	protected void interrupted() {
+		System.out.println("HEREHERE");
 		gearAssembly.reset();
 	}
 }
