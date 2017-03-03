@@ -22,11 +22,13 @@ public class WindWinch extends Command {
 	}
 	
 	protected void execute() {
-		if (Robot.oi.driverJoystick.getRawAxis(OI.XBOX_RIGHT_TRIGGER) > 0.5) {
+		if (Robot.oi.driverJoystick.getRawAxis(OI.XBOX_RIGHT_TRIGGER) > 0.5 || Robot.oi.operatorJoystick.getRawAxis(OI.XBOX_RIGHT_TRIGGER) > 0.5) {
 			Robot.oi.driverJoystick.setRumble(RumbleType.kRightRumble, getFastJoystickRumble());
+			Robot.oi.operatorJoystick.setRumble(RumbleType.kRightRumble, getFastJoystickRumble());
 			winch.wind(FAST);
 		} else {
 			Robot.oi.driverJoystick.setRumble(RumbleType.kRightRumble, getSlowJoystickRumble());
+			Robot.oi.operatorJoystick.setRumble(RumbleType.kRightRumble, getFastJoystickRumble());
 			winch.wind(SLOW);
 		}
 	}
@@ -38,12 +40,14 @@ public class WindWinch extends Command {
 	
 	protected void end() {
 		Robot.oi.driverJoystick.setRumble(RumbleType.kRightRumble, 0);
+		Robot.oi.operatorJoystick.setRumble(RumbleType.kRightRumble, 0);
 		winch.stop();
 	}
 
 	@Override
 	protected void interrupted() {
 		Robot.oi.driverJoystick.setRumble(RumbleType.kRightRumble, 0);
+		Robot.oi.operatorJoystick.setRumble(RumbleType.kRightRumble, 0);
 		winch.stop();
 	}
 	

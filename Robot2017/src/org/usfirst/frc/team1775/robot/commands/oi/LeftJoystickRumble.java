@@ -15,11 +15,13 @@ public class LeftJoystickRumble extends Command {
 	
 	public void execute() {
 		Robot.oi.driverJoystick.setRumble(RumbleType.kLeftRumble, amount);
+		Robot.oi.operatorJoystick.setRumble(RumbleType.kLeftRumble, amount);
 	}
 	
 	@Override
 	public void interrupted() {
 		Robot.oi.driverJoystick.setRumble(RumbleType.kLeftRumble, 0);
+		Robot.oi.operatorJoystick.setRumble(RumbleType.kLeftRumble, 0);
 	}
 	
 	@Override

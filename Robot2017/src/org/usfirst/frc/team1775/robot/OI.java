@@ -90,7 +90,7 @@ public class OI {
 
 	public OI() {
 		initDriverJoystick();
-		//initOperatorJoystick();
+		initOperatorJoystick();
 	}
 	
 	private void initDriverJoystick() {
@@ -98,27 +98,26 @@ public class OI {
 		
 		// A button
 		driverAButton = new JoystickButton(driverJoystick, XBOX_A);
+		driverAButton.whileHeld(new ReleaseGear());
 		
 		// B button
 		driverBButton = new JoystickButton(driverJoystick, XBOX_B);
-		driverBButton.whenPressed(new RotateByAngle());
 		
 		// X button
 		driverXButton = new JoystickButton(driverJoystick, XBOX_X);
-		driverXButton.whenPressed(new RotateByAngle(-110));
 		
 		// Y button
 		driverYButton = new JoystickButton(driverJoystick, XBOX_Y);
 
 		// Left bumper
 		driverLeftBumper = new JoystickButton(driverJoystick, XBOX_LEFT_BUMPER);
+		driverLeftBumper.whenPressed(new RotateByAngle());
 		
 		// Right bumper
 		driverRightBumper = new JoystickButton(driverJoystick, XBOX_RIGHT_BUMPER);
 		
 		// Back button
 		driverBackButton = new JoystickButton(driverJoystick, XBOX_BACK);
-		driverBackButton.whileHeld(new ReleaseGear());
 		
 		// Start button 
 		driverStartButton = new JoystickButton(driverJoystick, XBOX_START);
@@ -150,6 +149,7 @@ public class OI {
 		
 		// A button
 		operatorAButton = new JoystickButton(operatorJoystick, XBOX_A);
+		operatorAButton.whileHeld(new ReleaseGear());
 		
 		// B button
 		operatorBButton = new JoystickButton(operatorJoystick, XBOX_B);
@@ -163,17 +163,17 @@ public class OI {
 
 		// Left bumper
 		operatorLeftBumper = new JoystickButton(operatorJoystick, XBOX_LEFT_BUMPER);
+		operatorLeftBumper.whenPressed(new RotateByAngle());
 		
 		// Right bumper
 		operatorRightBumper = new JoystickButton(operatorJoystick, XBOX_RIGHT_BUMPER);
 		
 		// Back button
 		operatorBackButton = new JoystickButton(operatorJoystick, XBOX_BACK);
-		operatorBackButton.whileHeld(new ReleaseGear());
 		
 		// Start button 
 		operatorStartButton = new JoystickButton(operatorJoystick, XBOX_START);
-		//operatorStartButton.whileHeld(new DriveDistance(60));
+		operatorStartButton.whenPressed(new DriveFromBackWallAndShoot());
 
 		// Left trigger
 		operatorLeftTrigger = new Trigger() {
