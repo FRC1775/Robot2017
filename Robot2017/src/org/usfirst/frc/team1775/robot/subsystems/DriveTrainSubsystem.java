@@ -1,6 +1,5 @@
 package org.usfirst.frc.team1775.robot.subsystems;
 
-import org.usfirst.frc.team1775.robot.Cameras;
 import org.usfirst.frc.team1775.robot.RobotMap;
 import org.usfirst.frc.team1775.robot.commands.drivetrain.RegularDrive;
 
@@ -35,19 +34,29 @@ public class DriveTrainSubsystem extends Subsystem {
 	boolean shouldSetPoint = true;
 	
 	
-	
 	private PIDController straightDrivePidController = new PIDController(-0.3, 0.0, 0.0, (PIDSource) RobotMap.gyro, (value) -> {
 		SmartDashboard.putNumber("DriveTrain.straightDrive.pidResult", value);
 		straightDriveRotateCompensationValue = value;
 	}, 0.01);
 	
-	private PIDController rotateByAnglePidController;
-	private PIDController driveToDistancePidController;
+	private PIDController rotateByAnglePidController = new PIDController(0, 0, 0, (PIDSource) RobotMap.gyro, (value) -> {
+		SmartDashboard.putNumber("DriveTrain.rotateByAngle.pidResult", value);
+		rotateByAnglePidResult = value;
+	}, 0.01);
+	
+	private PIDController driveToDistancePidController = new PIDController(0, 0, 0, (PIDSource) RobotMap.driveTrainEncoder, (value) -> {
+		SmartDashboard.putNumber("DriveTrain.driveToDistance.pidResult", value);
+		driveToDistancePidResult = value;
+	}, 0.01);
 
 	
 	@Override
 	protected void initDefaultCommand() {
 		setDefaultCommand(new RegularDrive());
+		driveToDistancePidController.setOutputRange(-0.9, 0.9);
+		straightDrivePidController.setOutputRange(-0.3, 0.3);
+		straightDrivePidController.setSetpoint(0);
+		straightDrivePidController.enable();
 	}
 
 	public void arcadeDrive(double moveValue, double rotateValue, boolean squaredInputs, boolean constantRadius) {
@@ -84,26 +93,25 @@ public class DriveTrainSubsystem extends Subsystem {
 		
 		SmartDashboard.putNumber("DriveTrain.encoderDistance", RobotMap.driveTrainEncoder.getDistance());
 		
-		/*
-		if (rotateValue < 0.2 && rotateValue > -0.2) {
-			if (shouldSetPoint || (moveValue < 0.1 && moveValue > -0.1)) {
-				straightDrivePidController.setOutputRange(-0.3, 0.3);
-				straightDrivePidController.setSetpoint(RobotMap.gyro.getAngle());
-				shouldSetPoint = false;
-				straightDrivePidController.enable();
-			}
-			
-			SmartDashboard.putNumber("Angle", RobotMap.gyro.getAngle());
-			actualRotateValue = -straightDriveRotateCompensationValue;
-		} else {
-			straightDrivePidController.disable();
-			shouldSetPoint = true;
-		}
-		*/
+		actualRotateValue = driveStraightCorrection(moveValue, rotateValue);
 		
 		SmartDashboard.putNumber("DriveTrain.actualRotateValue", actualRotateValue);
 		
 		RobotMap.driveTrainRobotDrive.arcadeDrive(actualMoveValue, actualRotateValue, squaredInputs);
+	}
+	
+	private double driveStraightCorrection(double moveValue, double rotateValue) {
+		if (rotateValue < 0.2 && rotateValue > -0.2) {
+			if (shouldSetPoint || (moveValue < 0.1 && moveValue > -0.1)) {
+				RobotMap.gyro.reset();
+				shouldSetPoint = false;
+			}
+			
+			return -straightDriveRotateCompensationValue;
+		} else {
+			shouldSetPoint = true;
+			return rotateValue;
+		}
 	}
 	
 	private int detectEncoderCount = 0;
@@ -122,17 +130,16 @@ public class DriveTrainSubsystem extends Subsystem {
 			detectEncoderCount = 0;
 		}
 		
-		RobotMap.driveTrainRobotDrive.arcadeDrive(driveToDistancePidResult, 0, false);
+		
+		
+		RobotMap.driveTrainRobotDrive.arcadeDrive(driveToDistancePidResult, -straightDriveRotateCompensationValue, false);
 	}
 	
 	public void rotateByAngle() {
 		SmartDashboard.putNumber("DriveTrain.straightRotate", rotateByAnglePidResult);
 		SmartDashboard.putNumber("DriveTrain.rotateError", rotateByAnglePidController.getError());
 		SmartDashboard.putNumber("DriveTrain.angle", RobotMap.gyro.getAngle());
-		//if (Math.abs(straightRotate) < 0.01 && Math.abs(straightRotate) > 0.001) {
-		//	straightRotate *= 5;
-		//}
-		//  * (1.0/Math.min(rotateByAngleTargetAngle/90.0, 1))
+		
 		RobotMap.driveTrainRobotDrive.arcadeDrive(0, rotateByAnglePidResult, false);
 	}
 
@@ -148,30 +155,13 @@ public class DriveTrainSubsystem extends Subsystem {
 		RobotMap.driveTrainRobotDrive.arcadeDrive(0, rotateValue * rotateInPlaceCurrentRampFactor, squaredInputs);
 	}
 	
-	private int counts = 0;
-	
 	public boolean isFinished() {
-		// TODO figure out when to say we are finished
 		if (driveMode == DriveMode.RotateByAngle) {
 			return rotateByAnglePidController.onTarget();
-			/*
-			if ( < 0.25) {
-				counts++;
-			} else {
-				counts = 0;
-			}
-			
-			return counts > 20;
-			*/
 		} else if (driveMode == DriveMode.DriveToDistance) {
-			if (Math.abs(driveToDistanceTargetDistance - RobotMap.driveTrainEncoder.getDistance()) < 5) {
-				counts++;
-			} else {
-				counts = 0;
-			}
-			
-			return counts > 10;
+			return driveToDistancePidController.onTarget();
 		}
+		
 		return false;
 	}
 	
@@ -197,27 +187,18 @@ public class DriveTrainSubsystem extends Subsystem {
 			d = 0.4;
 			//offset = -2.5;
 		}
+		
 		//p = Preferences.getInstance().getDouble("DriveTrain.rotateByAngle.p", 0.01);
 		//d = Preferences.getInstance().getDouble("DriveTrain.rotateByAngle.d", 0.0);
-		counts = 0;
-		// TODO replace with rotateByAngleTargetAngle = degrees;
-		RobotMap.gyro.reset();
-		rotateByAngleTargetAngle = degrees + offset;
-		//rotateByAngleTargetAngle = Preferences.getInstance().getDouble("DriveTrain.rotateByAngle.angle", 90);
+		//offset = 0;
 		
-		if (rotateByAnglePidController == null) {
-			rotateByAnglePidController = new PIDController(p, i, d, (PIDSource) RobotMap.gyro, (value) -> {
-				SmartDashboard.putNumber("DriveTrain.rotateByAngle.pidResult", value);
-				rotateByAnglePidResult = value;
-			}, 0.01);
-		}
+		RobotMap.gyro.reset();
+		
+		rotateByAngleTargetAngle = degrees + offset;
+		
 		rotateByAnglePidController.setPID(p, i, d);
 		rotateByAnglePidController.setInputRange(-180, 180);
 		rotateByAnglePidController.setPercentTolerance(0.4);
-		//rotateByAnglePidController.setAbsoluteTolerance(2);
-		
-		//this set the tolerance degrees
-		//rotateByAnglePidController.setAbsoluteTolerance(1);;
 		
 		rotateByAnglePidController.setSetpoint(rotateByAngleTargetAngle);
 		rotateByAnglePidController.enable();
@@ -226,19 +207,19 @@ public class DriveTrainSubsystem extends Subsystem {
 	public void setDriveDistance(double distance) {
 		setDriveMode(DriveMode.DriveToDistance);
 
+		RobotMap.gyro.reset();
 		
 		double p = Preferences.getInstance().getDouble("DriveTrain.driveToDistance.p", 0.01);
 		double i = Preferences.getInstance().getDouble("DriveTrain.driveToDistance.i", 0.0);
 		double d = Preferences.getInstance().getDouble("DriveTrain.driveToDistance.d", 0.0);
-		counts = 0;
-		// TODO replace with 
-		driveToDistanceTargetDistance = RobotMap.driveTrainEncoder.getDistance() + distance;
-		//driveToDistanceTargetDistance = Preferences.getInstance().getDouble("DriveTrain.driveToDistance.distance", 60);
 		
-		driveToDistancePidController = new PIDController(p, i, d, (PIDSource) RobotMap.driveTrainEncoder, (value) -> {
-			SmartDashboard.putNumber("DriveTrain.driveToDistance.pidResult", value);
-			driveToDistancePidResult = value;
-		}, 0.01);
+		RobotMap.driveTrainEncoder.reset();
+		
+		driveToDistanceTargetDistance = distance;
+
+		driveToDistancePidController.setPID(p, i, d);
+		driveToDistancePidController.setInputRange(-100, 200);
+		driveToDistancePidController.setPercentTolerance(0.3);
 		
 		driveToDistancePidController.setSetpoint(driveToDistanceTargetDistance);
 		driveToDistancePidController.enable();
@@ -246,43 +227,15 @@ public class DriveTrainSubsystem extends Subsystem {
 
 	public void stop() {
 		RobotMap.driveTrainRobotDrive.stopMotor();
-		stopPidControllers();
 	}
 
 	private void setDriveMode(DriveMode mode) {
 		if (driveMode == mode) return;
 		
-		if (rotateByAnglePidController != null) {
-			//rotateByAnglePidController.disable();
-			//rotateByAnglePidController.free();
-			//rotateByAnglePidController = null;
-		}
-		
-		if (driveToDistancePidController != null) {
-			driveToDistancePidController.disable();
-			driveToDistancePidController.free();
-			driveToDistancePidController = null;
-		}
-		
 		rotateInPlaceCurrentRampFactor = 0;
 		rotateInPlaceStartTime = System.currentTimeMillis();
 		
 		driveMode = mode;
-	}
-	
-	private void stopPidControllers() {
-		// TODO can we include straight drive?
-		if (rotateByAnglePidController != null) {
-			//rotateByAnglePidController.disable();
-			//rotateByAnglePidController.free();
-			//rotateByAnglePidController = null;
-		}
-		
-		if (driveToDistancePidController != null) {
-			driveToDistancePidController.disable();
-			driveToDistancePidController.free();
-			driveToDistancePidController = null;
-		}
 	}
 	
 }
