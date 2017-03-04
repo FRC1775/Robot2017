@@ -27,11 +27,19 @@ public class Cameras {
     private static final String SHOOTER_CAMERA_NAME = "Shooter camera";
     private static final int SHOOTER_CAMERA_DEVICE = 0;
     private static final int SHOOTER_CAMERA_EXPOSURE = 0;
+    private static final int SHOOTER_CAMERA_FOCUS_AUTO = 0;
+    private static final int SHOOTER_CAMERA_FOCUS_ABSOLUTE = 0;
+    private static final int SHOOTER_CAMERA_WHITE_BALANCE_TEMP_AUTO = 0;
+    private static final int SHOOTER_CAMERA_WHITE_BALANCE_TEMP = 4000;
     
     // Gear camera settings
     private static final String GEAR_CAMERA_NAME = "Gear camera";
     private static final int GEAR_CAMERA_DEVICE = 1;
     private static final int GEAR_CAMERA_EXPOSURE = 0;
+    private static final int GEAR_CAMERA_FOCUS_AUTO = 0;
+    private static final int GEAR_CAMERA_FOCUS_ABSOLUTE = 0;
+    private static final int GEAR_CAMERA_WHITE_BALANCE_TEMP_AUTO = 0;
+    private static final int GEAR_CAMERA_WHITE_BALANCE_TEMP = 4000;
     
     public static double angleOffCenter;
     
@@ -46,6 +54,11 @@ public class Cameras {
 			shooterCamera.setResolution(IMG_WIDTH, IMG_HEIGHT);
 			shooterCamera.setFPS(FPS);
 			shooterCamera.setExposureManual(SHOOTER_CAMERA_EXPOSURE);
+			shooterCamera.getProperty("brightness").set(40);
+			shooterCamera.getProperty("white_balance_temperature_auto").set(SHOOTER_CAMERA_WHITE_BALANCE_TEMP_AUTO);
+			shooterCamera.getProperty("white_balance_temperature").set(SHOOTER_CAMERA_WHITE_BALANCE_TEMP);
+			shooterCamera.getProperty("focus_auto").set(SHOOTER_CAMERA_FOCUS_AUTO);
+			shooterCamera.getProperty("focus_absolute").set(SHOOTER_CAMERA_FOCUS_ABSOLUTE);
 		    
 			/*
 		    UsbCamera gearCamera = new UsbCamera(GEAR_CAMERA_NAME, GEAR_CAMERA_DEVICE);
@@ -53,6 +66,10 @@ public class Cameras {
 		    gearCamera.setResolution(IMG_WIDTH, IMG_HEIGHT);
 		    gearCamera.setFPS(FPS);
 		    gearCamera.setExposureManual(GEAR_CAMERA_EXPOSURE);
+			gearCamera.getProperty("white_balance_temperature_auto").set(GEAR_CAMERA_WHITE_BALANCE_TEMP_AUTO);
+			gearCamera.getProperty("white_balance_temperature").set(GEAR_CAMERA_WHITE_BALANCE_TEMP);
+			gearCamera.getProperty("focus_auto").set(GEAR_CAMERA_FOCUS_AUTO);
+			gearCamera.getProperty("focus_absolute").set(GEAR_CAMERA_FOCUS_ABSOLUTE);
 		    */
 		    
 		    CvSink shooterCameraSink = new CvSink(SHOOTER_CAMERA_NAME + " sink");
@@ -100,8 +117,11 @@ public class Cameras {
                 Imgproc.drawContours(inputImage, contours, -1, new Scalar(0, 255, 0)); //changed -1 to -5
                 if (contours.size() > 0) {
                 	//System.out.println("number of contours: "+contours.size());
-                	if (contours.size() == 2) {
-                		Rect r1 = Imgproc.boundingRect(contours.get(0));
+                	// TODO set to EQUAL to 2
+                	if (contours.size() >= 1) {
+                		// TODO top should be r1
+                		Rect top = Imgproc.boundingRect(contours.get(0));
+                		/*
                 		Rect r2 = Imgproc.boundingRect(contours.get(1));
                 		
                 		Rect top, bottom;
@@ -113,6 +133,7 @@ public class Cameras {
                 			top = r2;
                 			bottom = r1;
                 		}
+                		*/
                 		
                 		double offCenter = (double)top.x + (double)top.width / 2.0 - ((double)IMG_WIDTH / 2.0);
                 		
