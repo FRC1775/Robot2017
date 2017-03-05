@@ -1,24 +1,41 @@
 package org.usfirst.frc.team1775.robot.commands.shooter;
 
 import org.usfirst.frc.team1775.robot.Robot;
+import org.usfirst.frc.team1775.robot.subsystems.ShooterSubsystem;
 
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.command.InstantCommand;
 
-public class StartSingulator extends Command {
+public class StartSingulator extends InstantCommand {
+	private static final double DEFAULT_SINGULATOR_SPEED = 0.9;
+
+	public static ShooterSubsystem shooter = Robot.shooter;
 	
+	private boolean usePref;
 	private double speed;
-
+	
+	public StartSingulator() {
+		requires(shooter);
+		
+		this.usePref = true;
+	}
+	
 	public StartSingulator(double speed) {
-		requires(Robot.shooter);
+		requires(shooter);
+		
 		this.speed = speed;
 	}
 
 	protected void execute() {
-		Robot.shooter.startSingulator(speed);
+		shooter.startSingulator(getSpeed());
 	}
-	
-	@Override
-	protected boolean isFinished() {
-		return true;
+
+	private double getSpeed() {
+		if (usePref) {
+			return Preferences.getInstance().getDouble("Shooter.singulatorSpeed", DEFAULT_SINGULATOR_SPEED);
+		}
+		
+		return speed;
 	}
+
 }

@@ -248,6 +248,7 @@ public class OI {
 				return operatorJoystick.getPOV() == XBOX_POV_DOWN;
 			}
 		};
+		operatorPovDown.whenActive(new AdjustShooterSpeed(ChangeDirection.Down));
 	}
 	
 	public boolean hasOperatorJoystick() {

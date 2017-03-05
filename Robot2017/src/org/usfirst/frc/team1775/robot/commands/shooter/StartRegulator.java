@@ -1,26 +1,42 @@
 package org.usfirst.frc.team1775.robot.commands.shooter;
 
 import org.usfirst.frc.team1775.robot.Robot;
+import org.usfirst.frc.team1775.robot.subsystems.ShooterSubsystem;
 
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.command.InstantCommand;
 
-public class StartRegulator extends Command {
+public class StartRegulator extends InstantCommand {
+	
+	private static final double DEFAULT_REGULATOR_SPEED = 0.33;
 
+	public static ShooterSubsystem shooter = Robot.shooter;
+
+	private boolean usePref;
 	private double speed;
 	
+	public StartRegulator() {
+		requires(shooter);
+		
+		this.usePref = true;
+	}
+	
 	public StartRegulator(double speed) {
-		requires(Robot.shooter);
+		this();
 		
 		this.speed = speed;
 	}
 
 	protected void execute() {
-		Robot.shooter.startRegulator(speed);
+		shooter.startRegulator(getSpeed());
 	}
-	
-	@Override
-	protected boolean isFinished() {
-		return true;
+
+	private double getSpeed() {
+		if (usePref) {
+			return Preferences.getInstance().getDouble("Shooter.regulatorSpeed", DEFAULT_REGULATOR_SPEED);
+		}
+		
+		return speed;
 	}
 
 }
