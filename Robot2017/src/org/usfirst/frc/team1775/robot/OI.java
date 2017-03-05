@@ -284,17 +284,30 @@ public class OI {
 	
 	public double getLeftTrigger() {
 		if (!hasOperatorJoystick()) {
-			return Robot.oi.driverJoystick.getRawAxis(OI.XBOX_LEFT_TRIGGER);
+			return driverJoystick.getRawAxis(OI.XBOX_LEFT_TRIGGER);
 		}
 		
-		return Math.max(Robot.oi.driverJoystick.getRawAxis(OI.XBOX_LEFT_TRIGGER), Robot.oi.operatorJoystick.getRawAxis(OI.XBOX_LEFT_TRIGGER));
+		return Math.max(driverJoystick.getRawAxis(OI.XBOX_LEFT_TRIGGER), operatorJoystick.getRawAxis(OI.XBOX_LEFT_TRIGGER));
 	}
 	
 	public double getRightTrigger() {
 		if (!hasOperatorJoystick()) {
-			return Robot.oi.driverJoystick.getRawAxis(OI.XBOX_RIGHT_TRIGGER);
+			return driverJoystick.getRawAxis(OI.XBOX_RIGHT_TRIGGER);
 		}
 		
-		return Math.max(Robot.oi.driverJoystick.getRawAxis(OI.XBOX_RIGHT_TRIGGER), Robot.oi.operatorJoystick.getRawAxis(OI.XBOX_RIGHT_TRIGGER));
+		return Math.max(driverJoystick.getRawAxis(OI.XBOX_RIGHT_TRIGGER), operatorJoystick.getRawAxis(OI.XBOX_RIGHT_TRIGGER));
+	}
+	
+	public boolean getYButton() {
+		try {
+			if (!hasOperatorJoystick()) {
+				return driverYButton.get();
+			}
+			
+			return driverYButton.get() || operatorYButton.get();
+		
+		} catch (Exception e) {
+			return false;
+		}
 	}
 }
