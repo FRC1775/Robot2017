@@ -1,19 +1,16 @@
 package org.usfirst.frc.team1775.robot.commands.winch;
 
-import org.usfirst.frc.team1775.robot.OI;
 import org.usfirst.frc.team1775.robot.Robot;
 import org.usfirst.frc.team1775.robot.subsystems.WinchSubsystem;
 
 import edu.wpi.first.wpilibj.Preferences;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class WindWinch extends Command {
-	private static final boolean FAST = true;
-	private static final boolean SLOW = false;
-	
-	public static final double DEFAULT_SLOW_JOYSTICK_RUMBLE = 0.5;
-	public static final double DEFAULT_FAST_JOYSTICK_RUMBLE = 1.0;
+	public static final double DEFAULT_WINCH_SPEED_CROSSOVER = 0.8;
+	public static final double DEFAULT_SLOW_JOYSTICK_RUMBLE = 0.2;
+	public static final double DEFAULT_FAST_JOYSTICK_RUMBLE = 0.8;
 
 	private static WinchSubsystem winch = Robot.winch;
 	
@@ -22,14 +19,17 @@ public class WindWinch extends Command {
 	}
 	
 	protected void execute() {
-		if (Robot.oi.driverJoystick.getRawAxis(OI.XBOX_RIGHT_TRIGGER) > 0.5 || Robot.oi.operatorJoystick.getRawAxis(OI.XBOX_RIGHT_TRIGGER) > 0.5) {
-			Robot.oi.driverJoystick.setRumble(RumbleType.kRightRumble, getFastJoystickRumble());
-			Robot.oi.operatorJoystick.setRumble(RumbleType.kRightRumble, getFastJoystickRumble());
-			winch.wind(FAST);
+		SmartDashboard.putNumber("Winch.speedCrossover", getSpeedCrossover());
+		SmartDashboard.putNumber("Winch.slowJoystickRumble", getSlowJoystickRumble());
+		SmartDashboard.putNumber("Winch.fastJoystickRumble", getFastJoystickRumble());
+		
+		
+		if (Robot.oi.getRightTrigger() > getSpeedCrossover()) {
+			Robot.oi.rumbleBoth(getFastJoystickRumble());
+			winch.wind(WinchSubsystem.Speed.Fast);
 		} else {
-			Robot.oi.driverJoystick.setRumble(RumbleType.kRightRumble, getSlowJoystickRumble());
-			Robot.oi.operatorJoystick.setRumble(RumbleType.kRightRumble, getFastJoystickRumble());
-			winch.wind(SLOW);
+			Robot.oi.rumbleBoth(getSlowJoystickRumble());
+			winch.wind(WinchSubsystem.Speed.Slow);
 		}
 	}
 	
@@ -39,16 +39,18 @@ public class WindWinch extends Command {
 	}
 	
 	protected void end() {
-		Robot.oi.driverJoystick.setRumble(RumbleType.kRightRumble, 0);
-		Robot.oi.operatorJoystick.setRumble(RumbleType.kRightRumble, 0);
+		Robot.oi.rumbleBoth(0);
 		winch.stop();
 	}
 
 	@Override
 	protected void interrupted() {
-		Robot.oi.driverJoystick.setRumble(RumbleType.kRightRumble, 0);
-		Robot.oi.operatorJoystick.setRumble(RumbleType.kRightRumble, 0);
+		Robot.oi.rumbleBoth(0);
 		winch.stop();
+	}
+	
+	public double getSpeedCrossover() {
+		return Preferences.getInstance().getDouble("Winch.speedCrossover", DEFAULT_WINCH_SPEED_CROSSOVER);
 	}
 	
 	public double getSlowJoystickRumble() {

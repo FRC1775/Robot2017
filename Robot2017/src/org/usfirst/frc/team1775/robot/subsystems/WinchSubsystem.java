@@ -10,20 +10,27 @@ public class WinchSubsystem extends Subsystem {
 	
 	public static final double DEFAULT_WINCH_SLOW_SPEED = 0.5;
 	public static final double DEFAULT_WINCH_FAST_SPEED = 1.0;
+	
+	public enum Speed {
+		Slow, Fast
+	}
 
 	@Override
 	protected void initDefaultCommand() { }
 
-	public void wind(boolean goFast) {
-		double speed = getSlowSpeed();
+	public void wind(Speed speed) {
+		SmartDashboard.putNumber("Winch.slowSpeed", getSlowSpeed());
+		SmartDashboard.putNumber("Winch.fastSpeed", getFastSpeed());
 		
-		if (goFast) {
-			speed = getFastSpeed();
+		double motorSpeed = getSlowSpeed();
+		
+		if (speed == Speed.Fast) {
+			motorSpeed = getFastSpeed();
 		}
 		
-		SmartDashboard.putNumber("Winch.speed", speed);
+		SmartDashboard.putNumber("Winch.speed", motorSpeed);
 		
-		RobotMap.winchController.set(speed);
+		RobotMap.winchController.set(motorSpeed);
 	}
 	
 	public void stop() {

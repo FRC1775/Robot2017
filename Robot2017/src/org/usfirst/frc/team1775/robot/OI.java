@@ -1,10 +1,13 @@
 package org.usfirst.frc.team1775.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.buttons.Trigger;
 
 import org.usfirst.frc.team1775.robot.commands.autonomous.DriveFromBackWallAndShoot;
+import org.usfirst.frc.team1775.robot.commands.drivetrain.AngleTune;
+import org.usfirst.frc.team1775.robot.commands.drivetrain.ResetGyro;
 import org.usfirst.frc.team1775.robot.commands.drivetrain.RotateByAngle;
 import org.usfirst.frc.team1775.robot.commands.gearassembly.ReleaseGear;
 import org.usfirst.frc.team1775.robot.commands.shooter.Shoot;
@@ -118,10 +121,11 @@ public class OI {
 		
 		// Back button
 		driverBackButton = new JoystickButton(driverJoystick, XBOX_BACK);
+		driverBackButton.whenPressed(new AngleTune());
 		
 		// Start button 
 		driverStartButton = new JoystickButton(driverJoystick, XBOX_START);
-		driverStartButton.whenPressed(new DriveFromBackWallAndShoot());
+		driverStartButton.whenPressed(new ResetGyro());
 
 		// Left trigger
 		driverLeftTrigger = new Trigger() {
@@ -193,5 +197,38 @@ public class OI {
 			}
 		};
 		operatorRightTrigger.whileActive(new WindWinch());
+	}
+	
+	public boolean hasOperatorJoystick() {
+		return true;
+	}
+	
+	public void rumbleLeft(double value) {
+		driverJoystick.setRumble(RumbleType.kLeftRumble, value);
+		
+		if (hasOperatorJoystick()) {
+			operatorJoystick.setRumble(RumbleType.kLeftRumble, value);
+		}
+	}
+	
+	public void rumbleRight(double value) {
+		driverJoystick.setRumble(RumbleType.kRightRumble, value);
+		
+		if (hasOperatorJoystick()) {
+			operatorJoystick.setRumble(RumbleType.kRightRumble, value);
+		}
+	}
+	
+	public void rumbleBoth(double value) {
+		rumbleLeft(value);
+		rumbleRight(value);
+	}
+	
+	public double getLeftTrigger() {
+		return Math.max(Robot.oi.driverJoystick.getRawAxis(OI.XBOX_LEFT_TRIGGER), Robot.oi.operatorJoystick.getRawAxis(OI.XBOX_LEFT_TRIGGER));
+	}
+	
+	public double getRightTrigger() {
+		return Math.max(Robot.oi.driverJoystick.getRawAxis(OI.XBOX_RIGHT_TRIGGER), Robot.oi.operatorJoystick.getRawAxis(OI.XBOX_RIGHT_TRIGGER));
 	}
 }
