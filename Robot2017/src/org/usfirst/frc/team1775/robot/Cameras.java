@@ -45,9 +45,13 @@ public class Cameras {
     public static double distance;
     
     private Thread cameraThread;
+    
+    private int numCameras = 1;
 	
 	public void init() {
 	    CvSource imageSource = CameraServer.getInstance().putVideo("Camera Viewer", IMG_WIDTH, IMG_HEIGHT);
+	    
+	    numCameras = UsbCamera.enumerateUsbCameras().length;
 	    
 	    cameraThread = new Thread(() -> {
 			UsbCamera shooterCamera = new UsbCamera(SHOOTER_CAMERA_NAME, SHOOTER_CAMERA_DEVICE);
@@ -60,24 +64,26 @@ public class Cameras {
 			shooterCamera.getProperty("white_balance_temperature").set(SHOOTER_CAMERA_WHITE_BALANCE_TEMP);
 			shooterCamera.getProperty("focus_auto").set(SHOOTER_CAMERA_FOCUS_AUTO);
 			shooterCamera.getProperty("focus_absolute").set(SHOOTER_CAMERA_FOCUS_ABSOLUTE);
-		    
-			
-		    UsbCamera gearCamera = new UsbCamera(GEAR_CAMERA_NAME, GEAR_CAMERA_DEVICE);
-		    gearCamera.setPixelFormat(PIXEL_FORMAT);
-		    gearCamera.setResolution(IMG_WIDTH, IMG_HEIGHT);
-		    gearCamera.setFPS(FPS);
-		    gearCamera.setExposureManual(GEAR_CAMERA_EXPOSURE);
-			gearCamera.getProperty("white_balance_temperature_auto").set(GEAR_CAMERA_WHITE_BALANCE_TEMP_AUTO);
-			gearCamera.getProperty("white_balance_temperature").set(GEAR_CAMERA_WHITE_BALANCE_TEMP);
-			gearCamera.getProperty("focus_auto").set(GEAR_CAMERA_FOCUS_AUTO);
-			gearCamera.getProperty("focus_absolute").set(GEAR_CAMERA_FOCUS_ABSOLUTE);
-		    
-		    
+	    
 		    CvSink shooterCameraSink = new CvSink(SHOOTER_CAMERA_NAME + " sink");
 		    shooterCameraSink.setSource(shooterCamera);
 		    
-		    CvSink gearCameraSink = new CvSink(GEAR_CAMERA_NAME + " sink");
-		    gearCameraSink.setSource(gearCamera);
+		    CvSink gearCameraSink = null;
+		    
+			if (numCameras > 1) {
+			    UsbCamera gearCamera = new UsbCamera(GEAR_CAMERA_NAME, GEAR_CAMERA_DEVICE);
+			    gearCamera.setPixelFormat(PIXEL_FORMAT);
+			    gearCamera.setResolution(IMG_WIDTH, IMG_HEIGHT);
+			    gearCamera.setFPS(FPS);
+			    gearCamera.setExposureManual(GEAR_CAMERA_EXPOSURE);
+				gearCamera.getProperty("white_balance_temperature_auto").set(GEAR_CAMERA_WHITE_BALANCE_TEMP_AUTO);
+				gearCamera.getProperty("white_balance_temperature").set(GEAR_CAMERA_WHITE_BALANCE_TEMP);
+				gearCamera.getProperty("focus_auto").set(GEAR_CAMERA_FOCUS_AUTO);
+				gearCamera.getProperty("focus_absolute").set(GEAR_CAMERA_FOCUS_ABSOLUTE);
+			    
+			    gearCameraSink = new CvSink(GEAR_CAMERA_NAME + " sink");
+			    gearCameraSink.setSource(gearCamera);
+			}
 		    /*
 		    if (!shooterCamera.isConnected() || !gearCamera.isConnected()) {
 	    		System.out.println("HERE");
@@ -92,7 +98,6 @@ public class Cameras {
     		
             GripPipeline pipeline = new GripPipeline();
             
-    		
 		    while(!Thread.interrupted()) {
 		    	
 		    	if(Robot.oi.driverYButton.get() || Robot.oi.operatorYButton.get()) {
@@ -100,17 +105,21 @@ public class Cameras {
             	}
             	
                 if(showShooterCamera) {
-                	gearCameraSink.setEnabled(false);
+                	if (gearCameraSink != null) {
+                		gearCameraSink.setEnabled(false);
+                	}
                 	shooterCameraSink.setEnabled(true);
                 	
 	  		    	long frameTime = shooterCameraSink.grabFrame(inputImage);
 	  		    	if (frameTime == 0) continue;
                 } else {
                 	shooterCameraSink.setEnabled(false);
-                	gearCameraSink.setEnabled(true);
-                	
-	  		    	long frameTime = gearCameraSink.grabFrame(inputImage);
-	  		    	if (frameTime == 0) continue;
+                	if (gearCameraSink != null) {
+                		gearCameraSink.setEnabled(true);
+                    	
+    	  		    	long frameTime = gearCameraSink.grabFrame(inputImage);
+    	  		    	if (frameTime == 0) continue;
+                	}
                 }
                 
                 if (showShooterCamera) {
