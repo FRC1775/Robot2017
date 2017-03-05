@@ -42,6 +42,7 @@ public class Cameras {
     private static final int GEAR_CAMERA_WHITE_BALANCE_TEMP = 4000;
     
     public static double angleOffCenter;
+    public static double distance;
     
     private Thread cameraThread;
 	
