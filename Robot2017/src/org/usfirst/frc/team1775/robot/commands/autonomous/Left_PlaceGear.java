@@ -6,9 +6,9 @@ import org.usfirst.frc.team1775.robot.commands.gearassembly.ReleaseGear;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
-public class PlaceGear extends CommandGroup {
+public class Left_PlaceGear extends CommandGroup {
 
-	public PlaceGear() {
+	public Left_PlaceGear() {
 		// Steps to place a gear
 		
 		// 1. Find and determine distance / angle to gear peg
@@ -23,14 +23,8 @@ public class PlaceGear extends CommandGroup {
 		addSequential(new RotateByAngle(45));
 		addSequential(new Wait(100));
 		addSequential(new DriveDistance(33));
-		addSequential(new ReleaseGear(), 4);
+		addSequential(new ReleaseGear(true));
 		addSequential(new DriveDistance(-13));
-		
-	}
-	
-	@Override
-	protected boolean isFinished() {
-		return false;
 	}
 
 }

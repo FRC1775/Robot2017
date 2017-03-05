@@ -6,9 +6,9 @@ import org.usfirst.frc.team1775.robot.commands.shooter.Shoot;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
-public class DriveFromBackWallAndShoot extends CommandGroup {
+public class Left_Shoot extends CommandGroup {
 
-	public DriveFromBackWallAndShoot() {
+	public Left_Shoot() {
 		addSequential(new DriveDistance(60));
 		addSequential(new RotateByAngle(-110));
 		addSequential(new Wait(200));

@@ -10,8 +10,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.usfirst.frc.team1775.robot.commands.autonomous.DoNothing;
 import org.usfirst.frc.team1775.robot.commands.autonomous.DriveAcrossBaseline;
-import org.usfirst.frc.team1775.robot.commands.autonomous.DriveFromBackWallAndShoot;
-import org.usfirst.frc.team1775.robot.commands.autonomous.PlaceGear;
+import org.usfirst.frc.team1775.robot.commands.autonomous.Left_GoToHopperAndShoot;
+import org.usfirst.frc.team1775.robot.commands.autonomous.Left_Shoot;
+import org.usfirst.frc.team1775.robot.commands.autonomous.Middle_PlaceGear;
+import org.usfirst.frc.team1775.robot.commands.autonomous.Middle_PlaceGearThenShoot;
+import org.usfirst.frc.team1775.robot.commands.autonomous.Middle_Shoot;
+import org.usfirst.frc.team1775.robot.commands.autonomous.Right_PlaceGear;
+import org.usfirst.frc.team1775.robot.commands.autonomous.Left_PlaceGear;
+import org.usfirst.frc.team1775.robot.commands.autonomous.Left_PlaceGearThenShoot;
 import org.usfirst.frc.team1775.robot.subsystems.DriveTrainSubsystem;
 import org.usfirst.frc.team1775.robot.subsystems.GearAssemblySubsystem;
 import org.usfirst.frc.team1775.robot.subsystems.ShooterSubsystem;
@@ -57,50 +63,25 @@ public class Robot extends IterativeRobot {
         
         initCameras();
 		initDashboard();
-        
-		
-		Thread rpm = new Thread(() -> {
-			
-			while (true) {
-				try {
-					Thread.sleep(5);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				//SmartDashboard.putNumber("Shooter.rpm", RobotMap.shooterController.getSpeed());
-			}
-			
-		}); 
-		rpm.start();
-		
-		/*
-		Thread reportErrors = new Thread(() -> {
-			while (!Thread.interrupted()) {
-				DriverStation.reportError("digitalioport2: "+RobotMap.driveTrainEncoder.getDistance(), false);
-				//DriverStation.reportError("Gyro: "+RobotMap.gyro.getAngle(), false);
-			}
-		});
-		reportErrors.start();
-		*/
-		
-	    /*DigitalInput digital1;
-	    DigitalInput digital2;
-	        // This is Kait's sensor for the gear
-	    	digital1 = new DigitalInput(8);
-	    	digital2 = new DigitalInput(9);
-	    
-	    if (digital1.get() & digital2.get()){
-	    	SmartDashboard.putBoolean("both?", true);
-	    }
-	    */
 	}
 	
 	private void initDashboard() {
 		chooser.addDefault("Do Nothing", new DoNothing());
 		chooser.addObject("Drive Across Base Line", new DriveAcrossBaseline());
-		chooser.addObject("Drive And Shoot", new DriveFromBackWallAndShoot());
-		chooser.addObject("Place Gear", new PlaceGear());
+		
+		// TODO uncomment auto commands when implemented
+		
+		//chooser.addObject("Left - Place Gear", new Left_PlaceGear());
+		// chooser.addObject("Left - Place Gear Then Shoot", new Left_PlaceGearThenShoot());
+		//chooser.addObject("Left - Shoot", new Left_Shoot());
+		// chooser.addObject("Left - Go to Hopper And Shoot", new Left_GoToHopperAndShoot());
+
+		// chooser.addObject("Middle - Place Gear", new Middle_PlaceGear());
+		// chooser.addObject("Middle - Place Gear Then Shoot", new Middle_PlaceGearThenShoot());
+		// chooser.addObject("Middle - Shoot", new Middle_Shoot());
+		
+		// chooser.addObject("Right - Place Gear", new Right_PlaceGear());
+		
 		SmartDashboard.putData("Auto Mode", chooser);
 		
 		SmartDashboard.putData(Scheduler.getInstance());
