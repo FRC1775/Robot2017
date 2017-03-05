@@ -6,27 +6,27 @@ import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class LeftJoystickRumble extends Command {
+public class RightJoystickRumble extends Command {
 
 	private String key;
 	private double amount;
 	
-	public LeftJoystickRumble(double amount) {
+	public RightJoystickRumble(double amount) {
 		this.amount = amount;
 	}
 	
-	public LeftJoystickRumble(String key, double backup) {
+	public RightJoystickRumble(String key, double backup) {
 		this.key = key;
 		this.amount = backup;
 	}
 	
 	public void execute() {
-		Robot.oi.rumbleLeft(getAmount());
+		Robot.oi.rumbleRight(getAmount());
 	}
 	
 	@Override
 	public void interrupted() {
-		Robot.oi.rumbleLeft(0);
+		Robot.oi.rumbleRight(0);
 	}
 	
 	@Override
@@ -43,5 +43,5 @@ public class LeftJoystickRumble extends Command {
 		
 		return amount;
 	}
-	
+
 }

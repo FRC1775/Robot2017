@@ -12,7 +12,7 @@ public class Shoot extends CommandGroup {
 	private static final double DEFAULT_SINGULATOR_SPEED = 0.3;
 
 	public Shoot() {
-		addParallel(new LeftJoystickRumble(getJoystickRumble()));
+		addParallel(new LeftJoystickRumble("Shooter.joystickRumble", DEFAULT_JOYSTICK_RUMBLE));
 		addSequential(new StartSingulator(getSingulatorSpeed()));
 		addSequential(new StartShooter());
 		addSequential(new StartRegulator(getRegulatorSpeed()));
@@ -34,8 +34,5 @@ public class Shoot extends CommandGroup {
 	private double getRegulatorSpeed() {
 		return Preferences.getInstance().getDouble("Shooter.regulatorSpeed", DEFAULT_REGULATOR_SPEED);
 	}
-	
-	private double getJoystickRumble() {
-		return Preferences.getInstance().getDouble("Shooter.joystickRumble", DEFAULT_JOYSTICK_RUMBLE);
-	}
+
 }
