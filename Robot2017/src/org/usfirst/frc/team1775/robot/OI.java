@@ -11,6 +11,8 @@ import org.usfirst.frc.team1775.robot.commands.drivetrain.ResetGyro;
 import org.usfirst.frc.team1775.robot.commands.drivetrain.RotateByAngle;
 import org.usfirst.frc.team1775.robot.commands.gearassembly.CloseGear;
 import org.usfirst.frc.team1775.robot.commands.gearassembly.ReleaseGear;
+import org.usfirst.frc.team1775.robot.commands.shooter.AdjustShooterSpeed;
+import org.usfirst.frc.team1775.robot.commands.shooter.AdjustShooterSpeed.ChangeDirection;
 import org.usfirst.frc.team1775.robot.commands.shooter.Shoot;
 import org.usfirst.frc.team1775.robot.commands.shooter.StopShooterSubsystem;
 import org.usfirst.frc.team1775.robot.commands.winch.WindWinch;
@@ -59,6 +61,9 @@ public class OI {
 	public final static int XBOX_RIGHT_BUMPER = 6;
 	public final static int XBOX_BACK = 7;
 	public final static int XBOX_START = 8;
+	
+	public final static int XBOX_POV_UP = 0;
+	public final static int XBOX_POV_DOWN = 180;
 
 	public final static int XBOX_LEFT_JOYSTICK_X_AXIS = 0;
 	public final static int XBOX_LEFT_JOYSTICK_Y_AXIS = 1;
@@ -80,6 +85,8 @@ public class OI {
 	public JoystickButton driverStartButton;
 	public Trigger        driverLeftTrigger;
 	public Trigger        driverRightTrigger;
+	public Trigger        driverPovUp;
+	public Trigger        driverPovDown;
 
 	public JoystickButton operatorAButton;
 	public JoystickButton operatorBButton;
@@ -91,6 +98,8 @@ public class OI {
 	public JoystickButton operatorStartButton;
 	public Trigger        operatorLeftTrigger;
 	public Trigger        operatorRightTrigger;
+	public Trigger        operatorPovUp;
+	public Trigger        operatorPovDown;
 
 	public OI() {
 		initDriverJoystick();
@@ -148,6 +157,24 @@ public class OI {
 			}
 		};
 		driverRightTrigger.whileActive(new WindWinch());
+		
+		// POV Up
+		driverPovUp = new Trigger() {
+			@Override
+			public boolean get() {
+				return driverJoystick.getPOV() == XBOX_POV_UP;
+			}
+		};
+		driverPovUp.whenActive(new AdjustShooterSpeed(ChangeDirection.Up));
+		
+		// POV Down
+		driverPovDown = new Trigger() {
+			@Override
+			public boolean get() {
+				return driverJoystick.getPOV() == XBOX_POV_DOWN;
+			}
+		};
+		driverPovDown.whenActive(new AdjustShooterSpeed(ChangeDirection.Down));
 	}
 	
 	private void initOperatorJoystick() {
@@ -204,6 +231,23 @@ public class OI {
 			}
 		};
 		operatorRightTrigger.whileActive(new WindWinch());
+		
+		// POV Up
+		operatorPovUp = new Trigger() {
+			@Override
+			public boolean get() {
+				return operatorJoystick.getPOV() == XBOX_POV_UP;
+			}
+		};
+		operatorPovUp.whenActive(new AdjustShooterSpeed(ChangeDirection.Up));
+		
+		// POV Down
+		operatorPovDown = new Trigger() {
+			@Override
+			public boolean get() {
+				return operatorJoystick.getPOV() == XBOX_POV_DOWN;
+			}
+		};
 	}
 	
 	public boolean hasOperatorJoystick() {

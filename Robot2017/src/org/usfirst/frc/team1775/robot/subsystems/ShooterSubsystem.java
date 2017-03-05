@@ -1,6 +1,5 @@
 package org.usfirst.frc.team1775.robot.subsystems;
 
-import org.usfirst.frc.team1775.robot.Cameras;
 import org.usfirst.frc.team1775.robot.RobotMap;
 
 import edu.wpi.first.wpilibj.Preferences;
@@ -53,11 +52,16 @@ public class ShooterSubsystem extends Subsystem {
 					}
 
 					SmartDashboard.putNumber("Shooter.output", RobotMap.shooterController.get());
+					SmartDashboard.putNumber("Shooter.targetRpm", shooterRpmTarget);
 					SmartDashboard.putNumber("Shooter.rpm", currentShooterRpm);
 				}
 			});
 			shooterSpeedRegulator.start();
 		}
+	}
+	
+	public void adjustShooter(int rpmChange) {
+		this.shooterRpmTarget += rpmChange;
 	}
 
 	public void stop() {
@@ -107,42 +111,4 @@ public class ShooterSubsystem extends Subsystem {
 		return Preferences.getInstance().getInt("Shooter.bangBangReadyTolerance", DEFAULT_SHOOTER_BANG_BANG_READY_TOLERANCE);
 	}
 	
-	/*
-	 * 
-	 * Old code below
-	 * DO NOT USE
-	 * 
-	 */
-	
-	//double trigger = Robot.oi.joystick1.getRawAxis(2);
-
-	
-	//int rpm = Preferences.getInstance().getInt("Shooter.rpm", 2750);
-	
-	
-	
-	//if (trigger > 0.5) {
-	//	SmartDashboard.putNumber("Angle", RobotMap.gyro.getAngle());
-	//	SmartDashboard.putNumber("Shooter.singulatorSpeed", singulatorSpeed);
-	//	SmartDashboard.putNumber("Shooter.regulatorSpeed", regulatorSpeed);
-		
-	/*
-		RobotMap.shooterSingulatorController.set(singulatorSpeed);
-		RobotMap.shooterRegulatorController.set(regulatorSpeed);
-		
-		// Set shooter speed
-		RobotMap.shooterController.changeControlMode(TalonControlMode.Speed);
-		RobotMap.shooterController.setF(Preferences.getInstance().getDouble("Shooter.F", 1.6));
-		RobotMap.shooterController.setP(Preferences.getInstance().getDouble("Shooter.P", 3.3));
-		RobotMap.shooterController.setI(Preferences.getInstance().getDouble("Shooter.I", 0));
-		RobotMap.shooterController.setD(Preferences.getInstance().getDouble("Shooter.D", 115));
-		RobotMap.shooterController.set(Preferences.getInstance().getDouble("Shooter.rpm", 0));
-		SmartDashboard.putNumber("Shooter.trigger", trigger);
-		//SmartDashboard.putNumber("Shooter.rpm", RobotMap.shooterController.getSpeed());
-		SmartDashboard.putNumber("Shooter.output", RobotMap.shooterController.getOutputVoltage());
-		SmartDashboard.putNumber("Shooter.cle", RobotMap.shooterController.getClosedLoopError());
-	//} else {
-	//	stop();
-	//}
-	 * */
 }
