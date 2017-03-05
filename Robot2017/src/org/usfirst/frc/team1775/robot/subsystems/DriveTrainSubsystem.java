@@ -181,7 +181,11 @@ public class DriveTrainSubsystem extends Subsystem {
 		if (Math.abs(degrees) < 16) {
 			p = 0.15;
 			d = 0.4;
-			offset = -1;
+			if (degrees > 0) {
+				offset = 1;
+			} else {
+				offset = -1;
+			}
 		} else {
 			p = 0.15;
 			d = 0.4;

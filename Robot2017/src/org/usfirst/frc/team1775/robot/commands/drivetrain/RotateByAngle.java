@@ -23,6 +23,11 @@ public class RotateByAngle extends Command {
 		this.degrees = degrees;
 	}
 	
+	public RotateByAngle(double degrees, int timeout) {
+		this(degrees);
+		setTimeout((double)timeout / 1000.0);
+	}
+	
 	public void initialize() {
 		SmartDashboard.putData(driveTrain);
 		
@@ -45,6 +50,6 @@ public class RotateByAngle extends Command {
 	
 	@Override
 	protected boolean isFinished() {
-		return driveTrain.isFinished();
+		return isTimedOut() || driveTrain.isFinished();
 	}
 }

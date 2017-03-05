@@ -5,11 +5,9 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.buttons.Trigger;
 
-import org.usfirst.frc.team1775.robot.commands.autonomous.DriveFromBackWallAndShoot;
 import org.usfirst.frc.team1775.robot.commands.drivetrain.AngleTune;
 import org.usfirst.frc.team1775.robot.commands.drivetrain.ResetGyro;
 import org.usfirst.frc.team1775.robot.commands.drivetrain.RotateByAngle;
-import org.usfirst.frc.team1775.robot.commands.gearassembly.CloseGear;
 import org.usfirst.frc.team1775.robot.commands.gearassembly.ReleaseGear;
 import org.usfirst.frc.team1775.robot.commands.shooter.AdjustShooterSpeed;
 import org.usfirst.frc.team1775.robot.commands.shooter.AdjustShooterSpeed.ChangeDirection;
@@ -115,14 +113,14 @@ public class OI {
 		
 		// B button
 		driverBButton = new JoystickButton(driverJoystick, XBOX_B);
+		driverBButton.whenPressed(new RotateByAngle(2, 500));
 		
 		// X button
 		driverXButton = new JoystickButton(driverJoystick, XBOX_X);
-		driverXButton.whenPressed(new ReleaseGear(true));
+		driverXButton.whenPressed(new RotateByAngle(-2, 500));
 		
 		// Y button
 		driverYButton = new JoystickButton(driverJoystick, XBOX_Y);
-		driverYButton.whenPressed(new CloseGear());
 
 		// Left bumper
 		driverLeftBumper = new JoystickButton(driverJoystick, XBOX_LEFT_BUMPER);
@@ -191,7 +189,6 @@ public class OI {
 		
 		// B button
 		operatorBButton = new JoystickButton(operatorJoystick, XBOX_B);
-		//operatorBButton.whenPressed(new RotateByAngle(90));
 		
 		// X button
 		operatorXButton = new JoystickButton(operatorJoystick, XBOX_X);
@@ -211,7 +208,6 @@ public class OI {
 		
 		// Start button 
 		operatorStartButton = new JoystickButton(operatorJoystick, XBOX_START);
-		operatorStartButton.whenPressed(new DriveFromBackWallAndShoot());
 
 		// Left trigger
 		operatorLeftTrigger = new Trigger() {
