@@ -119,10 +119,10 @@ public class Cameras {
 	                if (contours.size() > 0) {
 	                	//System.out.println("number of contours: "+contours.size());
 	                	// TODO set to EQUAL to 2
-	                	if (contours.size() >= 1) {
+	                	if (contours.size() >= 2) {
 	                		// TODO top should be r1
-	                		Rect top = Imgproc.boundingRect(contours.get(0));
-	                		/*
+	                		Rect r1 = Imgproc.boundingRect(contours.get(0));
+	                		
 	                		Rect r2 = Imgproc.boundingRect(contours.get(1));
 	                		
 	                		Rect top, bottom;
@@ -134,13 +134,16 @@ public class Cameras {
 	                			top = r2;
 	                			bottom = r1;
 	                		}
-	                		*/
+	                		
 	                		
 	                		double offCenter = (double)top.x + (double)top.width / 2.0 - ((double)IMG_WIDTH / 2.0);
 	                		
 	                		angleOffCenter = (65 / (double) IMG_WIDTH) * offCenter;
 	                		SmartDashboard.putNumber("Camera.shooter.angle", angleOffCenter);
-	                		
+	                		double bandDistance = 0.0000002*Math.pow(top.y, 4) -0.00004 * Math.pow(top.y, 3) + 0.0049*Math.pow(top.y, 2) + 0.0484 * top.y + 78.792;
+	                		SmartDashboard.putNumber("Camera.shooter.bandDistance", bandDistance );
+	                		distance = Math.sqrt(Math.pow(bandDistance,  2) - Math.pow(66, 2))+16.5;//add 16.5 for the shooter distance to camera and the mid boiler distance from the outside of the boiler
+	                		SmartDashboard.putNumber("DistanceIWant",  distance);
 	                	}
 	                }
                 }
