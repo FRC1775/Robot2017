@@ -12,7 +12,6 @@ import edu.wpi.cscore.CvSink;
 import edu.wpi.cscore.CvSource;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoMode.PixelFormat;
-import edu.wpi.cscore.VideoSink;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -94,9 +93,10 @@ public class Cameras {
 
 				Mat inputImage = new Mat();
 
-				boolean showShooterCamera = true;
+				boolean showShooterCamera = false;
 
 				GripPipeline pipeline = new GripPipeline();
+				GearPipeline gearPipeline = new GearPipeline();
 
 				while (!Thread.interrupted()) {
 
@@ -115,7 +115,7 @@ public class Cameras {
 							continue;
 					} else {
 						shooterCameraSink.setEnabled(false);
-						
+
 						if (gearCameraSink != null) {
 							gearCameraSink.setEnabled(true);
 
@@ -128,16 +128,11 @@ public class Cameras {
 					if (showShooterCamera) {
 						pipeline.process(inputImage);
 						ArrayList<MatOfPoint> contours = pipeline.filterContoursOutput();
-						Imgproc.drawContours(inputImage, contours, -1, new Scalar(0, 255, 0)); // changed
-																								// -1
-																								// to
-																								// -5
 						if (contours.size() > 0) {
 							// System.out.println("number of contours:
 							// "+contours.size());
 							// TODO set to EQUAL to 2
 							if (contours.size() >= 2) {
-								// TODO top should be r1
 								Rect r1 = Imgproc.boundingRect(contours.get(0));
 
 								Rect r2 = Imgproc.boundingRect(contours.get(1));
@@ -182,18 +177,52 @@ public class Cameras {
 								SmartDashboard.putNumber("DistanceIWant", distance);
 							}
 						}
+					} else {
+						gearPipeline.process(inputImage);
+						ArrayList<MatOfPoint> contours = gearPipeline.filterContoursOutput();
+						
+						if (contours.size() > 0) {
+							// System.out.println("number of contours:
+							// "+contours.size());
+							// TODO set to EQUAL to 2
+							if (contours.size() >= 2) {
+								ArrayList<Rect> rects = new ArrayList<Rect>(2);
+								for (int i = 0; i < contours.size(); i++) {
+									Rect rect = Imgproc.boundingRect(contours.get(i));
+									if (rect.y < 110) {
+										System.out.println(rect.y);
+										Imgproc.drawContours(inputImage, contours, i, new Scalar(0, 255, 0));
+										rects.add(rect);
+									}
+									if (rects.size() == 2) {
+										break;
+									}
+								}
+								
+								if (rects.size() == 2) {
+									// TODO top should be r1
+									Rect r1 = rects.get(0);
+	
+									Rect r2 = rects.get(1);
+	
+									Rect left, right;
+	
+									if (r1.x < r2.x) {
+										left = r1;
+										right = r2;
+									} else {
+										right = r2;
+										left = r1;
+									}
+	
+									double offCenter = ((((double)right.width + (double)right.x) - (double) left.x) / 2.0 + (double)left.x) - ((double) IMG_WIDTH / 2.0);
+	
+									angleOffCenter = (65 / (double) IMG_WIDTH) * offCenter;
+									SmartDashboard.putNumber("Camera.shooter.angle", angleOffCenter);
+								}
+							}
+						}
 					}
-
-					// TODO do other processing here
-
-					/*
-					 * MatOfPoint contour1 = contours.get(0); Rect r =
-					 * Imgproc.boundingRect(contour1); double testDistance =
-					 * ((15.0*(double)IMG_WIDTH)/(2.0*r.width*Math.tan(((60.0*
-					 * Math.PI)/180)/2.0)));
-					 * DriverStation.reportError("Distance to boiler: "
-					 * +testDistance, false);
-					 */
 
 					imageSource.putFrame(inputImage);
 				}

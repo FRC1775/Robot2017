@@ -4,6 +4,7 @@ import org.usfirst.frc.team1775.robot.Cameras;
 import org.usfirst.frc.team1775.robot.Robot;
 import org.usfirst.frc.team1775.robot.subsystems.DriveTrainSubsystem;
 
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -23,6 +24,11 @@ public class RotateByAngle extends Command {
 		this.degrees = degrees;
 	}
 	
+	public RotateByAngle(int timeout, boolean nothing) {
+		requires(driveTrain);
+		setTimeout((double)timeout / 1000.0);
+	}
+	
 	public RotateByAngle(double degrees, int timeout) {
 		this(degrees);
 		setTimeout((double)timeout / 1000.0);
@@ -34,6 +40,7 @@ public class RotateByAngle extends Command {
 		if (degrees == 0) {
 			System.out.println(Cameras.angleOffCenter);
 			driveTrain.setRotateByAngle(Cameras.angleOffCenter);
+			//driveTrain.setRotateByAngle(Preferences.getInstance().getDouble("TargetAngle", 3));
 		} else {
 			driveTrain.setRotateByAngle(degrees);
 		}

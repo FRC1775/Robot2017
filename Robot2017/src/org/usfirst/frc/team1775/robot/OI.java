@@ -1,11 +1,11 @@
 package org.usfirst.frc.team1775.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.buttons.Trigger;
 
-import org.usfirst.frc.team1775.robot.commands.drivetrain.AngleTune;
 import org.usfirst.frc.team1775.robot.commands.drivetrain.ResetGyro;
 import org.usfirst.frc.team1775.robot.commands.drivetrain.RotateByAngle;
 import org.usfirst.frc.team1775.robot.commands.gearassembly.ReleaseGear;
@@ -105,8 +105,15 @@ public class OI {
 	}
 	
 	private void initDriverJoystick() {
+		
+		
 		driverJoystick = new Joystick(DRIVER_JOYSTICK);
 		
+		
+		if (!hasDriverJoystick()) {
+			driverJoystick = null;
+			return;
+		}
 		// A button
 		driverAButton = new JoystickButton(driverJoystick, XBOX_A);
 		driverAButton.whileHeld(new ReleaseGear());
@@ -124,14 +131,14 @@ public class OI {
 
 		// Left bumper
 		driverLeftBumper = new JoystickButton(driverJoystick, XBOX_LEFT_BUMPER);
-		driverLeftBumper.whenPressed(new RotateByAngle());
+		driverLeftBumper.whenPressed(new RotateByAngle(1500, true));
 		
 		// Right bumper
 		driverRightBumper = new JoystickButton(driverJoystick, XBOX_RIGHT_BUMPER);
 		
 		// Back button
 		driverBackButton = new JoystickButton(driverJoystick, XBOX_BACK);
-		driverBackButton.whenPressed(new AngleTune());
+		driverBackButton.whenPressed(new RotateByAngle(2000, true));
 		
 		// Start button 
 		driverStartButton = new JoystickButton(driverJoystick, XBOX_START);
@@ -257,6 +264,21 @@ public class OI {
 			operatorJoystick.getType();
 			return true;
 		} catch (Exception e) {
+			DriverStation.reportError(""+e, false);
+			return false;
+		}
+	}
+	public boolean hasDriverJoystick() {
+		if (driverJoystick == null) {
+			return false;
+		}
+		
+		try
+		{
+			driverJoystick.getType();
+			return true;
+		} catch (Exception e) {
+			DriverStation.reportError(""+e, false);
 			return false;
 		}
 	}
@@ -300,13 +322,15 @@ public class OI {
 	
 	public boolean getYButton() {
 		try {
-			if (!hasOperatorJoystick()) {
+			if (!hasOperatorJoystick() && hasDriverJoystick()) {
 				return driverYButton.get();
 			}
 			
 			return driverYButton.get() || operatorYButton.get();
 		
 		} catch (Exception e) {
+			DriverStation.reportError("getYButton error "+e, false);
+			
 			return false;
 		}
 	}

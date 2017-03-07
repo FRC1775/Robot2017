@@ -28,7 +28,7 @@ public class ReleaseGear extends Command {
 
 	@Override
 	protected boolean isFinished() {
-		return false;
+		return keepOpen;
 	}
 
 	@Override

@@ -71,12 +71,12 @@ public class Robot extends IterativeRobot {
 		
 		// TODO uncomment auto commands when implemented
 		
-		//chooser.addObject("Left - Place Gear", new Left_PlaceGear());
+		chooser.addObject("Left - Place Gear", new Left_PlaceGear());
 		// chooser.addObject("Left - Place Gear Then Shoot", new Left_PlaceGearThenShoot());
-		//chooser.addObject("Left - Shoot", new Left_Shoot());
+		chooser.addObject("Left - Shoot", new Left_Shoot());
 		// chooser.addObject("Left - Go to Hopper And Shoot", new Left_GoToHopperAndShoot());
 
-		// chooser.addObject("Middle - Place Gear", new Middle_PlaceGear());
+		chooser.addObject("Middle - Place Gear", new Middle_PlaceGear());
 		// chooser.addObject("Middle - Place Gear Then Shoot", new Middle_PlaceGearThenShoot());
 		// chooser.addObject("Middle - Shoot", new Middle_Shoot());
 		

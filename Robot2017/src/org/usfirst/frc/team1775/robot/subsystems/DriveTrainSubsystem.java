@@ -41,6 +41,7 @@ public class DriveTrainSubsystem extends Subsystem {
 	
 	private PIDController rotateByAnglePidController = new PIDController(0, 0, 0, (PIDSource) RobotMap.gyro, (value) -> {
 		SmartDashboard.putNumber("DriveTrain.rotateByAngle.pidResult", value);
+		SmartDashboard.putNumber("DriveTrain.rotateByAngle.gyroAngle", RobotMap.gyro.getAngle());
 		rotateByAnglePidResult = value;
 	}, 0.01);
 	
@@ -128,6 +129,27 @@ public class DriveTrainSubsystem extends Subsystem {
 		} else {
 			distanceEncoderValue = RobotMap.driveTrainEncoder.getDistance();
 			detectEncoderCount = 0;
+			
+			double distanceRemaining = Math.abs(driveToDistanceTargetDistance) - Math.abs(RobotMap.driveTrainEncoder.getDistance());
+			if (distanceRemaining < 2) {
+				driveToDistancePidResult = 0;
+			} else if (distanceRemaining < 5) {
+				driveToDistancePidResult = 0.2;
+			} else if (distanceRemaining < 10) {
+				driveToDistancePidResult = 0.25;
+			} else if (distanceRemaining < 20) {
+				driveToDistancePidResult = 0.3;
+			} else {
+				driveToDistancePidResult = 0.6;
+			}
+			
+			if (driveToDistanceTargetDistance < 0) {
+				driveToDistancePidResult = -driveToDistancePidResult;
+			}
+			
+			if (distanceRemaining < 0) {
+				driveToDistancePidResult = 0;
+			}
 		}
 		
 		
@@ -139,7 +161,26 @@ public class DriveTrainSubsystem extends Subsystem {
 		SmartDashboard.putNumber("DriveTrain.straightRotate", rotateByAnglePidResult);
 		SmartDashboard.putNumber("DriveTrain.rotateError", rotateByAnglePidController.getError());
 		SmartDashboard.putNumber("DriveTrain.angle", RobotMap.gyro.getAngle());
+		double angleRemaining = Math.abs(rotateByAngleTargetAngle) - Math.abs(RobotMap.gyro.getAngle());
+		if (angleRemaining < 2) {
+			rotateByAnglePidResult = 0.4;
+		} else if (angleRemaining < 5) {
+			rotateByAnglePidResult = 0.45;
+		} else if (angleRemaining < 10) {
+			rotateByAnglePidResult = 0.5;
+		} else if (angleRemaining < 20) {
+			rotateByAnglePidResult = 0.6;
+		} else {
+			rotateByAnglePidResult = 1;
+		}
 		
+		if (rotateByAngleTargetAngle < 0) {
+			rotateByAnglePidResult = -rotateByAnglePidResult;
+		}
+		
+		if (angleRemaining < 0) {
+			rotateByAnglePidResult = 0;
+		}
 		RobotMap.driveTrainRobotDrive.arcadeDrive(0, rotateByAnglePidResult, false);
 	}
 
@@ -157,9 +198,21 @@ public class DriveTrainSubsystem extends Subsystem {
 	
 	public boolean isFinished() {
 		if (driveMode == DriveMode.RotateByAngle) {
-			return rotateByAnglePidController.onTarget();
+			double angleRemaining = Math.abs(rotateByAngleTargetAngle) - Math.abs(RobotMap.gyro.getAngle());
+			if (rotateByAngleTargetAngle < 5) {
+				return angleRemaining < 0.1;
+			} else {
+				return angleRemaining / Math.abs(rotateByAngleTargetAngle) < 0.15;
+			}
+			//return rotateByAnglePidController.onTarget();
 		} else if (driveMode == DriveMode.DriveToDistance) {
-			return driveToDistancePidController.onTarget();
+			double distanceRemaining = Math.abs(driveToDistanceTargetDistance) - Math.abs(RobotMap.driveTrainEncoder.getDistance());
+			if (driveToDistanceTargetDistance < 5) {
+				return distanceRemaining < 0.1;
+			} else {
+				return distanceRemaining / Math.abs(driveToDistanceTargetDistance) < 0.15;
+			}
+			//return driveToDistancePidController.onTarget();
 		}
 		
 		return false;
@@ -168,7 +221,8 @@ public class DriveTrainSubsystem extends Subsystem {
 	public void setRegularDrive() {
 		setDriveMode(DriveMode.Regular);
 	}
-	
+	private boolean isAngleLess = false;
+	private double rotSpeed = 0.4;
 	public void setRotateByAngle(double degrees) {
 		setDriveMode(DriveMode.RotateByAngle);
 
@@ -178,19 +232,35 @@ public class DriveTrainSubsystem extends Subsystem {
 		} else {
 			offset = -2.5;
 		}
-		if (Math.abs(degrees) < 16) {
+		if (Math.abs(degrees) < 10) {
+			p = 0;
+			d = 0;
+			rotSpeed = 0.4;
+			isAngleLess = true;
+			offset = 0;
+		} else if (Math.abs(degrees) < 16) {
 			p = 0.15;
 			d = 0.4;
+			rotSpeed = 0.5;
+			isAngleLess = true;
+			offset = 0;
+			/*
+			isAngleLess = false;
 			if (degrees > 0) {
 				offset = 1;
 			} else {
 				offset = -1;
 			}
+			*/
 		} else {
 			p = 0.15;
 			d = 0.4;
 			//offset = -2.5;
+			isAngleLess = false;
 		}
+		
+		// HEY Gabe, Sorry I accidentally deleted the changes we made :((. Fortunately we have some of the
+		// numbers from in the spreadsheet. Ivan has some ideas to help improve overall.
 		
 		//p = Preferences.getInstance().getDouble("DriveTrain.rotateByAngle.p", 0.01);
 		//d = Preferences.getInstance().getDouble("DriveTrain.rotateByAngle.d", 0.0);
@@ -198,7 +268,7 @@ public class DriveTrainSubsystem extends Subsystem {
 		
 		RobotMap.gyro.reset();
 		
-		rotateByAngleTargetAngle = degrees + offset;
+		rotateByAngleTargetAngle = degrees; // + offset;
 		
 		rotateByAnglePidController.setPID(p, i, d);
 		rotateByAnglePidController.setInputRange(-180, 180);
