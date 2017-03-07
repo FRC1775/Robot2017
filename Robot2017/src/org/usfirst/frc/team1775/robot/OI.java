@@ -148,7 +148,13 @@ public class OI {
 		driverLeftTrigger = new Trigger() {
 			@Override
 			public boolean get() {
-				return driverJoystick.getRawAxis(XBOX_LEFT_TRIGGER) > 0;
+				try {
+					if (!hasDriverJoystick()) return false;
+					
+					return driverJoystick.getRawAxis(XBOX_LEFT_TRIGGER) > 0;
+				} catch(Exception e) {
+					return false;
+				}
 			}
 		};
 		driverLeftTrigger.whenActive(new Shoot());
@@ -158,7 +164,13 @@ public class OI {
 		driverRightTrigger = new Trigger() {
 			@Override
 			public boolean get() {
-				return driverJoystick.getRawAxis(XBOX_RIGHT_TRIGGER) > 0;
+				try {
+					if (!hasDriverJoystick()) return false;
+					
+					return driverJoystick.getRawAxis(XBOX_RIGHT_TRIGGER) > 0;
+				} catch(Exception e) {
+					return false;
+				}
 			}
 		};
 		driverRightTrigger.whileActive(new WindWinch());
@@ -167,7 +179,13 @@ public class OI {
 		driverPovUp = new Trigger() {
 			@Override
 			public boolean get() {
-				return driverJoystick.getPOV() == XBOX_POV_UP;
+				try {
+					if (!hasDriverJoystick()) return false;
+					
+					return driverJoystick.getPOV() == XBOX_POV_UP;
+				} catch(Exception e) {
+					return false;
+				}
 			}
 		};
 		driverPovUp.whenActive(new AdjustShooterSpeed(ChangeDirection.Up));
@@ -176,7 +194,13 @@ public class OI {
 		driverPovDown = new Trigger() {
 			@Override
 			public boolean get() {
-				return driverJoystick.getPOV() == XBOX_POV_DOWN;
+				try {
+					if (!hasDriverJoystick()) return false;
+					
+					return driverJoystick.getPOV() == XBOX_POV_DOWN;
+				} catch(Exception e) {
+					return false;
+				}
 			}
 		};
 		driverPovDown.whenActive(new AdjustShooterSpeed(ChangeDirection.Down));
@@ -220,7 +244,13 @@ public class OI {
 		operatorLeftTrigger = new Trigger() {
 			@Override
 			public boolean get() {
-				return operatorJoystick.getRawAxis(XBOX_LEFT_TRIGGER) > 0;
+				try {
+					if (!hasOperatorJoystick()) return false;
+					
+					return operatorJoystick.getRawAxis(XBOX_LEFT_TRIGGER) > 0;
+				} catch(Exception e) {
+					return false;
+				}
 			}
 		};
 		operatorLeftTrigger.whenActive(new Shoot());
@@ -230,7 +260,13 @@ public class OI {
 		operatorRightTrigger = new Trigger() {
 			@Override
 			public boolean get() {
-				return operatorJoystick.getRawAxis(XBOX_RIGHT_TRIGGER) > 0;
+				try {
+					if (!hasOperatorJoystick()) return false;
+					
+					return operatorJoystick.getRawAxis(XBOX_RIGHT_TRIGGER) > 0;
+				} catch(Exception e) {
+					return false;
+				}
 			}
 		};
 		operatorRightTrigger.whileActive(new WindWinch());
@@ -239,7 +275,13 @@ public class OI {
 		operatorPovUp = new Trigger() {
 			@Override
 			public boolean get() {
-				return operatorJoystick.getPOV() == XBOX_POV_UP;
+				try {
+					if (!hasOperatorJoystick()) return false;
+					
+					return operatorJoystick.getPOV() == XBOX_POV_UP;
+				} catch(Exception e) {
+					return false;
+				}
 			}
 		};
 		operatorPovUp.whenActive(new AdjustShooterSpeed(ChangeDirection.Up));
@@ -248,7 +290,13 @@ public class OI {
 		operatorPovDown = new Trigger() {
 			@Override
 			public boolean get() {
-				return operatorJoystick.getPOV() == XBOX_POV_DOWN;
+				try {
+					if (!hasOperatorJoystick()) return false;
+					
+					return operatorJoystick.getPOV() == XBOX_POV_DOWN;
+				} catch(Exception e) {
+					return false;
+				}
 			}
 		};
 		operatorPovDown.whenActive(new AdjustShooterSpeed(ChangeDirection.Down));
@@ -322,14 +370,18 @@ public class OI {
 	
 	public boolean getYButton() {
 		try {
-			if (!hasOperatorJoystick() && hasDriverJoystick()) {
+			if (!hasDriverJoystick()) {
+				return false;
+			}
+			
+			if (!hasOperatorJoystick()) {
 				return driverYButton.get();
 			}
 			
 			return driverYButton.get() || operatorYButton.get();
 		
 		} catch (Exception e) {
-			DriverStation.reportError("getYButton error "+e, false);
+			DriverStation.reportError("getYButtonError", false);
 			
 			return false;
 		}

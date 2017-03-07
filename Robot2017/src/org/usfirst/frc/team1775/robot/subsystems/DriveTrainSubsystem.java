@@ -3,9 +3,11 @@ package org.usfirst.frc.team1775.robot.subsystems;
 import org.usfirst.frc.team1775.robot.RobotMap;
 import org.usfirst.frc.team1775.robot.commands.drivetrain.RegularDrive;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -39,11 +41,13 @@ public class DriveTrainSubsystem extends Subsystem {
 		straightDriveRotateCompensationValue = value;
 	}, 0.01);
 	
+	/*
 	private PIDController rotateByAnglePidController = new PIDController(0, 0, 0, (PIDSource) RobotMap.gyro, (value) -> {
 		SmartDashboard.putNumber("DriveTrain.rotateByAngle.pidResult", value);
 		SmartDashboard.putNumber("DriveTrain.rotateByAngle.gyroAngle", RobotMap.gyro.getAngle());
 		rotateByAnglePidResult = value;
 	}, 0.01);
+	*/
 	
 	private PIDController driveToDistancePidController = new PIDController(0, 0, 0, (PIDSource) RobotMap.driveTrainEncoder, (value) -> {
 		SmartDashboard.putNumber("DriveTrain.driveToDistance.pidResult", value);
@@ -116,18 +120,20 @@ public class DriveTrainSubsystem extends Subsystem {
 	}
 	
 	private int detectEncoderCount = 0;
-	private double distanceEncoderValue = 0;
 	
 	public void driveDistance() {
 		SmartDashboard.putNumber("DriveTrain.encoderDistance", RobotMap.driveTrainEncoder.getDistance());
 		
-		if (distanceEncoderValue == RobotMap.driveTrainEncoder.getDistance()) {
+		System.out.println(RobotMap.driveTrainEncoder.get());
+		if (0 == RobotMap.driveTrainEncoder.get()) {
 			detectEncoderCount++;
 			if (detectEncoderCount > 10) {
-				stop();
+				Scheduler.getInstance().disable();
+				DriverStation.reportError("Drive Train Encoder Disconnected", false);
+				detectEncoderCount = 0;
+				return;
 			}
 		} else {
-			distanceEncoderValue = RobotMap.driveTrainEncoder.getDistance();
 			detectEncoderCount = 0;
 			
 			double distanceRemaining = Math.abs(driveToDistanceTargetDistance) - Math.abs(RobotMap.driveTrainEncoder.getDistance());
@@ -159,15 +165,16 @@ public class DriveTrainSubsystem extends Subsystem {
 	
 	public void rotateByAngle() {
 		SmartDashboard.putNumber("DriveTrain.straightRotate", rotateByAnglePidResult);
-		SmartDashboard.putNumber("DriveTrain.rotateError", rotateByAnglePidController.getError());
+		//SmartDashboard.putNumber("DriveTrain.rotateError", rotateByAnglePidController.getError());
 		SmartDashboard.putNumber("DriveTrain.angle", RobotMap.gyro.getAngle());
 		double angleRemaining = Math.abs(rotateByAngleTargetAngle) - Math.abs(RobotMap.gyro.getAngle());
+		
 		if (angleRemaining < 2) {
-			rotateByAnglePidResult = 0.4;
+			rotateByAnglePidResult = 0.35;
 		} else if (angleRemaining < 5) {
-			rotateByAnglePidResult = 0.45;
+			rotateByAnglePidResult = 0.4;
 		} else if (angleRemaining < 10) {
-			rotateByAnglePidResult = 0.5;
+			rotateByAnglePidResult = 0.45;
 		} else if (angleRemaining < 20) {
 			rotateByAnglePidResult = 0.6;
 		} else {
@@ -221,11 +228,11 @@ public class DriveTrainSubsystem extends Subsystem {
 	public void setRegularDrive() {
 		setDriveMode(DriveMode.Regular);
 	}
-	private boolean isAngleLess = false;
-	private double rotSpeed = 0.4;
+	
 	public void setRotateByAngle(double degrees) {
 		setDriveMode(DriveMode.RotateByAngle);
-
+		
+		/*
 		double p, i = 0, d, offset;
 		if (degrees > 0) {
 			offset = 2.5;
@@ -251,13 +258,15 @@ public class DriveTrainSubsystem extends Subsystem {
 			} else {
 				offset = -1;
 			}
-			*/
+			
 		} else {
 			p = 0.15;
 			d = 0.4;
 			//offset = -2.5;
 			isAngleLess = false;
 		}
+		
+		*/
 		
 		// HEY Gabe, Sorry I accidentally deleted the changes we made :((. Fortunately we have some of the
 		// numbers from in the spreadsheet. Ivan has some ideas to help improve overall.
@@ -270,12 +279,12 @@ public class DriveTrainSubsystem extends Subsystem {
 		
 		rotateByAngleTargetAngle = degrees; // + offset;
 		
-		rotateByAnglePidController.setPID(p, i, d);
-		rotateByAnglePidController.setInputRange(-180, 180);
-		rotateByAnglePidController.setPercentTolerance(0.4);
+		//rotateByAnglePidController.setPID(p, i, d);
+		//rotateByAnglePidController.setInputRange(-180, 180);
+		//rotateByAnglePidController.setPercentTolerance(0.4);
 		
-		rotateByAnglePidController.setSetpoint(rotateByAngleTargetAngle);
-		rotateByAnglePidController.enable();
+		//rotateByAnglePidController.setSetpoint(rotateByAngleTargetAngle);
+		//rotateByAnglePidController.enable();
 	}
 	
 	public void setDriveDistance(double distance) {

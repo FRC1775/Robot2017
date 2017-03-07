@@ -47,6 +47,12 @@ public class Cameras {
 	private Thread cameraThread;
 
 	private int numCameras = 1;
+	
+	private static boolean shouldChangeCamera;
+	
+	public static void changeCamera() {
+		shouldChangeCamera = true;
+	}
 
 	public void init() {
 		CvSource imageSource = CameraServer.getInstance().putVideo("Camera Viewer", IMG_WIDTH, IMG_HEIGHT);
@@ -100,7 +106,9 @@ public class Cameras {
 
 				while (!Thread.interrupted()) {
 
-					if (Robot.oi.getYButton()) {
+					if (Robot.oi.getYButton() || shouldChangeCamera) {
+						// This line isn't thread-safe
+						shouldChangeCamera = false;
 						showShooterCamera = !showShooterCamera;
 					}
 
@@ -129,22 +137,18 @@ public class Cameras {
 						pipeline.process(inputImage);
 						ArrayList<MatOfPoint> contours = pipeline.filterContoursOutput();
 						if (contours.size() > 0) {
-							// System.out.println("number of contours:
-							// "+contours.size());
 							// TODO set to EQUAL to 2
 							if (contours.size() >= 2) {
 								Rect r1 = Imgproc.boundingRect(contours.get(0));
 
 								Rect r2 = Imgproc.boundingRect(contours.get(1));
 
-								Rect top, bottom;
+								Rect top;
 
 								if (r1.height > r2.height) {
 									top = r1;
-									bottom = r2;
 								} else {
 									top = r2;
-									bottom = r1;
 								}
 
 								double offCenter = (double) top.x + (double) top.width / 2.0
@@ -155,25 +159,9 @@ public class Cameras {
 								double bandDistance = 0.0000002 * Math.pow(top.y, 4) - 0.00004 * Math.pow(top.y, 3)
 										+ 0.0049 * Math.pow(top.y, 2) + 0.0484 * top.y + 78.792;
 								SmartDashboard.putNumber("Camera.shooter.bandDistance", bandDistance);
-								distance = Math.sqrt(Math.pow(bandDistance, 2) - Math.pow(66, 2)) + 16.5;// add
-																											// 16.5
-																											// for
-																											// the
-																											// shooter
-																											// distance
-																											// to
-																											// camera
-																											// and
-																											// the
-																											// mid
-																											// boiler
-																											// distance
-																											// from
-																											// the
-																											// outside
-																											// of
-																											// the
-																											// boiler
+								// ad 16.5 for the shooter distance to camera and the mid boiler distance from the outside of the boiler
+								distance = Math.sqrt(Math.pow(bandDistance, 2) - Math.pow(66, 2)) + 16.5;
+								
 								SmartDashboard.putNumber("DistanceIWant", distance);
 							}
 						}
@@ -182,15 +170,12 @@ public class Cameras {
 						ArrayList<MatOfPoint> contours = gearPipeline.filterContoursOutput();
 						
 						if (contours.size() > 0) {
-							// System.out.println("number of contours:
-							// "+contours.size());
 							// TODO set to EQUAL to 2
 							if (contours.size() >= 2) {
 								ArrayList<Rect> rects = new ArrayList<Rect>(2);
 								for (int i = 0; i < contours.size(); i++) {
 									Rect rect = Imgproc.boundingRect(contours.get(i));
 									if (rect.y < 110) {
-										System.out.println(rect.y);
 										Imgproc.drawContours(inputImage, contours, i, new Scalar(0, 255, 0));
 										rects.add(rect);
 									}
@@ -200,7 +185,6 @@ public class Cameras {
 								}
 								
 								if (rects.size() == 2) {
-									// TODO top should be r1
 									Rect r1 = rects.get(0);
 	
 									Rect r2 = rects.get(1);
@@ -218,7 +202,7 @@ public class Cameras {
 									double offCenter = ((((double)right.width + (double)right.x) - (double) left.x) / 2.0 + (double)left.x) - ((double) IMG_WIDTH / 2.0);
 	
 									angleOffCenter = (65 / (double) IMG_WIDTH) * offCenter;
-									SmartDashboard.putNumber("Camera.shooter.angle", angleOffCenter);
+									SmartDashboard.putNumber("Camera.shooter.angle", angleOffCenter * 0.2);
 								}
 							}
 						}
@@ -239,139 +223,5 @@ public class Cameras {
 
 		cameraThread.start();
 	}
-
-	/*
-	 * 
-	 * 
-	 * Various bits of old code below
-	 * 
-	 * DO NOT USE
-	 * 
-	 * 
-	 */
-
-	/*
-	 * Thread t = new Thread(() -> {
-	 * 
-	 * boolean allowCam1 = false;
-	 * 
-	 * CvSink cvSink1 = CameraServer.getInstance().getVideo(camera1); CvSink
-	 * cvSink2 = CameraServer.getInstance().getVideo(camera2); CvSource
-	 * outputStream = CameraServer.getInstance().putVideo("Switcher", 320, 180);
-	 * 
-	 * Mat image = new Mat();
-	 * 
-	 * GripPipeline pipeline = new GripPipeline();
-	 * 
-	 * while(!Thread.interrupted()) {
-	 * 
-	 * if(oi.joystick1.getRawButton(1)) { allowCam1 = !allowCam1; }
-	 * 
-	 * if(allowCam1){ cvSink2.setEnabled(false); cvSink1.setEnabled(true);
-	 * cvSink1.grabFrame(image); } else{ cvSink1.setEnabled(false);
-	 * cvSink2.setEnabled(true); cvSink2.grabFrame(image); }
-	 * 
-	 * pipeline.process(image);
-	 * DriverStation.reportError(""+pipeline.filterContoursOutput().size(),
-	 * false); ArrayList<MatOfPoint> contours = pipeline.filterContoursOutput();
-	 * Imgproc.drawContours(image, contours, -1, new Scalar(0, 255, 0));
-	 * DriverStation.reportError("number of countours "+contours.size(), false);
-	 * outputStream.putFrame(image); }
-	 * 
-	 * }); t.start();
-	 */
-
-	// UsbCamera c = CameraServer.getInstance().startAutomaticCapture(0);
-	// UsbCamera camera1 = new UsbCamera("test",
-	// UsbCamera.enumerateUsbCameras()[0].path);//CameraServer.getInstance().startAutomaticCapture(0);
-
-	// c.setVideoMode(PixelFormat.kYUYV, 320, 240, 5);
-	// CameraServer.getInstance().removeCamera(c.getName());
-
-	// UsbCamera c2 = CameraServer.getInstance().startAutomaticCapture(1);
-
-	// c2.setVideoMode(PixelFormat.kYUYV, 320, 240, 5);
-
-	/*
-	 * // * This code can be used to enumerate the properties of the camera // *
-	 * for (VideoProperty vp : camera1.enumerateProperties()) {
-	 * DriverStation.reportError("\n" + vp.getName() + ": " + vp.getKind());
-	 * DriverStation.reportError("Range: " + vp.getMin() + " - " + vp.getMax());
-	 * if (vp.getKind() == Kind.kInteger || vp.getKind() == Kind.kBoolean ||
-	 * vp.getKind() == Kind.kEnum) { DriverStation.reportError("Default: " +
-	 * vp.getDefault()); DriverStation.reportError("Value: " + vp.get());
-	 * DriverStation.reportError("Step: " + vp.getStep()); } if (vp.getKind() ==
-	 * Kind.kString) { DriverStation.reportError("String: " + vp.getString()); }
-	 * if (vp.getKind() == Kind.kEnum) { DriverStation.reportError("Choices: " +
-	 * Arrays.toString(vp.getChoices())); } }
-	 */
-
-	// UsbCamera camera1 = CameraServer.getInstance().startAutomaticCapture(0);
-	// VideoProperty focus = camera1.getProperty("focus_auto");
-	// DriverStation.reportError("auto focus? "+focus, false);
-	// camera1.setResolution(IMG_WIDTH, IMG_HEIGHT);
-
-	// camera2.setResolution(IMG_WIDTH, IMG_HEIGHT);
-	// camera.setWhiteBalanceAuto();
-	// camera1.setExposureManual(0);
-	// camera1.getProperty("focus_auto").set(0);
-	// camera1.setExposureManual(5);
-	// camera1.getProperty("zoom_absolute").s
-	// camera2.setExposureManual(0);
-
-	// camera.
-	// camera.setWhiteBalanceAuto();
-	// camera.setBrightness(10);
-
-	// visionThread = new VisionThread(camera1, new GripPipeline(), pipeline ->
-	// {
-	// DriverStation.reportError("HERE", false);
-	// if (!pipeline.filterContoursOutput().isEmpty()) {
-	// if (!VisionThread.interrupted()) {
-
-	// synchronized (imgLock) {
-	// DriverStation.reportError(""+pipeline.filterContoursOutput().size(),
-	// false);
-	// ArrayList<MatOfPoint> contours = pipeline.filterContoursOutput();
-	// DriverStation.reportError("Count: " + contours.size(), false);
-	// MatOfPoint contour1 = contours.get(0);
-	// Rect r = Imgproc.boundingRect(contour1);
-	// MatOfPoint contour2 = contours.get(1);
-	// Rect r2 = Imgproc.boundingRect(contour2);
-
-	// 0.45 => 20/44.5" calibration of frame view from 47"
-	// 0.884 is view angle in radians
-	// Calculate angle by ratio of screen to ratio of view angle
-	// double anglularDiameter = (0.884 * (r.width / (double)IMG_WIDTH)) / 0.45;
-	// double TEST_WIDTH = 1000.0;
-	// double testDistance =
-	// ((15.0*(double)IMG_WIDTH)/(2.0*r.width*Math.tan(((60.0*Math.PI)/180)/2.0)));
-	// double testDistance2 = Math.sqrt((Math.pow(testDistance, 2)-Math.pow(120,
-	// 2)));
-	// Use angular diameter equation solving for D (distance to object)
-	// double distance = 20.0 / Math.tan(anglularDiameter / 2.0);
-	// DriverStation.reportError("Distance: " + distance, false);
-	// DriverStation.reportError("LeftX: "+r.x + " RightX: "+r2.x, false);
-	// centerX = r.x + (r.width / 2);
-	// double opp = IMG_WIDTH / 2 - centerX;
-	// Calculate angle of robot to target by using ratio of 1/2 view angle
-	// compared to percentage of screen width
-	// between center of frame and center of target
-	// double angle = 180.0/Math.PI * ((0.442 * (opp / (double)IMG_WIDTH)) /
-	// 0.45);
-	// DriverStation.reportError("Angle: " + angle, false);
-	// DriverStation.reportError(""+r.width, false);
-	// DriverStation.reportError("This is a test distance " + testDistance,
-	// false);
-	// DriverStation.reportError(""+r.width, false);
-	// DriverStation.reportError("This is a test distance " + testDistance,
-	// false);
-	// DriverStation.reportError("This is the length of the peg tape: "+
-	// r2.height, false);
-	// DriverStation.reportError("Contour 1 X: "+r.x, false);
-	// DriverStation.reportError("Contour 2 X: "+r2.x , false);
-	// }
-	/// }
-	// });
-	// visionThread.start();
+	
 }

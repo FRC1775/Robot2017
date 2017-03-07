@@ -18,8 +18,13 @@ public class AdjustShooterSpeed extends InstantCommand {
 	private boolean usePreference;
 	private int rpmChange;
 	private ChangeDirection changeDirection;
+	private boolean useCamera;
 	
 	// DO NOT Require shooter subsystem - if you do, it will kill shooting when changing speed
+
+	public AdjustShooterSpeed() {
+		this.useCamera = true;
+	}
 	
 	public AdjustShooterSpeed(int rpmChange) {
 		this.rpmChange = rpmChange;
@@ -31,7 +36,7 @@ public class AdjustShooterSpeed extends InstantCommand {
 	}
 	
 	public void execute() {
-		shooter.adjustShooter(getRpmChange());
+		shooter.adjustShooter(getRpmChange(), useCamera);
 	}
 	
 	private int getRpmChange() {
@@ -41,6 +46,8 @@ public class AdjustShooterSpeed extends InstantCommand {
 				return amount;
 			}
 			return -amount;
+		} else if (useCamera) {
+			return StartShooter.getRpmFromCamera();
 		}
 		
 		return rpmChange;

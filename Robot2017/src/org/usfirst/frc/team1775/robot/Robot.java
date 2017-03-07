@@ -10,11 +10,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.usfirst.frc.team1775.robot.commands.autonomous.DoNothing;
 import org.usfirst.frc.team1775.robot.commands.autonomous.DriveAcrossBaseline;
-import org.usfirst.frc.team1775.robot.commands.autonomous.Left_GoToHopperAndShoot;
 import org.usfirst.frc.team1775.robot.commands.autonomous.Left_Shoot;
 import org.usfirst.frc.team1775.robot.commands.autonomous.Middle_PlaceGear;
-import org.usfirst.frc.team1775.robot.commands.autonomous.Middle_PlaceGearThenShoot;
-import org.usfirst.frc.team1775.robot.commands.autonomous.Middle_Shoot;
 import org.usfirst.frc.team1775.robot.commands.autonomous.Right_PlaceGear;
 import org.usfirst.frc.team1775.robot.commands.autonomous.Left_PlaceGear;
 import org.usfirst.frc.team1775.robot.commands.autonomous.Left_PlaceGearThenShoot;
@@ -72,7 +69,7 @@ public class Robot extends IterativeRobot {
 		// TODO uncomment auto commands when implemented
 		
 		chooser.addObject("Left - Place Gear", new Left_PlaceGear());
-		// chooser.addObject("Left - Place Gear Then Shoot", new Left_PlaceGearThenShoot());
+		chooser.addObject("Left - Place Gear Then Shoot", new Left_PlaceGearThenShoot());
 		chooser.addObject("Left - Shoot", new Left_Shoot());
 		// chooser.addObject("Left - Go to Hopper And Shoot", new Left_GoToHopperAndShoot());
 
@@ -80,7 +77,7 @@ public class Robot extends IterativeRobot {
 		// chooser.addObject("Middle - Place Gear Then Shoot", new Middle_PlaceGearThenShoot());
 		// chooser.addObject("Middle - Shoot", new Middle_Shoot());
 		
-		// chooser.addObject("Right - Place Gear", new Right_PlaceGear());
+		chooser.addObject("Right - Place Gear", new Right_PlaceGear());
 		
 		SmartDashboard.putData("Auto Mode", chooser);
 		
@@ -157,6 +154,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
+		Scheduler.getInstance().enable();
 		Scheduler.getInstance().run();
 	}
 

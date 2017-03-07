@@ -61,7 +61,15 @@ public class ShooterSubsystem extends Subsystem {
 	}
 	
 	public void adjustShooter(int rpmChange) {
-		this.shooterRpmTarget += rpmChange;
+		adjustShooter(rpmChange, false);
+	}
+	
+	public void adjustShooter(int rpmChange, boolean absolute) {
+		if (absolute) {
+			this.shooterRpmTarget = rpmChange;
+		} else {
+			this.shooterRpmTarget += rpmChange;
+		}
 	}
 
 	public void stop() {
