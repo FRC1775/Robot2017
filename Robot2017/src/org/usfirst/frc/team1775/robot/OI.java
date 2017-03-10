@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.buttons.Trigger;
 
+import org.usfirst.frc.team1775.robot.commands.autonomous.ChangeCamera;
 import org.usfirst.frc.team1775.robot.commands.drivetrain.ResetGyro;
 import org.usfirst.frc.team1775.robot.commands.drivetrain.RotateByAngle;
 import org.usfirst.frc.team1775.robot.commands.gearassembly.ReleaseGear;
@@ -105,15 +106,13 @@ public class OI {
 	}
 	
 	private void initDriverJoystick() {
-		
-		
 		driverJoystick = new Joystick(DRIVER_JOYSTICK);
-		
 		
 		if (!hasDriverJoystick()) {
 			driverJoystick = null;
 			return;
 		}
+		
 		// A button
 		driverAButton = new JoystickButton(driverJoystick, XBOX_A);
 		driverAButton.whileHeld(new ReleaseGear());
@@ -128,6 +127,7 @@ public class OI {
 		
 		// Y button
 		driverYButton = new JoystickButton(driverJoystick, XBOX_Y);
+		driverYButton.whenPressed(new ChangeCamera());
 
 		// Left bumper
 		driverLeftBumper = new JoystickButton(driverJoystick, XBOX_LEFT_BUMPER);
@@ -226,6 +226,7 @@ public class OI {
 		
 		// Y button
 		operatorYButton = new JoystickButton(operatorJoystick, XBOX_Y);
+		operatorYButton.whenPressed(new ChangeCamera());
 
 		// Left bumper
 		operatorLeftBumper = new JoystickButton(operatorJoystick, XBOX_LEFT_BUMPER);
@@ -309,10 +310,8 @@ public class OI {
 		
 		try
 		{
-			operatorJoystick.getType();
-			return true;
+			return DriverStation.getInstance().getJoystickType(OPERATOR_JOYSTICK) >= 0;
 		} catch (Exception e) {
-			DriverStation.reportError(""+e, false);
 			return false;
 		}
 	}
@@ -323,10 +322,8 @@ public class OI {
 		
 		try
 		{
-			driverJoystick.getType();
-			return true;
+			return DriverStation.getInstance().getJoystickType(DRIVER_JOYSTICK) >= 0;
 		} catch (Exception e) {
-			DriverStation.reportError(""+e, false);
 			return false;
 		}
 	}

@@ -12,6 +12,10 @@ public class DoNothing extends Command {
 	public DoNothing() {
 		requires(driveTrain);
 	}
+	
+	public void execute() {
+		driveTrain.arcadeDrive(0, 0, true, true);
+	}
 
 	@Override
 	protected boolean isFinished() {

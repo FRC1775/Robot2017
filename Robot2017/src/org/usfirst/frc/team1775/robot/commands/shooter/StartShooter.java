@@ -20,8 +20,12 @@ public class StartShooter extends Command {
 	}
 	
 	public static int getRpmFromCamera() {
-		//return (int)(294.73 * Cameras.distance * 0.025 + 1060 + 100); // Calculate rpms from distance in inches
-		return (int) (11.239*Cameras.distance+646.7);
+		if (Cameras.distance == 0) {
+			return 0;
+		} else {
+			//return (int)(294.73 * Cameras.distance * 0.025 + 1060 + 100); // Calculate rpms from distance in inches
+			return (int) (11.239*Cameras.distance+646.7);
+		}
 	}
 	
 	public void initialize() {

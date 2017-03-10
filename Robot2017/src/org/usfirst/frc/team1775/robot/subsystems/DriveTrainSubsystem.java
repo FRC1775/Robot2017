@@ -170,14 +170,19 @@ public class DriveTrainSubsystem extends Subsystem {
 		double angleRemaining = Math.abs(rotateByAngleTargetAngle) - Math.abs(RobotMap.gyro.getAngle());
 		
 		if (angleRemaining < 2) {
+			// was 0.35
 			rotateByAnglePidResult = 0.35;
 		} else if (angleRemaining < 5) {
+			// was 0.4
 			rotateByAnglePidResult = 0.4;
 		} else if (angleRemaining < 10) {
+			// was 0.45
 			rotateByAnglePidResult = 0.45;
 		} else if (angleRemaining < 20) {
+			// was 0.6
 			rotateByAnglePidResult = 0.6;
 		} else {
+			// was 1
 			rotateByAnglePidResult = 1;
 		}
 		

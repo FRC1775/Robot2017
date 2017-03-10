@@ -26,7 +26,6 @@ public class DriveDistance extends Command {
 	protected void initialize() {
 		SmartDashboard.putData(driveTrain);
 		
-		System.out.println("HERE");
 		driveTrain.setDriveDistance(distance);
 	}
 
