@@ -20,8 +20,8 @@ public class RegularDrive extends Command {
 	}
 
 	public void execute() {
-		double drive = Robot.oi.driverJoystick.getRawAxis(OI.XBOX_LEFT_JOYSTICK_Y_AXIS);
-    	double rotate = Robot.oi.driverJoystick.getRawAxis(OI.XBOX_RIGHT_JOYSTICK_X_AXIS);
+		double drive = Robot.oi.getLeftYAxis();
+		double rotate = Robot.oi.getRightXAxis();
     	
     	boolean squaredInputs = Preferences.getInstance().getBoolean("DriveTrain.squaredInputs", true);
     	boolean constantRadius = Preferences.getInstance().getBoolean("DriveTrain.constantRadius", true);

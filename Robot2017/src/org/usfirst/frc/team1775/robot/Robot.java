@@ -10,11 +10,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.usfirst.frc.team1775.robot.commands.autonomous.DoNothing;
 import org.usfirst.frc.team1775.robot.commands.autonomous.DriveAcrossBaseline;
-import org.usfirst.frc.team1775.robot.commands.autonomous.Left_Shoot;
+import org.usfirst.frc.team1775.robot.commands.autonomous.Blue_Left_Shoot;
 import org.usfirst.frc.team1775.robot.commands.autonomous.Middle_PlaceGear;
-import org.usfirst.frc.team1775.robot.commands.autonomous.Right_PlaceGear;
-import org.usfirst.frc.team1775.robot.commands.autonomous.Left_PlaceGear;
-import org.usfirst.frc.team1775.robot.commands.autonomous.Left_PlaceGearThenShoot;
+import org.usfirst.frc.team1775.robot.commands.autonomous.Red_Left_PlaceGear;
+import org.usfirst.frc.team1775.robot.commands.autonomous.Red_Right_PlaceGear;
+import org.usfirst.frc.team1775.robot.commands.autonomous.Red_Right_PlaceGearThenShoot;
+import org.usfirst.frc.team1775.robot.commands.autonomous.Red_Right_Shoot;
+import org.usfirst.frc.team1775.robot.commands.autonomous.Blue_Right_PlaceGear;
+import org.usfirst.frc.team1775.robot.commands.autonomous.Blue_Left_PlaceGear;
+import org.usfirst.frc.team1775.robot.commands.autonomous.Blue_Left_PlaceGearThenShoot;
 import org.usfirst.frc.team1775.robot.subsystems.DriveTrainSubsystem;
 import org.usfirst.frc.team1775.robot.subsystems.GearAssemblySubsystem;
 import org.usfirst.frc.team1775.robot.subsystems.ShooterSubsystem;
@@ -67,17 +71,28 @@ public class Robot extends IterativeRobot {
 		chooser.addObject("Drive Across Base Line", new DriveAcrossBaseline());
 		
 		// TODO uncomment auto commands when implemented
-		
-		chooser.addObject("Left - Place Gear", new Left_PlaceGear());
-		chooser.addObject("Left - Place Gear Then Shoot", new Left_PlaceGearThenShoot());
-		chooser.addObject("Left - Shoot", new Left_Shoot());
-		// chooser.addObject("Left - Go to Hopper And Shoot", new Left_GoToHopperAndShoot());
+		//THIS IS THE BLUE SIDE
+		chooser.addObject("Blue Boiler - Place Gear", new Blue_Left_PlaceGear());
+		chooser.addObject("Blue Boiler - Place Gear Then Shoot", new Blue_Left_PlaceGearThenShoot());
+		chooser.addObject("Blue Boiler - Shoot", new Blue_Left_Shoot());
+		// chooser.addObject("Blue Boiler - Go to Hopper And Shoot", new Blue_Left_GoToHopperAndShoot());
 
 		chooser.addObject("Middle - Place Gear", new Middle_PlaceGear());
-		// chooser.addObject("Middle - Place Gear Then Shoot", new Middle_PlaceGearThenShoot());
-		// chooser.addObject("Middle - Shoot", new Middle_Shoot());
+		// chooser.addObject("Blue Middle - Place Gear Then Shoot", new Blue_Middle_PlaceGearThenShoot());
+		// chooser.addObject("Blue Middle - Shoot", new Blue_Middle_Shoot());
 		
-		chooser.addObject("Right - Place Gear", new Right_PlaceGear());
+		chooser.addObject("Blue Loading - Place Gear", new Blue_Right_PlaceGear());
+		
+		
+		//THIS IS THE RED SIDE
+		chooser.addObject("Red Boiler - Place Gear", new Red_Left_PlaceGear());
+		chooser.addObject("Red Boiler - Place Gear Then Shoot", new Red_Right_PlaceGearThenShoot());
+		chooser.addObject("Red Boiler - Shoot", new Red_Right_Shoot());
+		// chooser.addObject("Red Boiler - Go to Hopper And Shoot", new Red_Right_GoToHopperAndShoot());
+
+		// chooser.addObject("Red Middle - Place Gear Then Shoot", new Red_Middle_PlaceGearThenShoot());
+		// chooser.addObject("Red Middle - Shoot", new Red_Middle_Shoot());
+		chooser.addObject("Red Loading - Place Gear", new Red_Right_PlaceGear());
 		
 		SmartDashboard.putData("Auto Mode", chooser);
 		

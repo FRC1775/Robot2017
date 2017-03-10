@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.command.InstantCommand;
 
 public class StartRegulator extends InstantCommand {
 	
-	private static final double DEFAULT_REGULATOR_SPEED = 0.33;
+	private static final double DEFAULT_REGULATOR_SPEED = 0.9;
 
 	public static ShooterSubsystem shooter = Robot.shooter;
 

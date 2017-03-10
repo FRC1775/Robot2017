@@ -386,4 +386,33 @@ public class OI {
 			return false;
 		}
 	}
+	public double getLeftYAxis() {
+			try {
+				if (!hasDriverJoystick()) {
+					return 0;
+				}
+				else {
+					return driverJoystick.getRawAxis(OI.XBOX_LEFT_JOYSTICK_Y_AXIS);
+				}
+			
+			} catch (Exception e) {
+				DriverStation.reportError("getLeftYAxisError", false);
+				
+				return 0;
+			}
+	}
+	public double getRightXAxis() {
+		try {
+			if (!hasDriverJoystick()) {
+				return 0;
+			}
+			else {
+				return driverJoystick.getRawAxis(OI.XBOX_RIGHT_JOYSTICK_X_AXIS);
+			}
+		
+		} catch (Exception e) {
+			DriverStation.reportError("getRightXAxisError", false);
+			return 0;
+		}
+}
 }

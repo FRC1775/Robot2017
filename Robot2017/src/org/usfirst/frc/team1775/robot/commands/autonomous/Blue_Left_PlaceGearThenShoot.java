@@ -9,13 +9,13 @@ import org.usfirst.frc.team1775.robot.commands.shooter.StartSingulator;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
-public class Left_PlaceGearThenShoot extends CommandGroup {
+public class Blue_Left_PlaceGearThenShoot extends CommandGroup {
 
-	public Left_PlaceGearThenShoot() {
+	public Blue_Left_PlaceGearThenShoot() {
 		// Run Left_PlaceGear
 		// Move to a shooting position
 		// Shoot
-		addSequential(new Left_PlaceGear(true));
+		addSequential(new Blue_Left_PlaceGear(true));
 		addSequential(new RotateByAngle(130), 3);
 		addSequential(new StartShooter());
 		addSequential(new Wait(400));

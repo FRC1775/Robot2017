@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
  */
 public class RobotMap {
 	
-	public final static boolean IS_COMPETITION_BOT = false;
+	public final static boolean IS_COMPETITION_BOT = true;
 	
 	/*
 	 * 
@@ -27,8 +27,8 @@ public class RobotMap {
 	
 	public final static int COMPETITION_DRIVE_TRAIN_LEFT_CONTROLLER_PWM_CHANNEL = 2;
 	public final static int COMPETITION_DRIVE_TRAIN_RIGHT_CONTROLLER_PWM_CHANNEL = 1;
-	public final static int COMPETITION_DRIVE_TRAIN_ENCODER_DIO_CHANNEL_A = 2;
-	public final static int COMPETITION_DRIVE_TRAIN_ENCODER_DIO_CHANNEL_B = 3;
+	public final static int COMPETITION_DRIVE_TRAIN_ENCODER_DIO_CHANNEL_A = 3;
+	public final static int COMPETITION_DRIVE_TRAIN_ENCODER_DIO_CHANNEL_B = 2;
 	
 	public final static int COMPETITION_SHOOTER_SINGULATOR_CONTROLLER_PWM_CHANNEL = 0;
 	public final static int COMPETITION_SHOOTER_REGULATOR_CONTROLLER_PWM_CHANNEL = 3;

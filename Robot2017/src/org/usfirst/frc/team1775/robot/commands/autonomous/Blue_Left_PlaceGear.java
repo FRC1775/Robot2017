@@ -7,21 +7,28 @@ import org.usfirst.frc.team1775.robot.commands.gearassembly.ReleaseGear;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
-public class Right_PlaceGear extends CommandGroup {
+public class Blue_Left_PlaceGear extends CommandGroup {
 
-	public Right_PlaceGear() {
-		addSequential(new DriveDistance(76), 3);
-		addSequential(new Wait(600));
-		addSequential(new RotateByAngle(-45), 1.5);
-		addSequential(new Wait(1000));
-		addSequential(new RotateByAngle(), 1.5);
-		addSequential(new Wait(1000));
-		addSequential(new RotateByAngle(), 1.5);
-		addSequential(new DriveDistance(24), 1.5);
+	public Blue_Left_PlaceGear() {
+		this(false);
+	}
+	
+	public Blue_Left_PlaceGear(boolean changeCamera) {
+		addSequential(new DriveDistance(68), 3);
+		addSequential(new Wait(400));
+		addSequential(new RotateByAngle(43), 1.5);
+		addSequential(new Wait(300));
+		addSequential(new RotateByAngle(), 1);
+		addSequential(new Wait(300));
+		addSequential(new RotateByAngle(), 1);
+		if (changeCamera) {
+			addSequential(new ChangeCamera());
+		}
+		addSequential(new DriveDistance(22), 1.5);
 		addSequential(new ReleaseGear(true));
 		addSequential(new Wait(1000));
 		addSequential(new DriveDistance(-18), 1.5);
 		addSequential(new CloseGear());
 	}
-	
+
 }

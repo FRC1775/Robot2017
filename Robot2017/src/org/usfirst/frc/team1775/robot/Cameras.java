@@ -25,7 +25,7 @@ public class Cameras {
 
 	// Shooter camera settings
 	private static final String SHOOTER_CAMERA_NAME = "Shooter camera";
-	private static final int SHOOTER_CAMERA_DEVICE = 0;
+	private static final int SHOOTER_CAMERA_DEVICE = 1;
 	private static final int SHOOTER_CAMERA_EXPOSURE = 0;
 	private static final int SHOOTER_CAMERA_FOCUS_AUTO = 0;
 	private static final int SHOOTER_CAMERA_FOCUS_ABSOLUTE = 0;
@@ -34,7 +34,7 @@ public class Cameras {
 
 	// Gear camera settings
 	private static final String GEAR_CAMERA_NAME = "Gear camera";
-	private static final int GEAR_CAMERA_DEVICE = 1;
+	private static final int GEAR_CAMERA_DEVICE = 0;
 	private static final int GEAR_CAMERA_EXPOSURE = 1;
 	private static final int GEAR_CAMERA_FOCUS_AUTO = 0;
 	private static final int GEAR_CAMERA_FOCUS_ABSOLUTE = 0;
@@ -137,6 +137,7 @@ public class Cameras {
 						pipeline.process(inputImage);
 						ArrayList<MatOfPoint> contours = pipeline.filterContoursOutput();
 						if (contours.size() > 0) {
+							Imgproc.drawContours(inputImage, contours, -1, new Scalar(0, 255, 0));
 							// TODO set to EQUAL to 2
 							if (contours.size() >= 2) {
 								Rect r1 = Imgproc.boundingRect(contours.get(0));
@@ -160,17 +161,24 @@ public class Cameras {
 										+ 0.0049 * Math.pow(top.y, 2) + 0.0484 * top.y + 78.792;
 								SmartDashboard.putNumber("Camera.shooter.bandDistance", bandDistance);
 								// ad 16.5 for the shooter distance to camera and the mid boiler distance from the outside of the boiler
-								distance = Math.sqrt(Math.pow(bandDistance, 2) - Math.pow(66, 2)) + 16.5;
-								
+								distance = Math.sqrt(Math.pow(bandDistance, 2) - Math.pow(66, 2)) + 19.5;
+								distance = distance*1.2279-18.55;
 								SmartDashboard.putNumber("DistanceIWant", distance);
 							}
+							else {
+								angleOffCenter = 0;
+								SmartDashboard.putNumber("Camera.shooter.angle", angleOffCenter * 0.2);
+							}
+						}
+						else if(contours.size() ==0){
+							angleOffCenter = 0;
+							SmartDashboard.putNumber("Camera.shooter.angle", angleOffCenter * 0.2);
 						}
 					} else {
 						gearPipeline.process(inputImage);
 						ArrayList<MatOfPoint> contours = gearPipeline.filterContoursOutput();
 						
-						if (contours.size() > 0) {
-							// TODO set to EQUAL to 2
+					
 							if (contours.size() >= 2) {
 								ArrayList<Rect> rects = new ArrayList<Rect>(2);
 								for (int i = 0; i < contours.size(); i++) {
@@ -183,6 +191,7 @@ public class Cameras {
 										break;
 									}
 								}
+								
 								
 								if (rects.size() == 2) {
 									Rect r1 = rects.get(0);
@@ -205,7 +214,11 @@ public class Cameras {
 									SmartDashboard.putNumber("Camera.shooter.angle", angleOffCenter * 0.2);
 								}
 							}
-						}
+						
+							else {
+								angleOffCenter = 0;
+								SmartDashboard.putNumber("Camera.shooter.angle", angleOffCenter * 0.2);
+					}
 					}
 
 					imageSource.putFrame(inputImage);
