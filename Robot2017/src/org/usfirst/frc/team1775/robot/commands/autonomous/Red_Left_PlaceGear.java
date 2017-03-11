@@ -14,7 +14,7 @@ public class Red_Left_PlaceGear extends CommandGroup {
 	}
 	
 	public Red_Left_PlaceGear(boolean changeCamera) {
-		addSequential(new DriveDistance(68), 3);
+		addSequential(new DriveDistance(92), 3);
 		addSequential(new Wait(400));
 		addSequential(new RotateByAngle(43), 1.5);
 		addSequential(new Wait(300));

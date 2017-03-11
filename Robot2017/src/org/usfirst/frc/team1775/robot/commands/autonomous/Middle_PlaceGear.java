@@ -11,7 +11,7 @@ public class Middle_PlaceGear extends CommandGroup {
 
 	public Middle_PlaceGear() {
 		// Drive forward to peg
-		addSequential(new DriveDistance(40), 3);
+		addSequential(new DriveDistance(60), 3);
 		addSequential(new Wait(600));
 		addSequential(new RotateByAngle(), 1);
 		addSequential(new Wait(200));

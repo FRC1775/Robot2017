@@ -121,26 +121,28 @@ public class DriveTrainSubsystem extends Subsystem {
 	
 	private int detectEncoderCount = 0;
 	
-	public void driveDistance() {
+	public void driveDistance(boolean killScheduler) {
 		SmartDashboard.putNumber("DriveTrain.encoderDistance", RobotMap.driveTrainEncoder.getDistance());
 		
-		System.out.println(RobotMap.driveTrainEncoder.get());
 		if (0 == RobotMap.driveTrainEncoder.get()) {
 			detectEncoderCount++;
-			if (detectEncoderCount > 10) {
-				Scheduler.getInstance().disable();
-				DriverStation.reportError("Drive Train Encoder Disconnected", false);
+			if (detectEncoderCount > 25) {
+				if (killScheduler) {
+					Scheduler.getInstance().disable();
+					DriverStation.reportError("Drive Train Encoder Disconnected", false);
+				}
 				detectEncoderCount = 0;
 				return;
+				
 			}
 		} else {
 			detectEncoderCount = 0;
 			
 			double distanceRemaining = Math.abs(driveToDistanceTargetDistance) - Math.abs(RobotMap.driveTrainEncoder.getDistance());
 			if (distanceRemaining < 2) {
-				driveToDistancePidResult = 0;
+				driveToDistancePidResult = 0.3;
 			} else if (distanceRemaining < 5) {
-				driveToDistancePidResult = 0.2;
+				driveToDistancePidResult = 0.3;
 			} else if (distanceRemaining < 10) {
 				driveToDistancePidResult = 0.25;
 			} else if (distanceRemaining < 20) {
@@ -171,10 +173,10 @@ public class DriveTrainSubsystem extends Subsystem {
 		
 		if (angleRemaining < 2) {
 			// was 0.35
-			rotateByAnglePidResult = 0.35;
+			rotateByAnglePidResult = 0.30;
 		} else if (angleRemaining < 5) {
 			// was 0.4
-			rotateByAnglePidResult = 0.4;
+			rotateByAnglePidResult = 0.35;
 		} else if (angleRemaining < 10) {
 			// was 0.45
 			rotateByAnglePidResult = 0.45;

@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team1775.robot.commands.autonomous.DoNothing;
 import org.usfirst.frc.team1775.robot.commands.autonomous.DriveAcrossBaseline;
 import org.usfirst.frc.team1775.robot.commands.autonomous.Blue_Left_Shoot;
+import org.usfirst.frc.team1775.robot.commands.autonomous.Blue_Middle_Shoot;
 import org.usfirst.frc.team1775.robot.commands.autonomous.Middle_PlaceGear;
 import org.usfirst.frc.team1775.robot.commands.autonomous.Red_Left_PlaceGear;
 import org.usfirst.frc.team1775.robot.commands.autonomous.Red_Right_PlaceGear;
@@ -61,6 +62,7 @@ public class Robot extends IterativeRobot {
         winch = new WinchSubsystem();
 		
 		oi = new OI();
+
         
         initCameras();
 		initDashboard();
@@ -79,7 +81,7 @@ public class Robot extends IterativeRobot {
 
 		chooser.addObject("Middle - Place Gear", new Middle_PlaceGear());
 		// chooser.addObject("Blue Middle - Place Gear Then Shoot", new Blue_Middle_PlaceGearThenShoot());
-		// chooser.addObject("Blue Middle - Shoot", new Blue_Middle_Shoot());
+		chooser.addObject("Blue Middle - Shoot", new Blue_Middle_Shoot());
 		
 		chooser.addObject("Blue Loading - Place Gear", new Blue_Right_PlaceGear());
 		
@@ -162,6 +164,10 @@ public class Robot extends IterativeRobot {
 		// this line or comment it out.
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
+		
+		while (oi.driverJoystick == null) {
+			oi = new OI();
+		}
 	}
 
 	/**

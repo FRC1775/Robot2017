@@ -46,7 +46,9 @@ public class Cameras {
 	private static final int GEAR_CAMERA_WHITE_BALANCE_TEMP_AUTO = 0;
 	private static final int GEAR_CAMERA_WHITE_BALANCE_TEMP = 4000;
 
-	private static AtomicBoolean shouldChangeCamera;
+	
+	private static volatile boolean shouldChangeCamera;
+	//private static AtomicBoolean shouldChangeCamera;
 	public static volatile double angleOffCenter = 0;
 	public static volatile double distance = 0;
 	
@@ -55,7 +57,7 @@ public class Cameras {
 	private Thread cameraThread;
 
 	public static void changeCamera() {
-		shouldChangeCamera.set(true);
+		shouldChangeCamera = true;
 	}
 
 	public void init() {
@@ -82,24 +84,29 @@ public class Cameras {
 
 				while (!Thread.interrupted()) {
 
-					if (shouldChangeCamera.getAndSet(false)) {
+					if (shouldChangeCamera) {
+						shouldChangeCamera = false;
+						
 						if (showShooterCamera && gearCamera != null) {
 								videoSink.setSource(gearCamera);
 						} else if(!showShooterCamera && shooterCamera != null) {
 							videoSink.setSource(shooterCamera);
 						}
+						
 						showShooterCamera = !showShooterCamera;
 					}
 
 					if (showShooterCamera) {
+						
 						if (shooterCamera != null) {
-							//videoSink.setSource(shooterCamera);
+							videoSink.setSource(shooterCamera);
 
 							long frameTime = videoSink.grabFrame(inputImage);
 							if (frameTime == 0) {
 								continue;
 							}
 						}
+						
 						/*
 						if (gearCameraSink != null) {
 							gearCameraSink.setEnabled(false);
@@ -112,18 +119,20 @@ public class Cameras {
 								continue;
 							}
 						}
-						*/
 						
+						*/
 						processShooterCamera(pipeline, inputImage);
 					} else {
+						
 						if (gearCamera != null) {
-							//videoSink.setSource(gearCamera);
+							videoSink.setSource(gearCamera);
 
 							long frameTime = videoSink.grabFrame(inputImage);
 							if (frameTime == 0) {
 								continue;
 							}
 						}
+						
 						/*
 						if (shooterCameraSink != null) {
 							shooterCameraSink.setEnabled(false);
@@ -270,7 +279,7 @@ public class Cameras {
 	
 	private void calculateShooterAngle(Rect top) {
 		double offCenter = (double) top.x + (double) top.width / 2.0 - ((double) IMG_WIDTH / 2.0);
-		angleOffCenter = (65 / (double) IMG_WIDTH) * offCenter;
+		angleOffCenter = (65 / (double) IMG_WIDTH) * offCenter - 1.5;
 		
 		SmartDashboard.putNumber("Camera.shooter.angle", angleOffCenter);
 	}

@@ -14,17 +14,17 @@ public class Red_Right_PlaceGear extends CommandGroup {
 	}
 	
 	public Red_Right_PlaceGear(boolean changeCamera) {
-		addSequential(new DriveDistance(76), 3);
+		addSequential(new DriveDistance(100), 3);
 		addSequential(new Wait(600));
 		addSequential(new RotateByAngle(-45), 1.5);
-		addSequential(new Wait(1000));
+		addSequential(new Wait(900));
 		addSequential(new RotateByAngle(), 1.5);
-		addSequential(new Wait(1000));
+		addSequential(new Wait(700));
 		addSequential(new RotateByAngle(), 1.5);
 		if (changeCamera) {
 			addSequential(new ChangeCamera());
 		}
-		addSequential(new DriveDistance(24), 1.5);
+		addSequential(new DriveDistance(32), 1.5);
 		addSequential(new ReleaseGear(true));
 		addSequential(new Wait(1000));
 		addSequential(new DriveDistance(-18), 1.5);

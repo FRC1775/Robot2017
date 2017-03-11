@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class Blue_Right_PlaceGear extends CommandGroup {
 
 	public Blue_Right_PlaceGear() {
-		addSequential(new DriveDistance(76), 3);
+		addSequential(new DriveDistance(100), 3);
 		addSequential(new Wait(600));
 		addSequential(new RotateByAngle(-45), 1.5);
 		addSequential(new Wait(1000));

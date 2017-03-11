@@ -11,6 +11,8 @@ public class DriveDistance extends Command {
 	public static DriveTrainSubsystem driveTrain = Robot.driveTrain;
 	
 	private double distance;
+
+	private boolean killScheduler = true;
 	
 	public DriveDistance() {
 		requires(driveTrain);
@@ -21,7 +23,15 @@ public class DriveDistance extends Command {
 		
 		this.distance = distance;
 	}
-
+	
+	public DriveDistance(double distance, boolean killScheduler, int timeout) {
+		requires(driveTrain);
+		this.distance = distance;
+		this.killScheduler = killScheduler;
+		setTimeout((double)timeout / 1000.0);
+	}
+	
+	
 	@Override
 	protected void initialize() {
 		SmartDashboard.putData(driveTrain);
@@ -31,7 +41,7 @@ public class DriveDistance extends Command {
 
 	@Override
 	protected void execute() {
-		driveTrain.driveDistance();
+		driveTrain.driveDistance(killScheduler);
 	}
 
 	@Override
@@ -41,7 +51,7 @@ public class DriveDistance extends Command {
 	
 	@Override
 	protected boolean isFinished() {
-		return driveTrain.isFinished();
+		return isTimedOut() || driveTrain.isFinished();
 	}
 
 }

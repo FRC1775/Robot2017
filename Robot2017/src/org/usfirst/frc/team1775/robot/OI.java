@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.buttons.Trigger;
 
 import org.usfirst.frc.team1775.robot.commands.autonomous.ChangeCamera;
+import org.usfirst.frc.team1775.robot.commands.drivetrain.DriveDistance;
 import org.usfirst.frc.team1775.robot.commands.drivetrain.ResetGyro;
 import org.usfirst.frc.team1775.robot.commands.drivetrain.RotateByAngle;
 import org.usfirst.frc.team1775.robot.commands.gearassembly.ReleaseGear;
@@ -135,6 +136,7 @@ public class OI {
 		
 		// Right bumper
 		driverRightBumper = new JoystickButton(driverJoystick, XBOX_RIGHT_BUMPER);
+		driverRightBumper.whenPressed(new DriveDistance(-4, false, 500));
 		
 		// Back button
 		driverBackButton = new JoystickButton(driverJoystick, XBOX_BACK);
@@ -272,6 +274,8 @@ public class OI {
 		};
 		operatorRightTrigger.whileActive(new WindWinch());
 		
+
+		
 		// POV Up
 		operatorPovUp = new Trigger() {
 			@Override
@@ -322,6 +326,7 @@ public class OI {
 		
 		try
 		{
+			//System.out.println(""+DriverStation.getInstance().getJoystickType(DRIVER_JOYSTICK));
 			return DriverStation.getInstance().getJoystickType(DRIVER_JOYSTICK) >= 0;
 		} catch (Exception e) {
 			return false;
