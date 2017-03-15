@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.command.WaitCommand;
 public class Red_Right_Shoot extends CommandGroup {
 
 	public Red_Right_Shoot() {
-		addSequential(new StartSingulator());
 		addSequential(new StartShooter());
 		addSequential(new DriveDistance(30), 2);
 		addParallel(new StopDrive());
@@ -22,6 +21,7 @@ public class Red_Right_Shoot extends CommandGroup {
 		addParallel(new StopDrive());
 		
 		addSequential(new WaitCommand(.3));
+		addSequential(new StartSingulator());
 		addSequential(new StartRegulator());
 	}
 }

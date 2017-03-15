@@ -57,9 +57,13 @@ public class Robot extends IterativeRobot {
 		RobotMap.init();
 
         driveTrain = new DriveTrainSubsystem();
+        SmartDashboard.putData(driveTrain);
         shooter = new ShooterSubsystem();
+        SmartDashboard.putData(shooter);
         gearAssembly = new GearAssemblySubsystem();
+        SmartDashboard.putData(gearAssembly);
         winch = new WinchSubsystem();
+        SmartDashboard.putData(winch);
 		
 		oi = new OI();
 
@@ -76,7 +80,7 @@ public class Robot extends IterativeRobot {
 		 * THIS IS THE BLUE SIDE
 		 */
 		chooser.addObject("Blue - Left (Boiler) - Place Gear", new Blue_Left_PlaceGear());
-		chooser.addObject("Blue - Left (Boiler) - Place Gear Then Shoot", new Blue_Left_PlaceGearThenShoot());
+		//chooser.addObject("Blue - Left (Boiler) - Place Gear Then Shoot", new Blue_Left_PlaceGearThenShoot());
 		chooser.addObject("Blue - Left (Boiler) - Shoot", new Blue_Left_Shoot());
 		//chooser.addObject("Blue - Boiler(Left) - Go to Hopper And Shoot", new Blue_Left_GoToHopperAndShoot());
 
@@ -97,7 +101,7 @@ public class Robot extends IterativeRobot {
 		//chooser.addObject("Red - Middle - Shoot", new Red_Middle_Shoot());
 		
 		chooser.addObject("Red - Right (Boiler) - Place Gear", new Red_Right_PlaceGear());
-		chooser.addObject("Red - Right (Boiler) - Place Gear Then Shoot", new Red_Right_PlaceGearThenShoot());
+		//chooser.addObject("Red - Right (Boiler) - Place Gear Then Shoot", new Red_Right_PlaceGearThenShoot());
 		chooser.addObject("Red - Right (Boiler) - Shoot", new Red_Right_Shoot());
 		//chooser.addObject("Red - Boiler(Right) - Go to Hopper And Shoot", new Red_Right_GoToHopperAndShoot());
 		

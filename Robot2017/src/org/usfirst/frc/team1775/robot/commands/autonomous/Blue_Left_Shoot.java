@@ -13,15 +13,19 @@ import edu.wpi.first.wpilibj.command.WaitCommand;
 public class Blue_Left_Shoot extends CommandGroup {
 
 	public Blue_Left_Shoot() {
-		addSequential(new StartSingulator());
 		addSequential(new StartShooter());
-		addSequential(new DriveDistance(40), 2);
+		addSequential(new DriveDistance(65), 2);
 		addParallel(new StopDrive());
 		
 		addSequential(new RotateByAngle(-82), 2);
 		addParallel(new StopDrive());
 		
 		addSequential(new WaitCommand(.3));
+		addSequential(new DriveDistance(4), 1);
+		addParallel(new StopDrive());
+		
+		addSequential(new WaitCommand(.3));
+		addSequential(new StartSingulator());
 		addSequential(new StartRegulator());
 	}
 }

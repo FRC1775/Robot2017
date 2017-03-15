@@ -6,11 +6,16 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class StartShooter extends Command {
 
-	private int rpm;
+	private int rpm = -1;
 	private boolean shouldWait;
 	
 	public StartShooter() {
 		this(true);
+	}
+	
+	public StartShooter(int rpm) {
+		this(false);
+		this.rpm = rpm;
 	}
 	
 	public StartShooter(boolean shouldWait) {
@@ -28,7 +33,9 @@ public class StartShooter extends Command {
 	}
 	
 	public void initialize() {
-		this.rpm = getRpmFromCamera();
+		if (this.rpm < 0) {
+			this.rpm = getRpmFromCamera();
+		}
 	}
 
 	protected void execute() {

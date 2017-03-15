@@ -23,7 +23,7 @@ public class Blue_Left_PlaceGear extends CommandGroup {
 		
 		addSequential(new CenterOnHook());
 		
-		addSequential(new DriveDistance(15), 1.25);
+		addSequential(new DriveDistance(13), 1.25);
 		addParallel(new StopDrive());
 		
 		addSequential(new ReleaseGearAndReverse());
