@@ -5,8 +5,6 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class Blue_Middle_PlaceGearThenShoot extends CommandGroup {
 
 	public Blue_Middle_PlaceGearThenShoot() {
-		// Run Middle_PlaceGear
-		// Get into shooting position
-		// Shoot
+		addSequential(new Middle_PlaceGear());
 	}
 }

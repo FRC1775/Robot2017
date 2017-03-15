@@ -51,7 +51,7 @@ public class ShooterSubsystem extends Subsystem {
 						RobotMap.shooterController.set(getShooterBangBangMin());
 					}
 
-					SmartDashboard.putNumber("Shooter.output", RobotMap.shooterController.get());
+					//SmartDashboard.putNumber("Shooter.output", RobotMap.shooterController.get());
 					SmartDashboard.putNumber("Shooter.targetRpm", shooterRpmTarget);
 					SmartDashboard.putNumber("Shooter.rpm", currentShooterRpm);
 				}

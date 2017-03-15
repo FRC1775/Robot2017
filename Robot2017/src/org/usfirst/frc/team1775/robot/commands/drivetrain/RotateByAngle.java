@@ -1,6 +1,5 @@
 package org.usfirst.frc.team1775.robot.commands.drivetrain;
 
-import org.usfirst.frc.team1775.robot.Cameras;
 import org.usfirst.frc.team1775.robot.Robot;
 import org.usfirst.frc.team1775.robot.subsystems.DriveTrainSubsystem;
 
@@ -37,7 +36,7 @@ public class RotateByAngle extends Command {
 		SmartDashboard.putData(driveTrain);
 		
 		if (degrees == 0) {
-			driveTrain.setRotateByAngle(Cameras.angleOffCenter);
+			driveTrain.setRotateByAngle(Robot.camera.getAngleOffCenter());
 			//driveTrain.setRotateByAngle(Preferences.getInstance().getDouble("TargetAngle", 3));
 		} else {
 			driveTrain.setRotateByAngle(degrees);

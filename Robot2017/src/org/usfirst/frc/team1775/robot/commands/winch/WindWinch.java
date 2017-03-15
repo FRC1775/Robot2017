@@ -19,9 +19,9 @@ public class WindWinch extends Command {
 	}
 	
 	protected void execute() {
-		SmartDashboard.putNumber("Winch.speedCrossover", getSpeedCrossover());
-		SmartDashboard.putNumber("Winch.slowJoystickRumble", getSlowJoystickRumble());
-		SmartDashboard.putNumber("Winch.fastJoystickRumble", getFastJoystickRumble());
+		//SmartDashboard.putNumber("Winch.speedCrossover", getSpeedCrossover());
+		//SmartDashboard.putNumber("Winch.slowJoystickRumble", getSlowJoystickRumble());
+		//SmartDashboard.putNumber("Winch.fastJoystickRumble", getFastJoystickRumble());
 		
 		
 		if (Robot.oi.getRightTrigger() > getSpeedCrossover()) {

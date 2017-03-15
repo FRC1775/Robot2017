@@ -1,7 +1,6 @@
 package org.usfirst.frc.team1775.robot;
 
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
@@ -77,7 +76,8 @@ public class Cameras {
 
 				Mat inputImage = new Mat();
 
-				boolean showShooterCamera = false;
+				// Change this if we need to start the autonomous with one camera or another
+				boolean showShooterCamera = true;
 
 				GripPipeline pipeline = new GripPipeline();
 				GearPipeline gearPipeline = new GearPipeline();
@@ -153,12 +153,13 @@ public class Cameras {
 					imageSource.putFrame(inputImage);
 				}
 			} catch (Exception exception) {
-				DriverStation.reportError("Something went wrong with cameras", true);
+				System.out.println("Something went wrong with cameras");
+				//DriverStation.reportError("Something went wrong with cameras", true);
 				DriverStation.reportError(exception.getMessage(), false);
-				StackTraceElement[] els = exception.getStackTrace();
-				for (int i = 0; i < els.length; i++) {
-					DriverStation.reportError(els[i].toString(), false);
-				}
+				//StackTraceElement[] els = exception.getStackTrace();
+				//for (int i = 0; i < els.length; i++) {
+				//	DriverStation.reportError(els[i].toString(), false);
+				//}
 			}
 
 		});
@@ -185,17 +186,6 @@ public class Cameras {
 		return null;
 	}
 	
-	private CvSink initShooterCameraSink(UsbCamera shooterCamera) {
-		if (shooterCamera != null) {
-			CvSink shooterCameraSink = new CvSink(SHOOTER_CAMERA_NAME + " sink");
-			shooterCameraSink.setSource(shooterCamera);
-			
-			return shooterCameraSink;
-		}
-		
-		return null;
-	}
-	
 	private int getShooterCameraDevice() {
 		return Preferences.getInstance().getInt("Cameras.shooter", SHOOTER_CAMERA_DEVICE);
 	}
@@ -213,17 +203,6 @@ public class Cameras {
 			gearCamera.getProperty("focus_absolute").set(GEAR_CAMERA_FOCUS_ABSOLUTE);
 			
 			return gearCamera;
-		}
-		
-		return null;
-	}
-	
-	private CvSink initGearCameraSink(UsbCamera gearCamera) {
-		if (gearCamera != null) {
-			CvSink gearCameraSink = new CvSink(GEAR_CAMERA_NAME + " sink");
-			gearCameraSink.setSource(gearCamera);
-			
-			return gearCameraSink;
 		}
 		
 		return null;
@@ -293,15 +272,15 @@ public class Cameras {
 		distance = Math.sqrt(Math.pow(bandDistance, 2) - Math.pow(66, 2)) + 19.5;
 		distance = distance * 1.2279 - 18.55;
 		
-		SmartDashboard.putNumber("Camera.shooter.bandDistance", bandDistance);
-		SmartDashboard.putNumber("DistanceIWant", distance);
+		//SmartDashboard.putNumber("Camera.shooter.bandDistance", bandDistance);
+		//SmartDashboard.putNumber("DistanceIWant", distance);
 	}
 
 	private void processGearCamera(GearPipeline pipeline, Mat inputImage) {
 		if (inputImage.empty()) {
 			angleOffCenter = 0;
 			distance = 0;
-			SmartDashboard.putNumber("Camera.shooter.angle", 0);
+			//SmartDashboard.putNumber("Camera.shooter.angle", 0);
 			return;
 		}
 		
@@ -368,6 +347,5 @@ public class Cameras {
 				+ (double) left.x) - ((double) IMG_WIDTH / 2.0);
 
 		angleOffCenter = (65 / (double) IMG_WIDTH) * offCenter;
-		SmartDashboard.putNumber("Camera.shooter.angle", angleOffCenter * 0.2);
 	}
 }

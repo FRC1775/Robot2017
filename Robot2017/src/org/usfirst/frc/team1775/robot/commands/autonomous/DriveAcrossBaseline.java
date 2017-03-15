@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class DriveAcrossBaseline extends CommandGroup {
 
 	public DriveAcrossBaseline() {
-		addSequential(new DriveDistance(60));
+		addSequential(new DriveDistance(50));
 	}
 	
 }

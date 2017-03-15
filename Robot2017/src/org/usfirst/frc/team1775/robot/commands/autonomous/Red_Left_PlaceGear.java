@@ -2,33 +2,27 @@ package org.usfirst.frc.team1775.robot.commands.autonomous;
 
 import org.usfirst.frc.team1775.robot.commands.drivetrain.DriveDistance;
 import org.usfirst.frc.team1775.robot.commands.drivetrain.RotateByAngle;
-import org.usfirst.frc.team1775.robot.commands.gearassembly.CloseGear;
-import org.usfirst.frc.team1775.robot.commands.gearassembly.ReleaseGear;
+import org.usfirst.frc.team1775.robot.commands.drivetrain.StopDrive;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.command.WaitCommand;
 
 public class Red_Left_PlaceGear extends CommandGroup {
 
 	public Red_Left_PlaceGear() {
-		this(false);
-	}
-	
-	public Red_Left_PlaceGear(boolean changeCamera) {
-		addSequential(new DriveDistance(92), 3);
-		addSequential(new Wait(400));
-		addSequential(new RotateByAngle(43), 1.5);
-		addSequential(new Wait(300));
-		addSequential(new RotateByAngle(), 1);
-		addSequential(new Wait(300));
-		addSequential(new RotateByAngle(), 1);
-		if (changeCamera) {
-			addSequential(new ChangeCamera());
-		}
-		addSequential(new DriveDistance(22), 1.5);
-		addSequential(new ReleaseGear(true));
-		addSequential(new Wait(1000));
-		addSequential(new DriveDistance(-18), 1.5);
-		addSequential(new CloseGear());
+		addSequential(new DriveDistance(73));
+		addParallel(new StopDrive());
+		
+		addSequential(new WaitCommand(.2));
+		addSequential(new RotateByAngle(44, 1200));
+		addParallel(new StopDrive());
+		
+		addSequential(new CenterOnHook());
+		
+		addSequential(new DriveDistance(18), 1.25);
+		addParallel(new StopDrive());
+		
+		addSequential(new ReleaseGearAndReverse());
 	}
 
 }

@@ -4,10 +4,11 @@ import org.usfirst.frc.team1775.robot.Robot;
 import org.usfirst.frc.team1775.robot.subsystems.ShooterSubsystem;
 
 import edu.wpi.first.wpilibj.Preferences;
-import edu.wpi.first.wpilibj.command.InstantCommand;
+import edu.wpi.first.wpilibj.command.Command;
 
-public class AdjustShooterSpeed extends InstantCommand {
-	public static final int DEFAULT_SHOOTER_RPM_CHANGE_AMOUNT = 25;
+public class AdjustShooterSpeed extends Command {
+	// Used to be 25
+	public static final int DEFAULT_SHOOTER_RPM_CHANGE_AMOUNT = 15;
 	
 	public enum ChangeDirection {
 		Up, Down
@@ -37,6 +38,10 @@ public class AdjustShooterSpeed extends InstantCommand {
 	
 	public void execute() {
 		shooter.adjustShooter(getRpmChange(), useCamera);
+	}
+	
+	public boolean isFinished() {
+		return shooter.isShooterReady();
 	}
 	
 	private int getRpmChange() {

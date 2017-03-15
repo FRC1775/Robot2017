@@ -120,11 +120,10 @@ public class OI {
 		
 		// B button
 		driverBButton = new JoystickButton(driverJoystick, XBOX_B);
-		driverBButton.whenPressed(new RotateByAngle(2, 500));
+		driverBButton.whenPressed(new RotateByAngle(1, 500));
 		
-		// X button
 		driverXButton = new JoystickButton(driverJoystick, XBOX_X);
-		driverXButton.whenPressed(new RotateByAngle(-2, 500));
+		driverXButton.whenPressed(new RotateByAngle(-1, 500));
 		
 		// Y button
 		driverYButton = new JoystickButton(driverJoystick, XBOX_Y);
@@ -136,7 +135,7 @@ public class OI {
 		
 		// Right bumper
 		driverRightBumper = new JoystickButton(driverJoystick, XBOX_RIGHT_BUMPER);
-		driverRightBumper.whenPressed(new DriveDistance(-4, false, 500));
+		driverRightBumper.whenPressed(new DriveDistance(-.5, false, 1000));
 		
 		// Back button
 		driverBackButton = new JoystickButton(driverJoystick, XBOX_BACK);
@@ -232,7 +231,7 @@ public class OI {
 
 		// Left bumper
 		operatorLeftBumper = new JoystickButton(operatorJoystick, XBOX_LEFT_BUMPER);
-		operatorLeftBumper.whenPressed(new RotateByAngle());
+		operatorLeftBumper.whenPressed(new RotateByAngle(1500, true));
 		
 		// Right bumper
 		operatorRightBumper = new JoystickButton(operatorJoystick, XBOX_RIGHT_BUMPER);

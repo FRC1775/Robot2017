@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Talon;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
 /**
@@ -60,7 +59,7 @@ public class RobotMap {
 	public final static int PRACTICE_WINCH_CONTROLLER_PWM_CHANNEL = 4;
 	
 	// Gyro
-	public static Gyro gyro;
+	public static ADXRS450_Gyro gyro;
 	
 	// Drive Train
 	public static SpeedController driveTrainLeftController;
@@ -95,6 +94,7 @@ public class RobotMap {
 	private static void initGyro() {
 		gyro = new ADXRS450_Gyro();
 		gyro.calibrate();
+		LiveWindow.addSensor("Drive", "gyro", gyro);
 	}
 
 	private static void initDriveTrain() {
