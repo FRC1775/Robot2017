@@ -16,6 +16,7 @@ import org.usfirst.frc.team1775.robot.commands.autonomous.Red_Left_PlaceGear;
 import org.usfirst.frc.team1775.robot.commands.autonomous.Red_Right_PlaceGear;
 import org.usfirst.frc.team1775.robot.commands.autonomous.Red_Right_PlaceGearThenShoot;
 import org.usfirst.frc.team1775.robot.commands.autonomous.Red_Right_Shoot;
+import org.usfirst.frc.team1775.robot.commands.drivetrain.DriveDistance;
 import org.usfirst.frc.team1775.robot.commands.autonomous.Blue_Right_PlaceGear;
 import org.usfirst.frc.team1775.robot.commands.autonomous.Blue_Left_PlaceGear;
 import org.usfirst.frc.team1775.robot.commands.autonomous.Blue_Left_PlaceGearThenShoot;
@@ -108,6 +109,7 @@ public class Robot extends IterativeRobot {
 		
 		SmartDashboard.putData("Auto Mode", chooser);
 		SmartDashboard.putData(Scheduler.getInstance());
+		SmartDashboard.putData(new DriveDistance(45));
 	}
     
 	private void initCameras() {

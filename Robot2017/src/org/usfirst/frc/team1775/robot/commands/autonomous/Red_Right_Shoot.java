@@ -17,7 +17,7 @@ public class Red_Right_Shoot extends CommandGroup {
 		addSequential(new DriveDistance(30), 2);
 		addParallel(new StopDrive());
 		
-		addSequential(new RotateByAngle(82), 2);
+		addSequential(new RotateByAngle(82), 3);
 		addParallel(new StopDrive());
 		
 		addSequential(new WaitCommand(.3));

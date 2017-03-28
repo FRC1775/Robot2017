@@ -114,11 +114,11 @@ public class RobotMap {
 		driveTrainRobotDrive.setInvertedMotor(RobotDrive.MotorType.kRearRight, true);
 		
 		// Drive train encoder
-		driveTrainEncoder = new Encoder(getDriveTrainEncoderDioChannelA(), getDriveTrainEncoderDioChannelB(), false, Encoder.EncodingType.k4X);
+		driveTrainEncoder = new Encoder(getDriveTrainEncoderDioChannelA(), getDriveTrainEncoderDioChannelB(), false, Encoder.EncodingType.k1X);
 		
 		//driveTrainEncoder.setDistancePerPulse(10);
 		//Quadrature 4x
-		double distancePerPulse = ((3.5*Math.PI)/250.0)*1.067; // distance in inches multiplied by ratio error factor
+		double distancePerPulse = ((3.19*Math.PI)/250.0);
 		//if because this is a 4x encoder that I need to divide by 1000 or 250
 		driveTrainEncoder.setDistancePerPulse(distancePerPulse);
 		//double encoderValue = driveTrainEncoder.getDistance();

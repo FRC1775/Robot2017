@@ -17,7 +17,7 @@ public class Blue_Left_Shoot extends CommandGroup {
 		addSequential(new DriveDistance(65), 2);
 		addParallel(new StopDrive());
 		
-		addSequential(new RotateByAngle(-82), 2);
+		addSequential(new RotateByAngle(-84), 3); //GABE changed this from -82 to -84
 		addParallel(new StopDrive());
 		
 		addSequential(new WaitCommand(.3));

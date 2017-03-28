@@ -14,11 +14,11 @@ public class Blue_Left_PlaceGear extends CommandGroup {
 	}
 	
 	public Blue_Left_PlaceGear(boolean changeCamera) {
-		addSequential(new DriveDistance(74));
+		addSequential(new DriveDistance(77));
 		addParallel(new StopDrive());
 		
 		addSequential(new WaitCommand(.2));
-		addSequential(new RotateByAngle(44, 1200));
+		addSequential(new RotateByAngle(48, 1500));
 		addParallel(new StopDrive());
 		
 		addSequential(new CenterOnHook());

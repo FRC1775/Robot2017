@@ -127,7 +127,7 @@ public class OI {
 		
 		// Y button
 		driverYButton = new JoystickButton(driverJoystick, XBOX_Y);
-		driverYButton.whenPressed(new ChangeCamera());
+		driverYButton.whenPressed(new DriveDistance());
 
 		// Left bumper
 		driverLeftBumper = new JoystickButton(driverJoystick, XBOX_LEFT_BUMPER);
@@ -139,11 +139,11 @@ public class OI {
 		
 		// Back button
 		driverBackButton = new JoystickButton(driverJoystick, XBOX_BACK);
-		driverBackButton.whenPressed(new RotateByAngle(2000, true));
+		driverBackButton.whenPressed(new RotateByAngle());
 		
 		// Start button 
 		driverStartButton = new JoystickButton(driverJoystick, XBOX_START);
-		driverStartButton.whenPressed(new ResetGyro());
+		driverStartButton.whenPressed(new DriveDistance());
 
 		// Left trigger
 		driverLeftTrigger = new Trigger() {

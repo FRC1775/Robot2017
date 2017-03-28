@@ -68,7 +68,7 @@ public class GearCamera implements ICamera {
 			} catch (Exception exception) {
 				System.out.println("Something went wrong with cameras");
 				//DriverStation.reportError("Something went wrong with cameras", true);
-				DriverStation.reportError(exception.getMessage(), false);
+				//DriverStation.reportError(exception.getMessage(), false);
 				//StackTraceElement[] els = exception.getStackTrace();
 				//for (int i = 0; i < els.length; i++) {
 				//	DriverStation.reportError(els[i].toString(), false);

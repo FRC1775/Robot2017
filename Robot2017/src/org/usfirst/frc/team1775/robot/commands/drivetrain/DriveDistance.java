@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1775.robot.commands.drivetrain;
 
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -10,7 +11,7 @@ public class DriveDistance extends Command {
 	
 	public static DriveTrainSubsystem driveTrain = Robot.driveTrain;
 	
-	private double distance;
+	private double distance = 0;
 
 	private boolean killScheduler = true;
 	
@@ -36,7 +37,11 @@ public class DriveDistance extends Command {
 	protected void initialize() {
 		SmartDashboard.putData(driveTrain);
 		
-		driveTrain.setDriveDistance(distance);
+		if (distance == 0) {
+			driveTrain.setDriveDistance(Preferences.getInstance().getDouble("distance", 25.0));
+		} else {
+			driveTrain.setDriveDistance(distance);
+		}
 	}
 
 	@Override

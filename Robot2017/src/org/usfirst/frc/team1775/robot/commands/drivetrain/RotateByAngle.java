@@ -3,6 +3,7 @@ package org.usfirst.frc.team1775.robot.commands.drivetrain;
 import org.usfirst.frc.team1775.robot.Robot;
 import org.usfirst.frc.team1775.robot.subsystems.DriveTrainSubsystem;
 
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -36,8 +37,9 @@ public class RotateByAngle extends Command {
 		SmartDashboard.putData(driveTrain);
 		
 		if (degrees == 0) {
-			driveTrain.setRotateByAngle(Robot.camera.getAngleOffCenter());
-			//driveTrain.setRotateByAngle(Preferences.getInstance().getDouble("TargetAngle", 3));
+			//driveTrain.setRotateByAngle(Robot.camera.getAngleOffCenter());
+			//driveTrain.setRotateByAngle(Preferences.getInstance().getDouble("TargetAngle", 45));
+			driveTrain.setRotateByAngle(0);
 		} else {
 			driveTrain.setRotateByAngle(degrees);
 		}
