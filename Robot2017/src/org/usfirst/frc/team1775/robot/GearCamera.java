@@ -29,7 +29,7 @@ public class GearCamera implements ICamera {
 	// Gear camera settings
 	private static final String GEAR_CAMERA_NAME = "Gear camera";
 	private static final int GEAR_CAMERA_DEVICE = 0;
-	private static final int GEAR_CAMERA_EXPOSURE = 2;
+	private static final int GEAR_CAMERA_EXPOSURE = 1;
 	private static final int GEAR_CAMERA_FOCUS_AUTO = 0;
 	private static final int GEAR_CAMERA_FOCUS_ABSOLUTE = 0;
 	private static final int GEAR_CAMERA_WHITE_BALANCE_TEMP_AUTO = 0;
@@ -173,7 +173,7 @@ public class GearCamera implements ICamera {
 		double offCenter = ((((double) right.width + (double) right.x) - (double) left.x) / 2.0
 				+ (double) left.x) - ((double) IMG_WIDTH / 2.0);
 
-		angleOffCenter = (65 / (double) IMG_WIDTH) * offCenter / 2.5;
+		angleOffCenter = (65 / (double) IMG_WIDTH) * offCenter / 1.5;
 	}
 
 	@Override

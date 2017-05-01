@@ -102,7 +102,7 @@ public class Robot extends IterativeRobot {
 		//chooser.addObject("Red - Middle - Shoot", new Red_Middle_Shoot());
 		
 		chooser.addObject("Red - Right (Boiler) - Place Gear", new Red_Right_PlaceGear());
-		//chooser.addObject("Red - Right (Boiler) - Place Gear Then Shoot", new Red_Right_PlaceGearThenShoot());
+		chooser.addObject("Red - Right (Boiler) - Place Gear Then Shoot", new Red_Right_PlaceGearThenShoot());
 		chooser.addObject("Red - Right (Boiler) - Shoot", new Red_Right_Shoot());
 		//chooser.addObject("Red - Boiler(Right) - Go to Hopper And Shoot", new Red_Right_GoToHopperAndShoot());
 		

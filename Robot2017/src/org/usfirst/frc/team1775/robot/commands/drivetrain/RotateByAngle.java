@@ -37,9 +37,9 @@ public class RotateByAngle extends Command {
 		SmartDashboard.putData(driveTrain);
 		
 		if (degrees == 0) {
-			//driveTrain.setRotateByAngle(Robot.camera.getAngleOffCenter());
+			driveTrain.setRotateByAngle(Robot.camera.getAngleOffCenter());
 			//driveTrain.setRotateByAngle(Preferences.getInstance().getDouble("TargetAngle", 45));
-			driveTrain.setRotateByAngle(0);
+			//driveTrain.setRotateByAngle(0);
 		} else {
 			driveTrain.setRotateByAngle(degrees);
 		}

@@ -93,8 +93,9 @@ public class RobotMap {
 	
 	private static void initGyro() {
 		gyro = new ADXRS450_Gyro();
-		gyro.calibrate();
-		LiveWindow.addSensor("Drive", "gyro", gyro);
+		//gyro.
+		//gyro.calibrate();
+		//LiveWindow.addSensor("Drive", "gyro", gyro);
 	}
 
 	private static void initDriveTrain() {

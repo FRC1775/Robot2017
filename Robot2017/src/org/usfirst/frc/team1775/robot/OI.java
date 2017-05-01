@@ -139,7 +139,7 @@ public class OI {
 		
 		// Back button
 		driverBackButton = new JoystickButton(driverJoystick, XBOX_BACK);
-		driverBackButton.whenPressed(new RotateByAngle());
+		driverBackButton.whenPressed(new RotateByAngle(90));
 		
 		// Start button 
 		driverStartButton = new JoystickButton(driverJoystick, XBOX_START);
