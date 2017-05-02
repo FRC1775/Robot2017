@@ -10,6 +10,8 @@ import org.usfirst.frc.team1775.robot.commands.autonomous.ChangeCamera;
 import org.usfirst.frc.team1775.robot.commands.drivetrain.DriveDistance;
 import org.usfirst.frc.team1775.robot.commands.drivetrain.ResetGyro;
 import org.usfirst.frc.team1775.robot.commands.drivetrain.RotateByAngle;
+import org.usfirst.frc.team1775.robot.commands.gearassembly.GearDown;
+import org.usfirst.frc.team1775.robot.commands.gearassembly.GearUp;
 import org.usfirst.frc.team1775.robot.commands.gearassembly.ReleaseGear;
 import org.usfirst.frc.team1775.robot.commands.shooter.AdjustShooterSpeed;
 import org.usfirst.frc.team1775.robot.commands.shooter.AdjustShooterSpeed.ChangeDirection;
@@ -116,7 +118,7 @@ public class OI {
 		
 		// A button
 		driverAButton = new JoystickButton(driverJoystick, XBOX_A);
-		driverAButton.whileHeld(new ReleaseGear());
+		driverAButton.whenPressed(new GearDown());
 		
 		// B button
 		driverBButton = new JoystickButton(driverJoystick, XBOX_B);
@@ -127,7 +129,7 @@ public class OI {
 		
 		// Y button
 		driverYButton = new JoystickButton(driverJoystick, XBOX_Y);
-		driverYButton.whenPressed(new DriveDistance());
+		driverYButton.whenPressed(new GearUp());
 
 		// Left bumper
 		driverLeftBumper = new JoystickButton(driverJoystick, XBOX_LEFT_BUMPER);
@@ -387,6 +389,26 @@ public class OI {
 			return false;
 		}
 	}
+	
+	public boolean getAButton() {
+		try {
+			if (!hasDriverJoystick()) {
+				return false;
+			}
+			
+			if (!hasOperatorJoystick()) {
+				return driverAButton.get();
+			}
+			
+			return driverAButton.get() || operatorAButton.get();
+		
+		} catch (Exception e) {
+			DriverStation.reportError("getAButtonError", false);
+			
+			return false;
+		}
+	}
+	
 	public double getLeftYAxis() {
 			try {
 				if (!hasDriverJoystick()) {

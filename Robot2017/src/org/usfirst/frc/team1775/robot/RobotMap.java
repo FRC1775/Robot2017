@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1775.robot;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -35,7 +36,7 @@ public class RobotMap {
 	public final static int COMPETITION_SHOOTER_ENCODER_DIO_CHANNEL_A = 4;
 	public final static int COMPETITION_SHOOTER_ENCODER_DIO_CHANNEL_B = 5;
 	
-	public final static int COMPETITION_GEAR_RELEASE_PCM_CHANNEL = 0;
+	public final static int COMPETITION_GEAR_RELEASE_PCM_CHANNEL = 2;
 	public final static int COMPETITION_WINCH_CONTROLLER_PWM_CHANNEL = 4;
 	
 	/*
@@ -55,7 +56,7 @@ public class RobotMap {
 	public final static int PRACTICE_SHOOTER_ENCODER_DIO_CHANNEL_A = 4;
 	public final static int PRACTICE_SHOOTER_ENCODER_DIO_CHANNEL_B = 5;
 	
-	public final static int PRACTICE_GEAR_RELEASE_PCM_CHANNEL = 0;
+	public final static int PRACTICE_GEAR_RELEASE_PCM_CHANNEL = 2;
 	public final static int PRACTICE_WINCH_CONTROLLER_PWM_CHANNEL = 4;
 	
 	// Gyro
@@ -76,8 +77,8 @@ public class RobotMap {
 	
 	// Gear Assembly
 	public static Solenoid gearRelease;
-	// public static SpeedController gearRotatorController;
-	// public static DigitalInput gearSpokeDetectorOne;
+	public static SpeedController gearFeedController;
+	public static DigitalInput gearDetector;
 	// public static DigitalInput gearSpokeDetectorTwo;
 	
 	// Winch
@@ -168,6 +169,9 @@ public class RobotMap {
 	
 	private static void initGearAssembly() {
 		gearRelease = new Solenoid(getGearReleasePcmChannel());
+		// TODO get properly
+		gearFeedController = new Talon(5);
+		gearDetector = new DigitalInput(9);
 		LiveWindow.addActuator("Gear Assembly", "Release", gearRelease);
 	}
 	
