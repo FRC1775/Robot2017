@@ -22,7 +22,7 @@ public class Red_Right_PlaceGear extends CommandGroup {
 		addSequential(new RotateByAngle(-55)); //GABE i changed this -44 to -48, gkc
 		addParallel(new StopDrive());
 		
-		//addSequential(new CenterOnHook());
+		addSequential(new CenterOnHook());
 		
 		addSequential(new DriveDistance(20), 2);
 		addParallel(new StopDrive());

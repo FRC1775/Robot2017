@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.command.WaitCommand;
 public class Middle_PlaceGear extends CommandGroup {
 
 	public Middle_PlaceGear() {
-		addSequential(new DriveDistance(72), 4); //60 is what we started with
+		addSequential(new DriveDistance(67), 4); //60 is what we started with
 		addParallel(new StopDrive());
 		
 		//addSequential(new CenterOnHook());

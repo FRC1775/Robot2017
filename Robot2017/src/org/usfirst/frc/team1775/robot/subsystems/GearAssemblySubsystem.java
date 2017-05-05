@@ -3,6 +3,8 @@ package org.usfirst.frc.team1775.robot.subsystems;
 import org.usfirst.frc.team1775.robot.RobotMap;
 import org.usfirst.frc.team1775.robot.commands.gearassembly.HoldGear;
 
+import edu.wpi.first.wpilibj.Relay.Direction;
+import edu.wpi.first.wpilibj.Relay.Value;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -27,7 +29,13 @@ public class GearAssemblySubsystem extends Subsystem {
 	
 	public boolean sensesGear() {
 		SmartDashboard.putBoolean("GearDetector", !RobotMap.gearDetector.get());
-		return !RobotMap.gearDetector.get();
+		boolean sensesGear = !RobotMap.gearDetector.get();
+		if (sensesGear) {
+			RobotMap.gearIndicatorRelay.set(Value.kOn);
+		} else {
+			RobotMap.gearIndicatorRelay.set(Value.kOff);
+		}
+		return sensesGear;
 	}
 	
 	public void hasGear(boolean hasGear) {
@@ -51,7 +59,7 @@ public class GearAssemblySubsystem extends Subsystem {
 	}
 	
 	public boolean shouldRelease() {
-		return !isDown() && hasGear();
+		return !isDown() && (hasGear() || sensesGear());
 	}
 	
 	public void runGrip() {

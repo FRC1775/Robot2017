@@ -3,10 +3,12 @@ package org.usfirst.frc.team1775.robot;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.Relay.Direction;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
 /**
@@ -79,6 +81,7 @@ public class RobotMap {
 	public static Solenoid gearRelease;
 	public static SpeedController gearFeedController;
 	public static DigitalInput gearDetector;
+	public static Relay gearIndicatorRelay;
 	// public static DigitalInput gearSpokeDetectorTwo;
 	
 	// Winch
@@ -172,6 +175,8 @@ public class RobotMap {
 		// TODO get properly
 		gearFeedController = new Talon(5);
 		gearDetector = new DigitalInput(9);
+		gearIndicatorRelay = new Relay(0);
+		gearIndicatorRelay.setDirection(Direction.kForward);
 		LiveWindow.addActuator("Gear Assembly", "Release", gearRelease);
 	}
 	

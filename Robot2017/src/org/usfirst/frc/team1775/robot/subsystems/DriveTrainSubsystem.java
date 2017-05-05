@@ -36,7 +36,7 @@ public class DriveTrainSubsystem extends Subsystem {
 	boolean shouldSetPoint = true;
 	
 	
-	private PIDController straightDrivePidController = new PIDController(-0.3, 0.0, 0.0, (PIDSource) RobotMap.gyro, (value) -> {
+	private PIDController straightDrivePidController = new PIDController(-0.4, 0.0, 0.0, (PIDSource) RobotMap.gyro, (value) -> {
 		//SmartDashboard.putNumber("DriveTrain.straightDrive.pidResult", value);
 		straightDriveRotateCompensationValue = value;
 	}, 0.01);
@@ -58,7 +58,7 @@ public class DriveTrainSubsystem extends Subsystem {
 	protected void initDefaultCommand() {
 		setDefaultCommand(new RegularDrive());
 		driveToDistancePidController.setOutputRange(-0.9, 0.9);
-		straightDrivePidController.setOutputRange(-0.3, 0.3);
+		straightDrivePidController.setOutputRange(-0.4, 0.4);
 		straightDrivePidController.setSetpoint(0);
 		straightDrivePidController.enable();
 	}
