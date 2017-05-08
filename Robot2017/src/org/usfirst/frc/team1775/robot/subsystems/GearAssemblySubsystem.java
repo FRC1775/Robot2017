@@ -3,7 +3,6 @@ package org.usfirst.frc.team1775.robot.subsystems;
 import org.usfirst.frc.team1775.robot.RobotMap;
 import org.usfirst.frc.team1775.robot.commands.gearassembly.HoldGear;
 
-import edu.wpi.first.wpilibj.Relay.Direction;
 import edu.wpi.first.wpilibj.Relay.Value;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -27,68 +26,59 @@ public class GearAssemblySubsystem extends Subsystem {
 		return hasGear;
 	}
 	
-	public boolean sensesGear() {
-		SmartDashboard.putBoolean("GearDetector", !RobotMap.gearDetector.get());
-		boolean sensesGear = !RobotMap.gearDetector.get();
-		if (sensesGear) {
+	public boolean checkForGear() {
+		if (sensesGear()) {
 			RobotMap.gearIndicatorRelay.set(Value.kOn);
+			hasGear = true;
+			return true;
 		} else {
 			RobotMap.gearIndicatorRelay.set(Value.kOff);
+			return false;
 		}
-		return sensesGear;
 	}
 	
-	public void hasGear(boolean hasGear) {
-		this.hasGear = hasGear;
+	public boolean sensesGear() {
+		SmartDashboard.putBoolean("GearDetector", !RobotMap.gearDetector.get());
+		return !RobotMap.gearDetector.get();
 	}
 	
 	public void up() {
-		RobotMap.gearRelease.set(false);
+		RobotMap.gearTrayActuator.set(false);
 		isDown = false;
+		isReleasing = false;
 	}
 	
 	public void down() {
-		RobotMap.gearRelease.set(true);
-		if (shouldRelease()) {
-			System.out.println("Should Release");
+		RobotMap.gearTrayActuator.set(true);
+		if (hasGear()) {
 			release();
 		} else {
-			runGrip();
+			startGearIntake();
 		}
 		isDown = true;
-	}
-	
-	public boolean shouldRelease() {
-		return !isDown() && (hasGear() || sensesGear());
-	}
-	
-	public void runGrip() {
-		if (hasGear()) {
-			RobotMap.gearFeedController.set(-0.7);
-		} else {
-			RobotMap.gearFeedController.set(-1.0);
-		}
 	}
 	
 	public boolean isReleasing() {
 		return isReleasing;
 	}
 	
-	public void isReleasing(boolean releasing) {
-		isReleasing = releasing;
-	}
-	
-	public void stopGrip() {
+	public void stopFeed() {
 		RobotMap.gearFeedController.stopMotor();
 	}
 	
 	public void release() {
 		RobotMap.gearFeedController.set(0.5);
 		isReleasing = true;
+		hasGear = false;
 	}
 	
-	public void reset() {
-		//RobotMap.gearRelease.set(false);
+	public void gripHeldGear() {
+		RobotMap.gearFeedController.set(-0.7);
+	}
+	
+	public void startGearIntake() {
+		RobotMap.gearFeedController.set(1);
+		isReleasing = false;
 	}
 
 }

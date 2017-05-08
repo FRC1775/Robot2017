@@ -2,10 +2,8 @@ package org.usfirst.frc.team1775.robot.commands.autonomous;
 
 import org.usfirst.frc.team1775.robot.commands.drivetrain.DriveDistance;
 import org.usfirst.frc.team1775.robot.commands.drivetrain.StopDrive;
-import org.usfirst.frc.team1775.robot.commands.gearassembly.CloseGear;
 import org.usfirst.frc.team1775.robot.commands.gearassembly.GearDown;
 import org.usfirst.frc.team1775.robot.commands.gearassembly.GearUp;
-import org.usfirst.frc.team1775.robot.commands.gearassembly.ReleaseGear;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.WaitCommand;

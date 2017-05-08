@@ -10,12 +10,7 @@ import edu.wpi.first.wpilibj.command.WaitCommand;
 public class Red_Right_PlaceGear extends CommandGroup {
 
 	public Red_Right_PlaceGear() {
-		this(false);
-	}
-	
-	public Red_Right_PlaceGear(boolean changeCamera) {
-		
-		addSequential(new DriveDistance(86)); //GABE	i changed this from 74 to 77, a 3 inch increase to adjust at competition gkc
+		addSequential(new DriveDistance(AutoConstants.RED_RIGHT_PLACE_GEAR_DRIVE_1)); //GABE	i changed this from 74 to 77, a 3 inch increase to adjust at competition gkc
 		addParallel(new StopDrive());
 		
 		addSequential(new WaitCommand(.2));
@@ -24,7 +19,7 @@ public class Red_Right_PlaceGear extends CommandGroup {
 		
 		addSequential(new CenterOnHook());
 		
-		addSequential(new DriveDistance(20), 2);
+		addSequential(new DriveDistance(AutoConstants.RED_RIGHT_PLACE_GEAR_DRIVE_2), 2);
 		addParallel(new StopDrive());
 		
 		addSequential(new ReleaseGearAndReverse());

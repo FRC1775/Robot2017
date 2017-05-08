@@ -117,149 +117,16 @@ public class DriveTrainSubsystem extends Subsystem {
 		}
 	}
 	
-	private int detectEncoderCount = 0;
-	
 	double driveDistanceRampFactor = 0;
 	boolean isDecline = false;
 	
 	public void driveDistance(boolean killScheduler) {
 		SmartDashboard.putNumber("DriveTrain.encoderDistance", RobotMap.driveTrainEncoder.getDistance());
-		
-		/*
 
-		SmartDashboard.putString("anything", "do i work? yes im getting here");
-		double distanceRemaining = Math.abs(driveToDistanceTargetDistance) - Math.abs(RobotMap.driveTrainEncoder.getDistance());
-		double distanceGone = Math.abs(RobotMap.driveTrainEncoder.getDistance());
-		
-
-		if (!isDecline) {
-			driveDistanceRampFactor = Math.min(1, (System.currentTimeMillis() - driveDistanceStartTime) / (double) 500);
-		} else {
-			driveDistanceRampFactor = Math.max(0, 1 - (System.currentTimeMillis() - driveDistanceStartTime) / (double) 500);
-		}
-		
-		double maxValue = 0.5;
-		int rampBound = 5; 
-		//if (driveToDistanceTargetDistance <= 5) {
-		//	rampBound = 2;
-		//}
-		if (distanceGone < rampBound) {
-			driveToDistancePidResult = maxValue * driveDistanceRampFactor;
-		} else if (distanceRemaining < rampBound) {
-			if (!isDecline) {
-				driveDistanceStartTime = System.currentTimeMillis();
-				isDecline = true;
-			}
-			driveToDistancePidResult = maxValue * driveDistanceRampFactor;
-		} else {
-			driveToDistancePidResult = 0.5;
-			
-		}
-		SmartDashboard.putNumber("driveToDistancePidResult", driveToDistancePidResult);
-		SmartDashboard.putNumber("drivedistancerampfactor", driveDistanceRampFactor);
-		SmartDashboard.putNumber("getEncoderDistance", RobotMap.driveTrainEncoder.get());
-		/*
-		if (distanceRemaining < 2) {
-			driveToDistancePidResult = 0.3;
-		} else if (distanceRemaining < 5) {
-			driveToDistancePidResult = 0.3;
-		} else if (distanceRemaining < 10) {
-			driveToDistancePidResult = 0.25;
-		} else if (distanceRemaining < 20) {
-			driveToDistancePidResult = 0.3;
-		} else {
-			driveToDistancePidResult = 0.6;
-		}
-		//
-		if (driveToDistanceTargetDistance < 0) {
-			driveToDistancePidResult = -driveToDistancePidResult;
-		}
-		
-		if (distanceRemaining < 0) {
-			driveToDistancePidResult = 0;
-		}
-
-		
-		if (0 == RobotMap.driveTrainEncoder.get()) {
-			detectEncoderCount++;
-			if (detectEncoderCount > 25) {
-				if (killScheduler) {
-					Scheduler.getInstance().disable();
-					DriverStation.reportError("Drive Train Encoder Disconnected", false);
-				}
-				detectEncoderCount = 0;
-				return;
-				
-			}
-		} else {
-			detectEncoderCount = 0;
-		}
-		*/
 		RobotMap.driveTrainRobotDrive.arcadeDrive(driveToDistancePidResult, -straightDriveRotateCompensationValue, false);
 	}
 	
-	private double angleRampFactor = 0;
-	private double angleStartTime = 0;
-	
 	public void rotateByAngle() {
-		//SmartDashboard.putNumber("DriveTrain.straightRotate", rotateByAnglePidResult);
-		//SmartDashboard.putNumber("DriveTrain.rotateError", rotateByAnglePidController.getError());
-		
-		/*
-		SmartDashboard.putNumber("DriveTrain.angle", RobotMap.gyro.getAngle());
-		double angleRemaining = Math.abs(rotateByAngleTargetAngle) - Math.abs(RobotMap.gyro.getAngle());
-		double angleGone = Math.abs(RobotMap.gyro.getAngle());
-		
-
-		if (!isDecline) {
-			angleRampFactor = Math.min(1, (System.currentTimeMillis() - angleStartTime) / (double) 500);
-		} else {
-			angleRampFactor = Math.max(0, 1 - (System.currentTimeMillis() - angleStartTime) / (double) 500);
-		}
-		
-		double maxValue = 0.5;
-		
-		if (angleGone < 5) {
-			rotateByAnglePidResult = maxValue * angleRampFactor;
-		} else if (angleRemaining < 5) {
-			if (!isDecline) {
-				angleStartTime = System.currentTimeMillis();
-				isDecline = true;
-			}
-			rotateByAnglePidResult = maxValue * driveDistanceRampFactor;
-		} else {
-			rotateByAnglePidResult = 0.5;
-		}
-		*/
-		/*
-		if (angleRemaining < 2) {
-			// was 0.35
-			rotateByAnglePidResult = 0.30;
-		} else if (angleRemaining < 5) {
-			// was 0.4
-			rotateByAnglePidResult = 0.35;
-		} else if (angleRemaining < 10) {
-			// was 0.45
-			rotateByAnglePidResult = 0.45;
-		} else if (angleRemaining < 20) {
-			// was 0.6
-			rotateByAnglePidResult = 0.6;
-		} else {
-			// was 1
-			rotateByAnglePidResult = 1;
-		}
-		*/
-		
-		/*
-		if (rotateByAngleTargetAngle < 0) {
-			rotateByAnglePidResult = -rotateByAnglePidResult;
-		}
-		
-		if (angleRemaining < 0) {
-			rotateByAnglePidResult = 0;
-		}
-		*/
-		
 		RobotMap.driveTrainRobotDrive.arcadeDrive(0, rotateByAnglePidResult, false);
 	}
 
@@ -277,12 +144,9 @@ public class DriveTrainSubsystem extends Subsystem {
 	
 	public boolean isFinished() {
 		if (driveMode == DriveMode.RotateByAngle) {
-			//return false;
-			//return rotateByAngleTargetAngle == 0 || (isDecline && angleRampFactor <= 0);
 			return rotateByAnglePidController.onTarget();
 		} else if (driveMode == DriveMode.DriveToDistance) {
 			return driveToDistancePidController.onTarget();
-			//return driveToDistanceTargetDistance == 0 || (isDecline && driveDistanceRampFactor <= 0);
 		}
 		
 		return false;
@@ -296,7 +160,6 @@ public class DriveTrainSubsystem extends Subsystem {
 		setDriveMode(DriveMode.RotateByAngle);
 
 		isDecline = false;
-		angleStartTime = System.currentTimeMillis();
 		
 		RobotMap.gyro.reset();
 		
@@ -307,7 +170,6 @@ public class DriveTrainSubsystem extends Subsystem {
 		} else {
 			rotateByAngleTargetAngle += 0.211377;
 		}
-		
 		
 		double p = Preferences.getInstance().getDouble("DriveTrain.angle.p", 0.35);
 		double i = Preferences.getInstance().getDouble("DriveTrain.angle.i", 0.0);

@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.command.WaitCommand;
 public class Red_Right_PlaceGearThenShoot extends CommandGroup {
 
 	public Red_Right_PlaceGearThenShoot() {
-		addSequential(new Red_Right_PlaceGear(true));
+		addSequential(new Red_Right_PlaceGear());
 		
 		// TODO
 		addSequential(new DriveDistance(-51));
