@@ -17,15 +17,18 @@ public class HoldGear extends Command {
 	@Override
 	protected void execute() {
 		gearAssembly.checkForGear();
-		if (gearAssembly.isReleasing() && isTimedOut() && !Robot.oi.getAButton()) {
-			gearAssembly.stopFeed();
-			gearAssembly.up();
+		if (gearAssembly.isReleasing()) {
+			if (isTimedOut() && !Robot.oi.getAButton()) {
+				gearAssembly.stopFeed();
+				gearAssembly.up();
+				gearAssembly.hasGear(false);
+			}
 		} else if (gearAssembly.isDown() && gearAssembly.hasGear()) {
 			gearAssembly.stopFeed();
 			gearAssembly.up();
 		} else if (gearAssembly.hasGear() && !gearAssembly.sensesGear()) {
 			gearAssembly.gripHeldGear();
-		} else {
+		} else if (!gearAssembly.isDown()) {
 			gearAssembly.stopFeed();
 		}
 	}

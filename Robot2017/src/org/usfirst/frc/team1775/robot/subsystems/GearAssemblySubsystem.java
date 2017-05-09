@@ -26,6 +26,10 @@ public class GearAssemblySubsystem extends Subsystem {
 		return hasGear;
 	}
 	
+	public void hasGear(boolean hasGear) {
+		this.hasGear = hasGear;
+	}
+	
 	public boolean checkForGear() {
 		if (sensesGear()) {
 			RobotMap.gearIndicatorRelay.set(Value.kOn);
@@ -77,7 +81,7 @@ public class GearAssemblySubsystem extends Subsystem {
 	}
 	
 	public void startGearIntake() {
-		RobotMap.gearFeedController.set(1);
+		RobotMap.gearFeedController.set(-1.0);
 		isReleasing = false;
 	}
 
