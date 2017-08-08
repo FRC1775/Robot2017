@@ -26,6 +26,9 @@ import org.usfirst.frc.team1775.robot.subsystems.DriveTrainSubsystem;
 import org.usfirst.frc.team1775.robot.subsystems.GearAssemblySubsystem;
 import org.usfirst.frc.team1775.robot.subsystems.ShooterSubsystem;
 import org.usfirst.frc.team1775.robot.subsystems.WinchSubsystem;
+import org.usfirst.frc.team1775.robot.vision.Cameras;
+import org.usfirst.frc.team1775.robot.vision.GearCamera;
+import org.usfirst.frc.team1775.robot.vision.ICamera;
 
 /**
  * The VM is configured to automatically run this class, and to call the

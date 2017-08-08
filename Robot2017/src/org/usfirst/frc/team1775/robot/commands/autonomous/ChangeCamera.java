@@ -1,6 +1,6 @@
 package org.usfirst.frc.team1775.robot.commands.autonomous;
 
-import org.usfirst.frc.team1775.robot.Cameras;
+import org.usfirst.frc.team1775.robot.vision.Cameras;
 
 import edu.wpi.first.wpilibj.command.InstantCommand;
 

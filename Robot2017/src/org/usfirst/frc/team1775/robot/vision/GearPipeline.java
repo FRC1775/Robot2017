@@ -1,4 +1,4 @@
-package org.usfirst.frc.team1775.robot;
+package org.usfirst.frc.team1775.robot.vision;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,7 @@ import org.opencv.imgproc.*;
 *
 * @author GRIP
 */
-public class GripPipeline implements VisionPipeline {
+public class GearPipeline implements VisionPipeline {
 
 	//Outputs
 	private Mat hslThresholdOutput = new Mat();
@@ -32,9 +32,9 @@ public class GripPipeline implements VisionPipeline {
 	@Override	public void process(Mat source0) {
 		// Step HSL_Threshold0:
 		Mat hslThresholdInput = source0;
-		double[] hslThresholdHue = {70, 85};
-		double[] hslThresholdSaturation = {100, 255};
-		double[] hslThresholdLuminance = {40, 200};
+		double[] hslThresholdHue = {75, 90};
+		double[] hslThresholdSaturation = {200, 255};
+		double[] hslThresholdLuminance = {100, 230};
 		hslThreshold(hslThresholdInput, hslThresholdHue, hslThresholdSaturation, hslThresholdLuminance, hslThresholdOutput);
 
 		// Step Find_Contours0:
@@ -44,13 +44,13 @@ public class GripPipeline implements VisionPipeline {
 
 		// Step Filter_Contours0:
 		ArrayList<MatOfPoint> filterContoursContours = findContoursOutput;
-		double filterContoursMinArea = 5.0;
+		double filterContoursMinArea =40.0;
 		double filterContoursMinPerimeter = 0.0;
 		double filterContoursMinWidth = 0.0;
-		double filterContoursMaxWidth = 1000.0;
+		double filterContoursMaxWidth = 50.0;
 		double filterContoursMinHeight = 0.0;
 		double filterContoursMaxHeight = 1000.0;
-		double[] filterContoursSolidity = {30.05035971223023, 100.0};
+		double[] filterContoursSolidity = {70, 100.0};
 		double filterContoursMaxVertices = 1000000.0;
 		double filterContoursMinVertices = 0.0;
 		double filterContoursMinRatio = 0.0;

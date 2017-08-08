@@ -1,4 +1,4 @@
-package org.usfirst.frc.team1775.robot;
+package org.usfirst.frc.team1775.robot.vision;
 
 public interface ICamera {
 
