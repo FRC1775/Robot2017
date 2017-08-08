@@ -18,6 +18,8 @@ import org.usfirst.frc.team1775.robot.commands.autonomous.Red_Right_PlaceGearThe
 import org.usfirst.frc.team1775.robot.commands.autonomous.Red_Right_Shoot;
 import org.usfirst.frc.team1775.robot.commands.drivetrain.DriveDistance;
 import org.usfirst.frc.team1775.robot.commands.autonomous.Blue_Right_PlaceGear;
+import org.usfirst.frc.team1775.robot.commands.autonomous.Blue_Left_GoToHopperAndShoot;
+import org.usfirst.frc.team1775.robot.commands.autonomous.Blue_Left_GoToHopperAndShootDiag;
 import org.usfirst.frc.team1775.robot.commands.autonomous.Blue_Left_PlaceGear;
 import org.usfirst.frc.team1775.robot.commands.autonomous.Blue_Left_PlaceGearThenShoot;
 import org.usfirst.frc.team1775.robot.subsystems.DriveTrainSubsystem;
@@ -83,7 +85,8 @@ public class Robot extends IterativeRobot {
 		chooser.addObject("Blue - Left (Boiler) - Place Gear", new Blue_Left_PlaceGear());
 		//chooser.addObject("Blue - Left (Boiler) - Place Gear Then Shoot", new Blue_Left_PlaceGearThenShoot());
 		chooser.addObject("Blue - Left (Boiler) - Shoot", new Blue_Left_Shoot());
-		//chooser.addObject("Blue - Boiler(Left) - Go to Hopper And Shoot", new Blue_Left_GoToHopperAndShoot());
+		chooser.addObject("Blue - Boiler(Left) - Go to Hopper And Shoot", new Blue_Left_GoToHopperAndShoot());
+		chooser.addObject("Blue - Boiler(Left) - Go to Hopper And Shoot Diag", new Blue_Left_GoToHopperAndShootDiag());
 
 		chooser.addObject("Blue - Middle - Place Gear", new Middle_PlaceGear());
 		//chooser.addObject("Blue - Middle - Place Gear Then Shoot", new Blue_Middle_PlaceGearThenShoot());

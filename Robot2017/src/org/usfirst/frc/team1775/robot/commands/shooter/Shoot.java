@@ -14,6 +14,13 @@ public class Shoot extends CommandGroup {
 		addSequential(new StartShooter());
 		addSequential(new StartRegulator());
 	}
+	
+	public Shoot(int rpm) {
+		addParallel(new LeftJoystickRumble("Shooter.joystickRumble", DEFAULT_JOYSTICK_RUMBLE));
+		addSequential(new StartSingulator());
+		addSequential(new StartShooter(rpm));
+		addSequential(new StartRegulator());
+	}
 
 	@Override
 	protected void interrupted() {

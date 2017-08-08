@@ -143,7 +143,8 @@ public class OI {
 		
 		// Start button 
 		driverStartButton = new JoystickButton(driverJoystick, XBOX_START);
-		//driverStartButton.whenPressed(new DriveDistance());
+		driverStartButton.whenActive(new Shoot(7000));
+		driverStartButton.whenInactive(new StopShooterSubsystem());
 
 		// Left trigger
 		driverLeftTrigger = new Trigger() {
@@ -176,6 +177,7 @@ public class OI {
 		};
 		driverRightTrigger.whileActive(new WindWinch());
 		
+		/*
 		// POV Up
 		driverPovUp = new Trigger() {
 			@Override
@@ -205,6 +207,22 @@ public class OI {
 			}
 		};
 		driverPovDown.whenActive(new AdjustShooterSpeed(ChangeDirection.Down));
+		*/
+		
+		driverPovUp = new Trigger() {
+			@Override
+			public boolean get() {
+				try {
+					if (!hasDriverJoystick()) return false;
+					
+					return driverJoystick.getPOV() >= 0;
+				} catch(Exception e) {
+					return false;
+				}
+			}
+		};
+		driverPovUp.whenActive(new Shoot(1400));
+		driverPovUp.whenInactive(new StopShooterSubsystem());
 	}
 	
 	private void initOperatorJoystick() {
@@ -273,8 +291,7 @@ public class OI {
 		};
 		operatorRightTrigger.whileActive(new WindWinch());
 		
-
-		
+		/*
 		// POV Up
 		operatorPovUp = new Trigger() {
 			@Override
@@ -304,6 +321,22 @@ public class OI {
 			}
 		};
 		operatorPovDown.whenActive(new AdjustShooterSpeed(ChangeDirection.Down));
+		*/
+		
+		operatorPovUp = new Trigger() {
+			@Override
+			public boolean get() {
+				try {
+					if (!hasOperatorJoystick()) return false;
+					
+					return operatorJoystick.getPOV() >= 0;
+				} catch(Exception e) {
+					return false;
+				}
+			}
+		};
+		operatorPovUp.whenActive(new Shoot(1400));
+		operatorPovUp.whenInactive(new StopShooterSubsystem());
 	}
 	
 	public boolean hasOperatorJoystick() {
