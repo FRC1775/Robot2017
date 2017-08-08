@@ -1,0 +1,139 @@
+ raw_brightness: kInteger 
+ Range: 0 - 255 
+ Default: 128 
+ Value: 128 
+ Step: 1 
+  
+ brightness: kInteger 
+ Range: 0 - 100 
+ Default: 50 
+ Value: 50 
+ Step: 1 
+  
+ raw_contrast: kInteger 
+ Range: 0 - 255 
+ Default: 128 
+ Value: 128 
+ Step: 1 
+  
+ contrast: kInteger 
+ Range: 0 - 100 
+ Default: 50 
+ Value: 50 
+ Step: 1 
+  
+ raw_saturation: kInteger 
+ Range: 0 - 255 
+ Default: 128 
+ Value: 128 
+ Step: 1 
+  
+ saturation: kInteger 
+ Range: 0 - 100 
+ Default: 50 
+ Value: 50 
+ Step: 1 
+  
+ white_balance_temperature_auto: kBoolean 
+ Range: 0 - 1 
+ Default: 1 
+ Value: 1 
+ Step: 1 
+  
+ raw_gain: kInteger 
+ Range: 0 - 255 
+ Default: 0 
+ Value: 0 
+ Step: 1 
+  
+ gain: kInteger 
+ Range: 0 - 100 
+ Default: 0 
+ Value: 0 
+ Step: 1 
+  
+ power_line_frequency: kEnum 
+ Range: 0 - 2 
+ Default: 2 
+ Value: 2 
+ Step: 1 
+ Choices: [Disabled, 50 Hz, 60 Hz] 
+  
+ white_balance_temperature: kInteger 
+ Range: 2000 - 6500 
+ Default: 4000 
+ Value: 3155 
+ Step: 1 
+  
+ raw_sharpness: kInteger 
+ Range: 0 - 255 
+ Default: 128 
+ Value: 128 
+ Step: 1 
+  
+ sharpness: kInteger 
+ Range: 0 - 100 
+ Default: 50 
+ Value: 50 
+ Step: 1 
+  
+ backlight_compensation: kInteger 
+ Range: 0 - 1 
+ Default: 0 
+ Value: 0 
+ Step: 1 
+  
+ exposure_auto: kEnum 
+ Range: 0 - 3 
+ Default: 3 
+ Value: 3 
+ Step: 1 
+ Choices: [, Manual Mode, , Aperture Priority Mode] 
+  
+ raw_exposure_absolute: kInteger 
+ Range: 3 - 2047 
+ Default: 250 
+ Value: 250 
+ Step: 1 
+  
+ exposure_absolute: kInteger 
+ Range: 0 - 100 
+ Default: 12 
+ Value: 12 
+ Step: 1 
+  
+ exposure_auto_priority: kBoolean 
+ Range: 0 - 1 
+ Default: 0 
+ Value: 1 
+ Step: 1 
+  
+ pan_absolute: kInteger 
+ Range: -36000 - 36000 
+ Default: 0 
+ Value: 0 
+ Step: 3600 
+  
+ tilt_absolute: kInteger 
+ Range: -36000 - 36000 
+ Default: 0 
+ Value: 0 
+ Step: 3600 
+  
+ focus_absolute: kInteger 
+ Range: 0 - 250 
+ Default: 0 
+ Value: 0 
+ Step: 5 
+  
+ focus_auto: kBoolean 
+ Range: 0 - 1 
+ Default: 1 
+ Value: 1 
+ Step: 1 
+  
+ zoom_absolute: kInteger 
+ Range: 100 - 500 
+ Default: 100 
+ Value: 100 
+ Step: 1 
