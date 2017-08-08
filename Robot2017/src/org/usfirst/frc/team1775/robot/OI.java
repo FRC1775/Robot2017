@@ -217,7 +217,7 @@ public class OI {
 		
 		// A button
 		operatorAButton = new JoystickButton(operatorJoystick, XBOX_A);
-		driverAButton.whenPressed(new GearDown());
+		operatorAButton.whenPressed(new GearDown());
 		
 		// B button
 		operatorBButton = new JoystickButton(operatorJoystick, XBOX_B);

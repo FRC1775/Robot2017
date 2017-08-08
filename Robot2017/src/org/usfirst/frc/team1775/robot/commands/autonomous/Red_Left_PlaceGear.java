@@ -14,7 +14,7 @@ public class Red_Left_PlaceGear extends CommandGroup {
 		addParallel(new StopDrive());
 		
 		addSequential(new WaitCommand(.2));
-		addSequential(new RotateByAngle(60, 1200));
+		addSequential(new RotateByAngle(55, 1200));
 		addParallel(new StopDrive());
 		
 		addSequential(new CenterOnHook());
