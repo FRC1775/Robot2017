@@ -10,8 +10,6 @@ import org.usfirst.frc.team1775.robot.commands.drivetrain.DriveDistance;
 import org.usfirst.frc.team1775.robot.commands.drivetrain.RotateByAngle;
 import org.usfirst.frc.team1775.robot.commands.gearassembly.GearDown;
 import org.usfirst.frc.team1775.robot.commands.gearassembly.GearUp;
-import org.usfirst.frc.team1775.robot.commands.shooter.AdjustShooterSpeed;
-import org.usfirst.frc.team1775.robot.commands.shooter.AdjustShooterSpeed.ChangeDirection;
 import org.usfirst.frc.team1775.robot.commands.shooter.Shoot;
 import org.usfirst.frc.team1775.robot.commands.shooter.StopShooterSubsystem;
 import org.usfirst.frc.team1775.robot.commands.winch.WindWinch;
