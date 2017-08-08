@@ -18,7 +18,7 @@ public class HoldGear extends Command {
 	protected void execute() {
 		gearAssembly.checkForGear();
 		if (gearAssembly.isReleasing()) {
-			if (isTimedOut() && !Robot.oi.getAButton()) {
+			if (isTimedOut() && !Robot.operatorInterface.getAButton()) {
 				gearAssembly.stopFeed();
 				gearAssembly.up();
 				gearAssembly.hasGear(false);

@@ -20,7 +20,7 @@ import org.usfirst.frc.team1775.robot.commands.winch.WindWinch;
  * This class is the glue that binds the controls on the physical operator
  * interface to the commands and command groups that allow control of the robot.
  */
-public class OI {
+public class OperatorInterface {
 	//// CREATING BUTTONS
 	// One type of button is a joystick button which is any button on a
 	//// joystick.
@@ -100,7 +100,7 @@ public class OI {
 	public Trigger        operatorPovUp;
 	public Trigger        operatorPovDown;
 
-	public OI() {
+	public OperatorInterface() {
 		initDriverJoystick();
 		initOperatorJoystick();
 	}
@@ -389,18 +389,18 @@ public class OI {
 	
 	public double getLeftTrigger() {
 		if (!hasOperatorJoystick()) {
-			return driverJoystick.getRawAxis(OI.XBOX_LEFT_TRIGGER);
+			return driverJoystick.getRawAxis(OperatorInterface.XBOX_LEFT_TRIGGER);
 		}
 		
-		return Math.max(driverJoystick.getRawAxis(OI.XBOX_LEFT_TRIGGER), operatorJoystick.getRawAxis(OI.XBOX_LEFT_TRIGGER));
+		return Math.max(driverJoystick.getRawAxis(OperatorInterface.XBOX_LEFT_TRIGGER), operatorJoystick.getRawAxis(OperatorInterface.XBOX_LEFT_TRIGGER));
 	}
 	
 	public double getRightTrigger() {
 		if (!hasOperatorJoystick()) {
-			return driverJoystick.getRawAxis(OI.XBOX_RIGHT_TRIGGER);
+			return driverJoystick.getRawAxis(OperatorInterface.XBOX_RIGHT_TRIGGER);
 		}
 		
-		return Math.max(driverJoystick.getRawAxis(OI.XBOX_RIGHT_TRIGGER), operatorJoystick.getRawAxis(OI.XBOX_RIGHT_TRIGGER));
+		return Math.max(driverJoystick.getRawAxis(OperatorInterface.XBOX_RIGHT_TRIGGER), operatorJoystick.getRawAxis(OperatorInterface.XBOX_RIGHT_TRIGGER));
 	}
 	
 	public boolean getYButton() {
@@ -447,7 +447,7 @@ public class OI {
 				return 0;
 			}
 			else {
-				return driverJoystick.getRawAxis(OI.XBOX_LEFT_JOYSTICK_Y_AXIS);
+				return driverJoystick.getRawAxis(OperatorInterface.XBOX_LEFT_JOYSTICK_Y_AXIS);
 			}
 		
 		} catch (Exception e) {
@@ -463,7 +463,7 @@ public class OI {
 				return 0;
 			}
 			else {
-				return driverJoystick.getRawAxis(OI.XBOX_RIGHT_JOYSTICK_X_AXIS);
+				return driverJoystick.getRawAxis(OperatorInterface.XBOX_RIGHT_JOYSTICK_X_AXIS);
 			}
 		
 		} catch (Exception e) {

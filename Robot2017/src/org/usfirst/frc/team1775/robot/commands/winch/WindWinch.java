@@ -23,11 +23,11 @@ public class WindWinch extends Command {
 		//SmartDashboard.putNumber("Winch.fastJoystickRumble", getFastJoystickRumble());
 		
 		
-		if (Robot.oi.getRightTrigger() > getSpeedCrossover()) {
-			Robot.oi.rumbleBoth(getFastJoystickRumble());
+		if (Robot.operatorInterface.getRightTrigger() > getSpeedCrossover()) {
+			Robot.operatorInterface.rumbleBoth(getFastJoystickRumble());
 			winch.wind(WinchSubsystem.Speed.Fast);
 		} else {
-			Robot.oi.rumbleBoth(getSlowJoystickRumble());
+			Robot.operatorInterface.rumbleBoth(getSlowJoystickRumble());
 			winch.wind(WinchSubsystem.Speed.Slow);
 		}
 	}
@@ -38,13 +38,13 @@ public class WindWinch extends Command {
 	}
 	
 	protected void end() {
-		Robot.oi.rumbleBoth(0);
+		Robot.operatorInterface.rumbleBoth(0);
 		winch.stop();
 	}
 
 	@Override
 	protected void interrupted() {
-		Robot.oi.rumbleBoth(0);
+		Robot.operatorInterface.rumbleBoth(0);
 		winch.stop();
 	}
 	

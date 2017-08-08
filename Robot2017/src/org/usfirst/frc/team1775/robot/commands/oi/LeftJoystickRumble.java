@@ -21,12 +21,12 @@ public class LeftJoystickRumble extends Command {
 	}
 	
 	public void execute() {
-		Robot.oi.rumbleLeft(getAmount());
+		Robot.operatorInterface.rumbleLeft(getAmount());
 	}
 	
 	@Override
 	public void interrupted() {
-		Robot.oi.rumbleLeft(0);
+		Robot.operatorInterface.rumbleLeft(0);
 	}
 	
 	@Override

@@ -1,6 +1,6 @@
 package org.usfirst.frc.team1775.robot.subsystems;
 
-import org.usfirst.frc.team1775.robot.RobotMap;
+import org.usfirst.frc.team1775.robot.RoboRio;
 
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -30,11 +30,11 @@ public class WinchSubsystem extends Subsystem {
 		
 		SmartDashboard.putNumber("Winch.speed", motorSpeed);
 		
-		RobotMap.winchController.set(motorSpeed);
+		RoboRio.winchController.set(motorSpeed);
 	}
 	
 	public void stop() {
-		RobotMap.winchController.stopMotor();
+		RoboRio.winchController.stopMotor();
 	}
 	
 	public boolean isAtLimit() {

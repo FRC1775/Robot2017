@@ -1,6 +1,6 @@
 package org.usfirst.frc.team1775.robot.subsystems;
 
-import org.usfirst.frc.team1775.robot.RobotMap;
+import org.usfirst.frc.team1775.robot.RoboRio;
 
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -24,11 +24,11 @@ public class ShooterSubsystem extends Subsystem {
 	private Thread shooterSpeedRegulator;
 	
 	public void startRegulator(double speed) {
-		RobotMap.shooterRegulatorController.set(speed);
+		RoboRio.shooterRegulatorController.set(speed);
 	}
 	
 	public void startSingulator(double speed) {
-		RobotMap.shooterSingulatorController.set(speed);
+		RoboRio.shooterSingulatorController.set(speed);
 	}
 
 	public void startShooter(int rpm) {
@@ -43,12 +43,12 @@ public class ShooterSubsystem extends Subsystem {
 						return;
 					}
 					
-					double currentShooterRpm = (RobotMap.shooterEncoder.getRate() / DEGREES_IN_REVOLUTION) * SECONDS_PER_MINUTE;
+					double currentShooterRpm = (RoboRio.shooterEncoder.getRate() / DEGREES_IN_REVOLUTION) * SECONDS_PER_MINUTE;
 					
 					if (currentShooterRpm < shooterRpmTarget) {
-						RobotMap.shooterController.set(getShooterBangBangMax());
+						RoboRio.shooterController.set(getShooterBangBangMax());
 					} else {
-						RobotMap.shooterController.set(getShooterBangBangMin());
+						RoboRio.shooterController.set(getShooterBangBangMin());
 					}
 
 					//SmartDashboard.putNumber("Shooter.output", RobotMap.shooterController.get());
@@ -73,8 +73,8 @@ public class ShooterSubsystem extends Subsystem {
 	}
 
 	public void stop() {
-		RobotMap.shooterSingulatorController.stopMotor();
-		RobotMap.shooterRegulatorController.stopMotor();
+		RoboRio.shooterSingulatorController.stopMotor();
+		RoboRio.shooterRegulatorController.stopMotor();
 		
 		if (shooterSpeedRegulator != null) {
 			try {
@@ -85,7 +85,7 @@ public class ShooterSubsystem extends Subsystem {
 				// Do nothing
 			} finally {
 				// Always attempt to stop the shooter motor
-				RobotMap.shooterController.stopMotor();
+				RoboRio.shooterController.stopMotor();
 			}
 		}
 	}
@@ -96,11 +96,11 @@ public class ShooterSubsystem extends Subsystem {
 	
 	public boolean isStopped() {
 		// TODO this may be a bad idea for checking stopped state.
-		return RobotMap.shooterController.get() == 0 && RobotMap.shooterSingulatorController.get() == 0 && RobotMap.shooterRegulatorController.get() == 0;
+		return RoboRio.shooterController.get() == 0 && RoboRio.shooterSingulatorController.get() == 0 && RoboRio.shooterRegulatorController.get() == 0;
 	}
 	
 	private static int getCurrentShooterRpm() {
-		return (int) Math.round((RobotMap.shooterEncoder.getRate() / DEGREES_IN_REVOLUTION) * SECONDS_PER_MINUTE);
+		return (int) Math.round((RoboRio.shooterEncoder.getRate() / DEGREES_IN_REVOLUTION) * SECONDS_PER_MINUTE);
 	}
 	
 	private static int getShooterBangBangRate() {

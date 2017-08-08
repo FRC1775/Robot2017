@@ -1,13 +1,13 @@
 package org.usfirst.frc.team1775.robot.commands.drivetrain;
 
-import org.usfirst.frc.team1775.robot.RobotMap;
+import org.usfirst.frc.team1775.robot.RoboRio;
 
 import edu.wpi.first.wpilibj.command.Command;
 
 public class ResetGyro extends Command {
 
 	public void execute() {
-		RobotMap.gyro.reset();
+		RoboRio.gyro.reset();
 	}
 	
 	@Override

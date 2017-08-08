@@ -19,8 +19,8 @@ public class RegularDrive extends Command {
 	}
 
 	public void execute() {
-		double drive = Robot.oi.getLeftYAxis();
-		double rotate = Robot.oi.getRightXAxis();
+		double drive = Robot.operatorInterface.getLeftYAxis();
+		double rotate = Robot.operatorInterface.getRightXAxis();
     	
     	boolean squaredInputs = Preferences.getInstance().getBoolean("DriveTrain.squaredInputs", true);
     	boolean constantRadius = Preferences.getInstance().getBoolean("DriveTrain.constantRadius", true);
