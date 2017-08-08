@@ -35,6 +35,7 @@ public class Robot extends IterativeRobot {
     
     public static ICamera camera;
     
+    public static RoboRio roboRio;
 	public static OperatorInterface operatorInterface;
 
 	Command autonomousCommand;
@@ -94,7 +95,8 @@ public class Robot extends IterativeRobot {
 	}
 	
 	private void initRoboRio() {
-		RoboRio.init();
+		roboRio = new PracticeRoboRio();
+		roboRio.init();
 	}
 	
 	private void initOperatorInterface() {

@@ -1,6 +1,6 @@
 package org.usfirst.frc.team1775.robot.subsystems;
 
-import org.usfirst.frc.team1775.robot.RoboRio;
+import org.usfirst.frc.team1775.robot.Robot;
 import org.usfirst.frc.team1775.robot.commands.gearassembly.HoldGear;
 
 import edu.wpi.first.wpilibj.Relay.Value;
@@ -32,28 +32,28 @@ public class GearAssemblySubsystem extends Subsystem {
 	
 	public boolean checkForGear() {
 		if (sensesGear()) {
-			RoboRio.gearIndicatorRelay.set(Value.kOn);
+			Robot.roboRio.gearIndicatorRelay.set(Value.kOn);
 			hasGear = true;
 			return true;
 		} else {
-			RoboRio.gearIndicatorRelay.set(Value.kOff);
+			Robot.roboRio.gearIndicatorRelay.set(Value.kOff);
 			return false;
 		}
 	}
 	
 	public boolean sensesGear() {
-		SmartDashboard.putBoolean("GearDetector", !RoboRio.gearDetector.get());
-		return !RoboRio.gearDetector.get();
+		SmartDashboard.putBoolean("GearDetector", !Robot.roboRio.gearDetector.get());
+		return !Robot.roboRio.gearDetector.get();
 	}
 	
 	public void up() {
-		RoboRio.gearTrayActuator.set(false);
+		Robot.roboRio.gearTrayActuator.set(false);
 		isDown = false;
 		isReleasing = false;
 	}
 	
 	public void down() {
-		RoboRio.gearTrayActuator.set(true);
+		Robot.roboRio.gearTrayActuator.set(true);
 		if (hasGear()) {
 			release();
 		} else {
@@ -67,21 +67,21 @@ public class GearAssemblySubsystem extends Subsystem {
 	}
 	
 	public void stopFeed() {
-		RoboRio.gearFeedController.stopMotor();
+		Robot.roboRio.gearFeedController.stopMotor();
 	}
 	
 	public void release() {
-		RoboRio.gearFeedController.set(0.5);
+		Robot.roboRio.gearFeedController.set(0.5);
 		isReleasing = true;
 		hasGear = false;
 	}
 	
 	public void gripHeldGear() {
-		RoboRio.gearFeedController.set(-0.7);
+		Robot.roboRio.gearFeedController.set(-0.7);
 	}
 	
 	public void startGearIntake() {
-		RoboRio.gearFeedController.set(-1.0);
+		Robot.roboRio.gearFeedController.set(-1.0);
 		isReleasing = false;
 	}
 
