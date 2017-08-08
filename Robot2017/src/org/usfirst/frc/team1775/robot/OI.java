@@ -6,13 +6,10 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.buttons.Trigger;
 
-import org.usfirst.frc.team1775.robot.commands.autonomous.ChangeCamera;
 import org.usfirst.frc.team1775.robot.commands.drivetrain.DriveDistance;
-import org.usfirst.frc.team1775.robot.commands.drivetrain.ResetGyro;
 import org.usfirst.frc.team1775.robot.commands.drivetrain.RotateByAngle;
 import org.usfirst.frc.team1775.robot.commands.gearassembly.GearDown;
 import org.usfirst.frc.team1775.robot.commands.gearassembly.GearUp;
-import org.usfirst.frc.team1775.robot.commands.gearassembly.ReleaseGear;
 import org.usfirst.frc.team1775.robot.commands.shooter.AdjustShooterSpeed;
 import org.usfirst.frc.team1775.robot.commands.shooter.AdjustShooterSpeed.ChangeDirection;
 import org.usfirst.frc.team1775.robot.commands.shooter.Shoot;
@@ -124,6 +121,7 @@ public class OI {
 		driverBButton = new JoystickButton(driverJoystick, XBOX_B);
 		driverBButton.whenPressed(new RotateByAngle(1, 500));
 		
+		// X Button
 		driverXButton = new JoystickButton(driverJoystick, XBOX_X);
 		driverXButton.whenPressed(new RotateByAngle(-1, 500));
 		
@@ -141,11 +139,11 @@ public class OI {
 		
 		// Back button
 		driverBackButton = new JoystickButton(driverJoystick, XBOX_BACK);
-		driverBackButton.whenPressed(new RotateByAngle(90));
+		//driverBackButton.whenPressed(new RotateByAngle(90));
 		
 		// Start button 
 		driverStartButton = new JoystickButton(driverJoystick, XBOX_START);
-		driverStartButton.whenPressed(new DriveDistance());
+		//driverStartButton.whenPressed(new DriveDistance());
 
 		// Left trigger
 		driverLeftTrigger = new Trigger() {
@@ -219,7 +217,7 @@ public class OI {
 		
 		// A button
 		operatorAButton = new JoystickButton(operatorJoystick, XBOX_A);
-		operatorAButton.whileHeld(new ReleaseGear());
+		operatorAButton.whenPressed(new GearDown());
 		
 		// B button
 		operatorBButton = new JoystickButton(operatorJoystick, XBOX_B);
@@ -229,7 +227,7 @@ public class OI {
 		
 		// Y button
 		operatorYButton = new JoystickButton(operatorJoystick, XBOX_Y);
-		operatorYButton.whenPressed(new ChangeCamera());
+		operatorYButton.whenPressed(new GearUp());
 
 		// Left bumper
 		operatorLeftBumper = new JoystickButton(operatorJoystick, XBOX_LEFT_BUMPER);
@@ -320,6 +318,7 @@ public class OI {
 			return false;
 		}
 	}
+	
 	public boolean hasDriverJoystick() {
 		if (driverJoystick == null) {
 			return false;
@@ -410,20 +409,21 @@ public class OI {
 	}
 	
 	public double getLeftYAxis() {
-			try {
-				if (!hasDriverJoystick()) {
-					return 0;
-				}
-				else {
-					return driverJoystick.getRawAxis(OI.XBOX_LEFT_JOYSTICK_Y_AXIS);
-				}
-			
-			} catch (Exception e) {
-				DriverStation.reportError("getLeftYAxisError", false);
-				
+		try {
+			if (!hasDriverJoystick()) {
 				return 0;
 			}
+			else {
+				return driverJoystick.getRawAxis(OI.XBOX_LEFT_JOYSTICK_Y_AXIS);
+			}
+		
+		} catch (Exception e) {
+			DriverStation.reportError("getLeftYAxisError", false);
+			
+			return 0;
+		}
 	}
+	
 	public double getRightXAxis() {
 		try {
 			if (!hasDriverJoystick()) {

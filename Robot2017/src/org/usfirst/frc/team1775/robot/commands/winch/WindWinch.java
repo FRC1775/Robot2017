@@ -5,7 +5,6 @@ import org.usfirst.frc.team1775.robot.subsystems.WinchSubsystem;
 
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class WindWinch extends Command {
 	public static final double DEFAULT_WINCH_SPEED_CROSSOVER = 0.8;

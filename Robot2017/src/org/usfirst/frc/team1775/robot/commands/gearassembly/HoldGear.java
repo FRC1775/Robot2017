@@ -10,38 +10,26 @@ public class HoldGear extends Command {
 	public static GearAssemblySubsystem gearAssembly = Robot.gearAssembly;
 	
 	public HoldGear() {
-		super(1);
+		super(0.5);
 		requires(gearAssembly);
 	}
-
-	long startTime = 0;
 	
 	@Override
 	protected void execute() {
+		gearAssembly.checkForGear();
 		if (gearAssembly.isReleasing()) {
-			System.out.println("Releasing");
-			gearAssembly.release();
-			if (startTime == 0) {
-				startTime = System.currentTimeMillis();
-			}
-			if ((System.currentTimeMillis() - startTime) > 500 && !Robot.oi.getAButton()) {
-				System.out.println("Done Releasing");
-				gearAssembly.stopGrip();
-				gearAssembly.hasGear(false);
+			if (isTimedOut() && !Robot.oi.getAButton()) {
+				gearAssembly.stopFeed();
 				gearAssembly.up();
-				gearAssembly.isReleasing(false);
-				startTime = 0;
+				gearAssembly.hasGear(true);
 			}
-		} else if (gearAssembly.isDown() && !gearAssembly.sensesGear()) {
-			gearAssembly.runGrip();
-		} else if (gearAssembly.isDown() && gearAssembly.sensesGear()) {
-			gearAssembly.stopGrip();
-			gearAssembly.hasGear(true);
+		} else if (gearAssembly.isDown() && gearAssembly.hasGear()) {
+			gearAssembly.stopFeed();
 			gearAssembly.up();
 		} else if (gearAssembly.hasGear() && !gearAssembly.sensesGear()) {
-			gearAssembly.runGrip();
-		} else {
-			gearAssembly.stopGrip();
+			gearAssembly.gripHeldGear();
+		} else if (!gearAssembly.isDown()){
+			gearAssembly.stopFeed();
 		}
 	}
 

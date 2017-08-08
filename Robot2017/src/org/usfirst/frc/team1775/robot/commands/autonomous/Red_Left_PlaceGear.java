@@ -10,16 +10,16 @@ import edu.wpi.first.wpilibj.command.WaitCommand;
 public class Red_Left_PlaceGear extends CommandGroup {
 
 	public Red_Left_PlaceGear() {
-		addSequential(new DriveDistance(86)); // 88
+		addSequential(new DriveDistance(AutoConstants.RED_LEFT_PLACE_GEAR_DRIVE_1));
 		addParallel(new StopDrive());
 		
 		addSequential(new WaitCommand(.2));
-		addSequential(new RotateByAngle(60, 1200));
+		addSequential(new RotateByAngle(55, 1200));
 		addParallel(new StopDrive());
 		
 		addSequential(new CenterOnHook());
 		
-		addSequential(new DriveDistance(19), 2); // 19
+		addSequential(new DriveDistance(AutoConstants.RED_LEFT_PLACE_GEAR_DRIVE_2), 2);
 		addParallel(new StopDrive());
 		
 		addSequential(new ReleaseGearAndReverse());

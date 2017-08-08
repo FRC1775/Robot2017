@@ -4,7 +4,6 @@ import org.usfirst.frc.team1775.robot.commands.drivetrain.DriveDistance;
 import org.usfirst.frc.team1775.robot.commands.drivetrain.StopDrive;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
-import edu.wpi.first.wpilibj.command.WaitCommand;
 
 public class Middle_PlaceGear extends CommandGroup {
 

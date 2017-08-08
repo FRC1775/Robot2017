@@ -38,7 +38,11 @@ public class RobotMap {
 	public final static int COMPETITION_SHOOTER_ENCODER_DIO_CHANNEL_A = 4;
 	public final static int COMPETITION_SHOOTER_ENCODER_DIO_CHANNEL_B = 5;
 	
-	public final static int COMPETITION_GEAR_RELEASE_PCM_CHANNEL = 2;
+	public final static int COMPETITION_GEAR_TRAY_ACTUATOR_PCM_CHANNEL = 2;
+	public final static int COMPETITION_GEAR_FEED_CONTROLLER_PWM_CHANNEL = 5;
+	public final static int COMPETITION_GEAR_DETECTOR_DIO_CHANNEL = 9;
+	public final static int COMPETITION_GEAR_INDICATOR_RELAY_CHANNEL = 0;
+	
 	public final static int COMPETITION_WINCH_CONTROLLER_PWM_CHANNEL = 4;
 	
 	/*
@@ -58,7 +62,11 @@ public class RobotMap {
 	public final static int PRACTICE_SHOOTER_ENCODER_DIO_CHANNEL_A = 4;
 	public final static int PRACTICE_SHOOTER_ENCODER_DIO_CHANNEL_B = 5;
 	
-	public final static int PRACTICE_GEAR_RELEASE_PCM_CHANNEL = 2;
+	public final static int PRACTICE_GEAR_TRAY_ACTUATOR_PCM_CHANNEL = 2;
+	public final static int PRACTICE_GEAR_FEED_CONTROLLER_PWM_CHANNEL = 5;
+	public final static int PRACTICE_GEAR_DETECTOR_DIO_CHANNEL = 9;
+	public final static int PRACTICE_GEAR_INDICATOR_RELAY_CHANNEL = 0;
+	
 	public final static int PRACTICE_WINCH_CONTROLLER_PWM_CHANNEL = 4;
 	
 	// Gyro
@@ -75,14 +83,12 @@ public class RobotMap {
 	public static SpeedController shooterRegulatorController;
 	public static SpeedController shooterController;
 	public static Encoder shooterEncoder;
-	//public static CANTalon shooterController;
 	
 	// Gear Assembly
-	public static Solenoid gearRelease;
+	public static Solenoid gearTrayActuator;
 	public static SpeedController gearFeedController;
 	public static DigitalInput gearDetector;
 	public static Relay gearIndicatorRelay;
-	// public static DigitalInput gearSpokeDetectorTwo;
 	
 	// Winch
 	public static SpeedController winchController;
@@ -97,9 +103,7 @@ public class RobotMap {
 	
 	private static void initGyro() {
 		gyro = new ADXRS450_Gyro();
-		//gyro.
-		//gyro.calibrate();
-		//LiveWindow.addSensor("Drive", "gyro", gyro);
+		LiveWindow.addSensor("Drive Train", "Gyro", gyro);
 	}
 
 	private static void initDriveTrain() {
@@ -110,7 +114,6 @@ public class RobotMap {
 		LiveWindow.addActuator("Drive Train", "RightController", (Talon) driveTrainRightController);
 
 		driveTrainRobotDrive = new RobotDrive(driveTrainLeftController, driveTrainRightController);
-
 		driveTrainRobotDrive.setSafetyEnabled(true);
 		driveTrainRobotDrive.setExpiration(0.1);
 		driveTrainRobotDrive.setSensitivity(0.5);
@@ -118,16 +121,10 @@ public class RobotMap {
 		driveTrainRobotDrive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
 		driveTrainRobotDrive.setInvertedMotor(RobotDrive.MotorType.kRearRight, true);
 		
-		// Drive train encoder
 		driveTrainEncoder = new Encoder(getDriveTrainEncoderDioChannelA(), getDriveTrainEncoderDioChannelB(), false, Encoder.EncodingType.k1X);
-		
-		//driveTrainEncoder.setDistancePerPulse(10);
-		//Quadrature 4x
 		double distancePerPulse = ((3.19*Math.PI)/250.0);
-		//if because this is a 4x encoder that I need to divide by 1000 or 250
 		driveTrainEncoder.setDistancePerPulse(distancePerPulse);
-		//double encoderValue = driveTrainEncoder.getDistance();
-		//SmartDashboard.putNumber("DriveTrainEncoder", encoderValue );
+		LiveWindow.addSensor("Drive Train", "Encoder", driveTrainEncoder);
 		
 	}
 	
@@ -139,45 +136,27 @@ public class RobotMap {
 		LiveWindow.addActuator("Shooter", "RegulatorController", (Talon) shooterRegulatorController);
 		
 		shooterController = new Talon(getShooterControllerPwmChannel());
-		LiveWindow.addActuator("Shooter", "Controller", (Talon) shooterController);
 		shooterController.setInverted(true);
+		LiveWindow.addActuator("Shooter", "Controller", (Talon) shooterController);
 		
 		shooterEncoder = new Encoder(getShooterEncoderDioChannelA(), getShooterEncoderDioChannelB(), false, Encoder.EncodingType.k1X);
 		shooterEncoder.setDistancePerPulse(360 / 20);
 		shooterEncoder.setSamplesToAverage(10);
-		
-		/*
-		 * Talon SRX which we aren't using now.
-		shooterController = new CANTalon(0);
-		shooterController.reverseSensor(false);
-		shooterController.reverseOutput(true);
-		shooterController.configNominalOutputVoltage(+0.0, -0.0);
-		shooterController.configPeakOutputVoltage(+12.0, -12.0);
-		shooterController.setFeedbackDevice(FeedbackDevice.QuadEncoder);
-		shooterController.configEncoderCodesPerRev(20);
-		shooterController.setProfile(0);
-		shooterController.setPosition(0);
-		shooterController.SetVelocityMeasurementPeriod(VelocityMeasurementPeriod.Period_100Ms);
-		shooterController.SetVelocityMeasurementWindow(64);
-		shooterController.setAllowableClosedLoopErr(1);
-		
-		// Must be true!!
-		shooterController.enableBrakeMode(true);
-		shooterController.enableLimitSwitch(false, false);
-		shooterController.enableControl();
-		shooterController.enable();
-		//shooterController.setVoltageRampRate(12);
-		 */
+		LiveWindow.addSensor("Shooter", "Encoder", shooterEncoder);
 	}
 	
 	private static void initGearAssembly() {
-		gearRelease = new Solenoid(getGearReleasePcmChannel());
-		// TODO get properly
-		gearFeedController = new Talon(5);
-		gearDetector = new DigitalInput(9);
-		gearIndicatorRelay = new Relay(0);
+		gearTrayActuator = new Solenoid(getGearTrayActuatorPcmChannel());
+		LiveWindow.addActuator("Gear", "TrayActuator", gearTrayActuator);
+		
+		gearFeedController = new Talon(getGearFeedControllerPwmChannel());
+		LiveWindow.addActuator("Gear", "FeedController", (Talon) gearFeedController);
+		
+		gearDetector = new DigitalInput(getGearDetectorDioChannel());
+		LiveWindow.addActuator("Gear", "Tray Actuator", gearTrayActuator);
+		
+		gearIndicatorRelay = new Relay(getGearIndicatorRelayChannel());
 		gearIndicatorRelay.setDirection(Direction.kForward);
-		LiveWindow.addActuator("Gear Assembly", "Release", gearRelease);
 	}
 	
 	private static void initWinch() {
@@ -257,11 +236,35 @@ public class RobotMap {
 		}
 	}
 	
-	private static int getGearReleasePcmChannel() {
+	private static int getGearTrayActuatorPcmChannel() {
 		if (isCompetitionBot()) {
-			return COMPETITION_GEAR_RELEASE_PCM_CHANNEL;
+			return COMPETITION_GEAR_TRAY_ACTUATOR_PCM_CHANNEL;
 		} else {
-			return PRACTICE_GEAR_RELEASE_PCM_CHANNEL;
+			return PRACTICE_GEAR_TRAY_ACTUATOR_PCM_CHANNEL;
+		}
+	}
+	
+	private static int getGearFeedControllerPwmChannel() {
+		if (isCompetitionBot()) {
+			return COMPETITION_GEAR_FEED_CONTROLLER_PWM_CHANNEL;
+		} else {
+			return PRACTICE_GEAR_FEED_CONTROLLER_PWM_CHANNEL;
+		}
+	}
+	
+	private static int getGearDetectorDioChannel() {
+		if (isCompetitionBot()) {
+			return COMPETITION_GEAR_DETECTOR_DIO_CHANNEL;
+		} else {
+			return PRACTICE_GEAR_DETECTOR_DIO_CHANNEL;
+		}
+	}
+	
+	private static int getGearIndicatorRelayChannel() {
+		if (isCompetitionBot()) {
+			return COMPETITION_GEAR_INDICATOR_RELAY_CHANNEL;
+		} else {
+			return PRACTICE_GEAR_INDICATOR_RELAY_CHANNEL;
 		}
 	}
 

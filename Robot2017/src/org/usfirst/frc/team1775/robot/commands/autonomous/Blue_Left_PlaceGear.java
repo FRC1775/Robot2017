@@ -10,20 +10,16 @@ import edu.wpi.first.wpilibj.command.WaitCommand;
 public class Blue_Left_PlaceGear extends CommandGroup {
 
 	public Blue_Left_PlaceGear() {
-		this(false);
-	}
-	
-	public Blue_Left_PlaceGear(boolean changeCamera) {
-		addSequential(new DriveDistance(77));
+		addSequential(new DriveDistance(AutoConstants.BLUE_LEFT_PLACE_GEAR_DRIVE_1));
 		addParallel(new StopDrive());
 		
 		addSequential(new WaitCommand(.2));
-		addSequential(new RotateByAngle(48, 1500));
+		addSequential(new RotateByAngle(48)); //GABE i changed this -44 to -48, gkc
 		addParallel(new StopDrive());
 		
 		addSequential(new CenterOnHook());
 		
-		addSequential(new DriveDistance(13), 1.25);
+		addSequential(new DriveDistance(AutoConstants.BLUE_LEFT_PLACE_GEAR_DRIVE_2), 2);
 		addParallel(new StopDrive());
 		
 		addSequential(new ReleaseGearAndReverse());
