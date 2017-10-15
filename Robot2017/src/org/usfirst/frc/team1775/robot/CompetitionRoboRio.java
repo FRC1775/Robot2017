@@ -1,6 +1,6 @@
 package org.usfirst.frc.team1775.robot;
 
-public class CompetitionRoboRio {
+public class CompetitionRoboRio extends RoboRio {
 	public final static int DRIVE_TRAIN_LEFT_CONTROLLER_PWM_CHANNEL = 2;
 	public final static int DRIVE_TRAIN_RIGHT_CONTROLLER_PWM_CHANNEL = 1;
 	public final static int DRIVE_TRAIN_ENCODER_DIO_CHANNEL_A = 3;
@@ -19,63 +19,63 @@ public class CompetitionRoboRio {
 	
 	public final static int WINCH_CONTROLLER_PWM_CHANNEL = 4;
 	
-	protected boolean isCompetitionBot() {
+	public boolean isCompetitionBot() {
 		return true;
 	}
 	
-	protected int getDriveTrainLeftControllerPwmChannel() {
+	public int getDriveTrainLeftControllerPwmChannel() {
 		return DRIVE_TRAIN_LEFT_CONTROLLER_PWM_CHANNEL;
 	}
 	
-	protected int getDriveTrainRightControllerPwmChannel() {
+	public int getDriveTrainRightControllerPwmChannel() {
 		return DRIVE_TRAIN_RIGHT_CONTROLLER_PWM_CHANNEL;
 	}
 	
-	protected int getDriveTrainEncoderDioChannelA() {
+	public int getDriveTrainEncoderDioChannelA() {
 		return DRIVE_TRAIN_ENCODER_DIO_CHANNEL_A;
 	}
 	
-	protected int getDriveTrainEncoderDioChannelB() {
+	public int getDriveTrainEncoderDioChannelB() {
 		return DRIVE_TRAIN_ENCODER_DIO_CHANNEL_B;
 	}
 	
-	protected int getShooterSingulatorControllerPwmChannel() {
+	public int getShooterSingulatorControllerPwmChannel() {
 		return SHOOTER_SINGULATOR_CONTROLLER_PWM_CHANNEL;
 	}
 	
-	protected int getShooterRegulatorControllerPwmChannel() {
+	public int getShooterRegulatorControllerPwmChannel() {
 		return SHOOTER_REGULATOR_CONTROLLER_PWM_CHANNEL;
 	}
 	
-	protected int getShooterControllerPwmChannel() {
+	public int getShooterControllerPwmChannel() {
 		return SHOOTER_CONTROLLER_PWM_CHANNEL;
 	}
 	
-	protected int getShooterEncoderDioChannelA() {
+	public int getShooterEncoderDioChannelA() {
 		return SHOOTER_ENCODER_DIO_CHANNEL_A;
 	}
 	
-	protected int getShooterEncoderDioChannelB() {
+	public int getShooterEncoderDioChannelB() {
 		return SHOOTER_ENCODER_DIO_CHANNEL_B;
 	}
 	
-	protected int getGearTrayActuatorPcmChannel() {
+	public int getGearTrayActuatorPcmChannel() {
 		return GEAR_TRAY_ACTUATOR_PCM_CHANNEL;
 	}
 	
-	protected int getGearFeedControllerPwmChannel() {
+	public int getGearFeedControllerPwmChannel() {
 		return GEAR_FEED_CONTROLLER_PWM_CHANNEL;
 	}
 	
-	protected int getGearDetectorDioChannel() {
+	public int getGearDetectorDioChannel() {
 		return GEAR_DETECTOR_DIO_CHANNEL;
 	}
 	
-	protected int getGearIndicatorRelayChannel() {
+	public int getGearIndicatorRelayChannel() {
 		return GEAR_INDICATOR_RELAY_CHANNEL;
 	}
 
-	protected int getWinchControllerPwmChannel() {
+	public int getWinchControllerPwmChannel() {
 		return WINCH_CONTROLLER_PWM_CHANNEL;
 	}
 }

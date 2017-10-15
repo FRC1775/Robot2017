@@ -96,7 +96,6 @@ public class Robot extends IterativeRobot {
 	
 	private void initRoboRio() {
 		roboRio = new PracticeRoboRio();
-		roboRio.init();
 	}
 	
 	private void initOperatorInterface() {
@@ -105,13 +104,25 @@ public class Robot extends IterativeRobot {
 	
 	private void initSubsystems() {
         driveTrain = new DriveTrainSubsystem();
+        driveTrain.init();
         SmartDashboard.putData(driveTrain);
+        
         shooter = new ShooterSubsystem();
+        shooter.init();
         SmartDashboard.putData(shooter);
+        
         gearAssembly = new GearAssemblySubsystem();
+        gearAssembly.init();
         SmartDashboard.putData(gearAssembly);
+        
         winch = new WinchSubsystem();
+        winch.init();
         SmartDashboard.putData(winch);
+	}
+    
+	private void initCameras() {
+		camera = new GearCamera();
+		camera.init();
 	}
 	
 	private void initDashboard() {
@@ -152,11 +163,6 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putData("Auto Mode", chooser);
 		SmartDashboard.putData(Scheduler.getInstance());
 		SmartDashboard.putData(new DriveDistance(45));
-	}
-    
-	private void initCameras() {
-		camera = new GearCamera();
-		camera.init();
 	}
 	
 	private void ensureAutonomousIsStopped() {

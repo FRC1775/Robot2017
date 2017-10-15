@@ -2,8 +2,12 @@ package org.usfirst.frc.team1775.robot.subsystems;
 
 import org.usfirst.frc.team1775.robot.Robot;
 
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ShooterSubsystem extends Subsystem {
@@ -16,19 +20,41 @@ public class ShooterSubsystem extends Subsystem {
 	
 	private static final int SECONDS_PER_MINUTE = 60;
 	private static final int DEGREES_IN_REVOLUTION = 360;
+	
+	private SpeedController singulatorController;
+	private SpeedController regulatorController;
+	private SpeedController shooterController;
+	private Encoder shooterEncoder;
+	
+	private int shooterRpmTarget;
+	private Thread shooterSpeedRegulator;
 
 	@Override
 	protected void initDefaultCommand() { }
 	
-	private int shooterRpmTarget;
-	private Thread shooterSpeedRegulator;
+	public void init() {
+		singulatorController = new Talon(Robot.roboRio.getShooterSingulatorControllerPwmChannel());
+		LiveWindow.addActuator("Shooter", "SingulatorController", (Talon) singulatorController);
+		
+		regulatorController = new Talon(Robot.roboRio.getShooterRegulatorControllerPwmChannel());
+		LiveWindow.addActuator("Shooter", "RegulatorController", (Talon) regulatorController);
+		
+		shooterController = new Talon(Robot.roboRio.getShooterControllerPwmChannel());
+		shooterController.setInverted(true);
+		LiveWindow.addActuator("Shooter", "Controller", (Talon) shooterController);
+		
+		shooterEncoder = new Encoder(Robot.roboRio.getShooterEncoderDioChannelA(), Robot.roboRio.getShooterEncoderDioChannelB(), false, Encoder.EncodingType.k1X);
+		shooterEncoder.setDistancePerPulse(360 / 20);
+		shooterEncoder.setSamplesToAverage(10);
+		LiveWindow.addSensor("Shooter", "Encoder", shooterEncoder);
+	}
 	
 	public void startRegulator(double speed) {
-		Robot.roboRio.shooterRegulatorController.set(speed);
+		regulatorController.set(speed);
 	}
 	
 	public void startSingulator(double speed) {
-		Robot.roboRio.shooterSingulatorController.set(speed);
+		singulatorController.set(speed);
 	}
 
 	public void startShooter(int rpm) {
@@ -43,12 +69,12 @@ public class ShooterSubsystem extends Subsystem {
 						return;
 					}
 					
-					double currentShooterRpm = (Robot.roboRio.shooterEncoder.getRate() / DEGREES_IN_REVOLUTION) * SECONDS_PER_MINUTE;
+					double currentShooterRpm = (shooterEncoder.getRate() / DEGREES_IN_REVOLUTION) * SECONDS_PER_MINUTE;
 					
 					if (currentShooterRpm < shooterRpmTarget) {
-						Robot.roboRio.shooterController.set(getShooterBangBangMax());
+						shooterController.set(getShooterBangBangMax());
 					} else {
-						Robot.roboRio.shooterController.set(getShooterBangBangMin());
+						shooterController.set(getShooterBangBangMin());
 					}
 
 					//SmartDashboard.putNumber("Shooter.output", RobotMap.shooterController.get());
@@ -73,8 +99,8 @@ public class ShooterSubsystem extends Subsystem {
 	}
 
 	public void stop() {
-		Robot.roboRio.shooterSingulatorController.stopMotor();
-		Robot.roboRio.shooterRegulatorController.stopMotor();
+		singulatorController.stopMotor();
+		regulatorController.stopMotor();
 		
 		if (shooterSpeedRegulator != null) {
 			try {
@@ -85,7 +111,7 @@ public class ShooterSubsystem extends Subsystem {
 				// Do nothing
 			} finally {
 				// Always attempt to stop the shooter motor
-				Robot.roboRio.shooterController.stopMotor();
+				shooterController.stopMotor();
 			}
 		}
 	}
@@ -96,11 +122,11 @@ public class ShooterSubsystem extends Subsystem {
 	
 	public boolean isStopped() {
 		// TODO this may be a bad idea for checking stopped state.
-		return Robot.roboRio.shooterController.get() == 0 && Robot.roboRio.shooterSingulatorController.get() == 0 && Robot.roboRio.shooterRegulatorController.get() == 0;
+		return shooterController.get() == 0 && singulatorController.get() == 0 && regulatorController.get() == 0;
 	}
 	
-	private static int getCurrentShooterRpm() {
-		return (int) Math.round((Robot.roboRio.shooterEncoder.getRate() / DEGREES_IN_REVOLUTION) * SECONDS_PER_MINUTE);
+	private int getCurrentShooterRpm() {
+		return (int) Math.round((shooterEncoder.getRate() / DEGREES_IN_REVOLUTION) * SECONDS_PER_MINUTE);
 	}
 	
 	private static int getShooterBangBangRate() {

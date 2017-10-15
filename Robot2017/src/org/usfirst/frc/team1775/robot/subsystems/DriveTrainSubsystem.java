@@ -3,10 +3,16 @@ package org.usfirst.frc.team1775.robot.subsystems;
 import org.usfirst.frc.team1775.robot.Robot;
 import org.usfirst.frc.team1775.robot.commands.drivetrain.RegularDrive;
 
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveTrainSubsystem extends Subsystem {
@@ -17,6 +23,12 @@ public class DriveTrainSubsystem extends Subsystem {
 	}
 	
 	private static DriveMode driveMode = DriveMode.Regular;
+
+	private SpeedController leftController;
+	private SpeedController rightController;
+	private RobotDrive robotDrive;
+	private Encoder encoder;
+	private ADXRS450_Gyro gyro;
 
 	private long rotateInPlaceStartTime;
 
@@ -34,23 +46,46 @@ public class DriveTrainSubsystem extends Subsystem {
 	boolean shouldSetPoint = true;
 	
 	
-	private PIDController straightDrivePidController = new PIDController(-0.4, 0.0, 0.0, (PIDSource) Robot.roboRio.gyro, (value) -> {
+	private PIDController straightDrivePidController = new PIDController(-0.4, 0.0, 0.0, (PIDSource) gyro, (value) -> {
 		//SmartDashboard.putNumber("DriveTrain.straightDrive.pidResult", value);
 		straightDriveRotateCompensationValue = value;
 	}, 0.01);
 	
 	
-	private PIDController rotateByAnglePidController = new PIDController(0, 0, 0, (PIDSource) Robot.roboRio.gyro, (value) -> {
-		SmartDashboard.putNumber("DriveTrain.rotateByAngle.gyroAngle", Robot.roboRio.gyro.getAngle());
+	private PIDController rotateByAnglePidController = new PIDController(0, 0, 0, (PIDSource) gyro, (value) -> {
+		SmartDashboard.putNumber("DriveTrain.rotateByAngle.gyroAngle", gyro.getAngle());
 		rotateByAnglePidResult = value;
 	}, 0.01);
 	
 	
-	private PIDController driveToDistancePidController = new PIDController(0, 0, 0, (PIDSource) Robot.roboRio.driveTrainEncoder, (value) -> {
-		SmartDashboard.putNumber("DriveTrain.encoderDistance", Robot.roboRio.driveTrainEncoder.getDistance());
+	private PIDController driveToDistancePidController = new PIDController(0, 0, 0, (PIDSource) encoder, (value) -> {
+		SmartDashboard.putNumber("DriveTrain.encoderDistance", encoder.getDistance());
 		driveToDistancePidResult = value;
 	}, 0.02);
 
+	public void init() {
+		leftController = new Talon(Robot.roboRio.getDriveTrainLeftControllerPwmChannel());
+		LiveWindow.addActuator("Drive Train", "Left Controller", (Talon) leftController);
+
+		rightController = new Talon(Robot.roboRio.getDriveTrainRightControllerPwmChannel());
+		LiveWindow.addActuator("Drive Train", "Right Controller", (Talon) rightController);
+
+		robotDrive = new RobotDrive(leftController, rightController);
+		robotDrive.setSafetyEnabled(true);
+		robotDrive.setExpiration(0.1);
+		robotDrive.setSensitivity(0.5);
+		robotDrive.setMaxOutput(1);
+		robotDrive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
+		robotDrive.setInvertedMotor(RobotDrive.MotorType.kRearRight, true);
+		
+		encoder = new Encoder(Robot.roboRio.getDriveTrainEncoderDioChannelA(), Robot.roboRio.getDriveTrainEncoderDioChannelB(), false, Encoder.EncodingType.k1X);
+		double distancePerPulse = ((3.19*Math.PI)/250.0);
+		encoder.setDistancePerPulse(distancePerPulse);
+		LiveWindow.addSensor("Drive Train", "Encoder", encoder);
+		
+		gyro = new ADXRS450_Gyro();
+		LiveWindow.addSensor("Drive Train", "Gyro", gyro);
+	}
 	
 	@Override
 	protected void initDefaultCommand() {
@@ -93,18 +128,18 @@ public class DriveTrainSubsystem extends Subsystem {
 			}
 		}
 		
-		SmartDashboard.putNumber("DriveTrain.encoderDistance", Robot.roboRio.driveTrainEncoder.getDistance());
-		SmartDashboard.putNumber("DriveTrain.angle", Robot.roboRio.gyro.getAngle());
+		SmartDashboard.putNumber("DriveTrain.encoderDistance", encoder.getDistance());
+		SmartDashboard.putNumber("DriveTrain.angle", gyro.getAngle());
 		
 		actualRotateValue = driveStraightCorrection(moveValue, rotateValue);
 		
-		Robot.roboRio.driveTrainRobotDrive.arcadeDrive(actualMoveValue, actualRotateValue, squaredInputs);
+		robotDrive.arcadeDrive(actualMoveValue, actualRotateValue, squaredInputs);
 	}
 	
 	private double driveStraightCorrection(double moveValue, double rotateValue) {
 		if (rotateValue < 0.2 && rotateValue > -0.2) {
 			if (shouldSetPoint || (moveValue < 0.1 && moveValue > -0.1)) {
-				Robot.roboRio.gyro.reset();
+				gyro.reset();
 				shouldSetPoint = false;
 			}
 			
@@ -119,13 +154,13 @@ public class DriveTrainSubsystem extends Subsystem {
 	boolean isDecline = false;
 	
 	public void driveDistance(boolean killScheduler) {
-		SmartDashboard.putNumber("DriveTrain.encoderDistance", Robot.roboRio.driveTrainEncoder.getDistance());
+		SmartDashboard.putNumber("DriveTrain.encoderDistance", encoder.getDistance());
 
-		Robot.roboRio.driveTrainRobotDrive.arcadeDrive(driveToDistancePidResult, -straightDriveRotateCompensationValue, false);
+		robotDrive.arcadeDrive(driveToDistancePidResult, -straightDriveRotateCompensationValue, false);
 	}
 	
 	public void rotateByAngle() {
-		Robot.roboRio.driveTrainRobotDrive.arcadeDrive(0, rotateByAnglePidResult, false);
+		robotDrive.arcadeDrive(0, rotateByAnglePidResult, false);
 	}
 
 	public void rotate(double rotateValue, boolean squaredInputs) {
@@ -137,7 +172,7 @@ public class DriveTrainSubsystem extends Subsystem {
 		// TODO handle ramp of rotate
 		rotateInPlaceCurrentRampFactor = Math.min(1, (System.currentTimeMillis() - rotateInPlaceStartTime) / DEFAULT_ROTATE_RAMP_TIME);
 		
-		Robot.roboRio.driveTrainRobotDrive.arcadeDrive(0, rotateValue * rotateInPlaceCurrentRampFactor, squaredInputs);
+		robotDrive.arcadeDrive(0, rotateValue * rotateInPlaceCurrentRampFactor, squaredInputs);
 	}
 	
 	public boolean isFinished() {
@@ -159,7 +194,7 @@ public class DriveTrainSubsystem extends Subsystem {
 
 		isDecline = false;
 		
-		Robot.roboRio.gyro.reset();
+		gyro.reset();
 		
 		rotateByAngleTargetAngle = 0.972217 * degrees;
 		
@@ -188,7 +223,7 @@ public class DriveTrainSubsystem extends Subsystem {
 	public void setDriveDistance(double distance) {
 		setDriveMode(DriveMode.DriveToDistance);
 
-		Robot.roboRio.gyro.reset();
+		gyro.reset();
 		
 		isDecline = false;
 		driveDistanceStartTime = System.currentTimeMillis();
@@ -197,7 +232,7 @@ public class DriveTrainSubsystem extends Subsystem {
 		double i = Preferences.getInstance().getDouble("DriveTrain.driveToDistance.i", 0.0);
 		double d = Preferences.getInstance().getDouble("DriveTrain.driveToDistance.d", 2.3);
 		
-		Robot.roboRio.driveTrainEncoder.reset();
+		encoder.reset();
 		
 		driveToDistanceTargetDistance = distance;
 
@@ -216,7 +251,11 @@ public class DriveTrainSubsystem extends Subsystem {
 	}
 
 	public void stop() {
-		Robot.roboRio.driveTrainRobotDrive.stopMotor();
+		robotDrive.stopMotor();
+	}
+	
+	public void resetGyro() {
+		gyro.reset();
 	}
 
 	private void setDriveMode(DriveMode mode) {
