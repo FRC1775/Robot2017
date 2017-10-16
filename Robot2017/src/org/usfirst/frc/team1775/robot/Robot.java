@@ -44,8 +44,8 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		initRoboRio();
-		initOperatorInterface();
         initSubsystems();
+		initOperatorInterface();
         initCameras();
 		initDashboard();
 	}
