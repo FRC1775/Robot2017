@@ -69,9 +69,7 @@ public class ShooterSubsystem extends Subsystem {
 						return;
 					}
 					
-					double currentShooterRpm = (shooterEncoder.getRate() / DEGREES_IN_REVOLUTION) * SECONDS_PER_MINUTE;
-					
-					if (currentShooterRpm < shooterRpmTarget) {
+					if (getCurrentShooterRpm() < shooterRpmTarget) {
 						shooterController.set(getShooterBangBangMax());
 					} else {
 						shooterController.set(getShooterBangBangMin());
@@ -79,7 +77,7 @@ public class ShooterSubsystem extends Subsystem {
 
 					//SmartDashboard.putNumber("Shooter.output", RobotMap.shooterController.get());
 					SmartDashboard.putNumber("Shooter.targetRpm", shooterRpmTarget);
-					SmartDashboard.putNumber("Shooter.rpm", currentShooterRpm);
+					SmartDashboard.putNumber("Shooter.rpm", getCurrentShooterRpm());
 				}
 			});
 			shooterSpeedRegulator.start();

@@ -33,6 +33,7 @@ public class WinchSubsystem extends Subsystem {
 
 		double motorSpeed = speed == Speed.Fast ? getFastSpeed() : getSlowSpeed();
 		SmartDashboard.putNumber("Winch.speed", motorSpeed);
+
 		winchController.set(motorSpeed);
 	}
 	

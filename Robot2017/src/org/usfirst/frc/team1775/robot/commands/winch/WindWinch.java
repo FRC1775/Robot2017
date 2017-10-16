@@ -18,11 +18,6 @@ public class WindWinch extends Command {
 	}
 	
 	protected void execute() {
-		//SmartDashboard.putNumber("Winch.speedCrossover", getSpeedCrossover());
-		//SmartDashboard.putNumber("Winch.slowJoystickRumble", getSlowJoystickRumble());
-		//SmartDashboard.putNumber("Winch.fastJoystickRumble", getFastJoystickRumble());
-		
-		
 		if (Robot.operatorInterface.getRightTrigger() > getSpeedCrossover()) {
 			Robot.operatorInterface.rumbleBoth(getFastJoystickRumble());
 			winch.wind(WinchSubsystem.Speed.Fast);
